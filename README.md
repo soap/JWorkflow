@@ -1,4 +1,4 @@
-jWorkFlow
+JWorkFlow
 =========
 
-Workflow for Joomla
+Document based workflow for Joomla CMS 3.x.
