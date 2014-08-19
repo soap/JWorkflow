@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id$ -->
+<extension type="plugin" group="content" version="2.5.0" method="upgrade">
+	<name>PLG_CONTENT_WORKFLOW</name>
+	<version>1.0.1</version>
+	<creationDate>July 2013</creationDate>
+	<author>Prasit Gebsaap</author>
+	<copyright>Copyright 2013 by Prasit Gebsaap. All rights reserved.	</copyright>
+	<license>GNU General Public License version 2 or later.</license>
+	<authorEmail>soap@ji-net.com</authorEmail>
+	<authorUrl>www.joomlant.com</authorUrl>
+	<description>PLG_CONTENT_WORKFLOW_XML_DESCRIPTION</description>
+	<files>
+		<filename>index.html</filename>
+		<filename plugin="workflow">workflow.php</filename>
+		<folder>language</folder>
+	</files>
+</extension>
+
