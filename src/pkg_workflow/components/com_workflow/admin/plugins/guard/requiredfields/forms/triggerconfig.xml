@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<fields name="trigger_config">
+		<fieldset name="trigger_config">
+			<field name="context"
+				type="text"
+				label="PLG_GUARD_REQUIREDFIELDS_CONTEXT_LABEL"
+				description="PLG_GUARD_REQUIREDFIELDS_CONTEXT_DESC"
+				size="30" />
+				
+			<field name="required_fields"
+				type="textarea"
+				label="PLG_GUARD_REQUIREDFIELDS_REQUIRED_FIELDS_LABEL"
+				description="PLG_GUARD_REQUIREDFIELDS_REQUIRED_FIELDS_DESC" />
+		</fieldset>
+	</fields>
+</form>

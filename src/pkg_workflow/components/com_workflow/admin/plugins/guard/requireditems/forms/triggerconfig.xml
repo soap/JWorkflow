@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<fields name="trigger_config">
+		<fieldset name="trigger_config">
+                        <field name="detail_table"
+				type="text"
+				label="PLG_GUARD_REQUIREDITEMS_TABLE_DETAIL_LABEL"
+				description="PLG_GUARD_REQUIREDITEMS_TABLE_DETAIL_DESC" 
+				class="inputbox"
+				size="20"
+				required="true"
+			/>
+                        
+                        <field name="foreign_key"
+				type="text"
+				label="PLG_GUARD_REQUIREDITEMS_FOREIGN_KEY_LABEL"
+				description="PLG_GUARD_REQUIREDITEMS_FOREIGN_KEY_DESC" 
+				class="inputbox"
+				size="20"
+				required="true"
+			/>
+                    
+			<field name="context"
+				type="text"
+				label="PLG_GUARD_REQUIREDITEMS_CONTEXT_LABEL"
+				description="PLG_GUARD_REQUIREDITEMS_CONTEXT_DESC"
+				size="30" />
+			
+		</fieldset>
+	</fields>
+</form>

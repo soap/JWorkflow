@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS `#__wf_user_roles` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(200) NOT NULL,
+  `alias` varchar(200) NOT NULL,
+  `description` text NOT NULL,
+  `method` varchar(100) NOT NULL DEFAULT 'query',
+  `method_params` text NOT NULL,
+  `params` text NOT NULL,
+  `created_by` int(11) NOT NULL DEFAULT '0',
+  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` int(11) NOT NULL DEFAULT '0',
+  `modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `checked_out` int(11) NOT NULL DEFAULT '0',
+  `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `published` tinyint(4) NOT NULL DEFAULT '1',
+  `language` varchar(50) NOT NULL DEFAULT '*',
+  `access` int(11) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL DEFAULT '0',
+  `note` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

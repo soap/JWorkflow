@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<fields name="guard_config">
+		<fieldset name="guard_config">
+			<field name="context"
+				type="text"
+				label="PLG_GUARD_ASSIGNEDGUARD_CONTEXT_LABEL"
+				description="PLG_GUARD_ASSIGNEDGUARD_CONTEXT_DESC" 
+				class="inputbox"
+				size="20"
+				required="true"
+			/>
+		</fieldset>
+	</fields>
+</form>

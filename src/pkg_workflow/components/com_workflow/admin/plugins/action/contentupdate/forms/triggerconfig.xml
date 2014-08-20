@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<fields name="trigger_config">
+		<fieldset name="trigger_config">
+			<field name="item_type"
+				type="text"
+				label="PLG_ACTION_CONTENTUPDATE_ITEM_TYPE_LABEL"
+				description="PLG_ACTION_CONTENTUPDATE_ITEM_TYPE_DESC"
+				class="inputbox"
+				size="35"
+				required="false" 
+			/>
+			
+			<field name="update_items"
+				type="textarea"
+				label="PLG_ACTION_CONTENTUPDATE_UPDATE_ITEMS_LABEL"
+				description="PLG_ACTION_CONTENTUPDATE_UPDATE_ITEMS_DESC" 
+				class="inputbox"
+				rows="5"
+				cols="30"
+				filter="safehtml"
+			/>
+		</fieldset>
+	</fields>
+</form>

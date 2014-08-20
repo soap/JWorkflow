@@ -227,6 +227,33 @@ class plgContentWorkflow extends JPlugin
 		
     }
     
+    public function onContentPrepare($context, &$article, &$params, $page)
+    {
+
+    }
+    
+    public function onContentPrepareForm($form, $data) 
+    {
+    	if (is_object($data) && empty($data->id)) {
+    		$form->setFieldAttribute('state', 'disabled', 'true');
+    	}
+    	
+    	if (is_array($data) && empty($data['id'])) {
+    		$form->setFieldAttribute('state', 'disabled', 'true');
+    	}
+    }
+    
+    public function onContentPrepareData($context, $data)
+    {
+    	if ($context != 'com_content.article') return true;
+    	
+     	if (is_object($data) && empty($data->id)) {
+     		$data->state = 0;	
+     	}
+    	
+     	return true;
+    }
+    
     protected function compare($m1, $m2) 
     {
     	if (count($m1->mappings) == count($m2->mappings)) return 0;

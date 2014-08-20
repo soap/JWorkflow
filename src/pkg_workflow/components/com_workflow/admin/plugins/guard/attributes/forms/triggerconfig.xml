@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<fields name="trigger_config">
+		<fieldset name="trigger_config">			
+			<field name="item_type"
+				type="text"
+				label="PLG_GUARD_ATTRIBUTES_ITEM_TYPE_LABEL"
+				description="PLG_GUARD_ATTRIBUTES_ITEM_TYPE_DESC"
+				size="45" />
+				
+			<field name="match_attributes"
+				type="text"
+				label="PLG_GUARD_ATTRIBUTES_MATCHING_ATTRIBUTES_LABEL"
+				description="PLG_GUARD_ATTRIBUTES_MATCHING_ATTRIBUTES_DESC"
+			</field>				
+		</fieldset>
+	</fields>
+</form>

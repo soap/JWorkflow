@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<fields name="guard_config">
+		<fieldset name="guard_config">
+			<field name="group"
+				type="usergroup"
+				label="PLG_GUARD_USERGROUP_GROUP_LABEL"
+				description="PLG_GUARD_USERGROUP_GROUP_DESC"
+				multiple="true"
+				size="10" 
+				required="true"
+			/>
+			
+			<field name="allowowner"
+				type="list"
+				label="PLG_GUARD_USERGROUP_ALLOWOWNER_LABEL"
+				description="PLG_GUARD_USERGROUP_ALLOWOWNER_DESC"
+				size="1" 
+				default="0">
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>
+			
+			<field name="ownerfield"
+				type="text"
+				label="PLG_GUARD_USERGROUP_OWNERFIELD_LABEL"
+				description="PLG_GUARD_USERGROUP_OWNERFIELD_DESC"
+				size="15" 
+				default="created_by" />
+		</fieldset>
+	</fields>
+</form>
