@@ -5,7 +5,7 @@ jimport('joomla.plugin.plugin');
 /**
  * Content Workflow Plugin.
  *
- * @package     Workflow
+ * @package     JWorkflow
  * @subpackage  content_workflow
  * @since       1.0
  */
@@ -164,7 +164,16 @@ class plgContentWorkflow extends JPlugin
 				JFactory::getApplication()->enqueueMessage('(2) Cannot find workflow mapping for '.$context);
 				return true;
 			}
-			$query = $db->getQuery(true);
+			$query->clear();
+			
+			$query->select('title as workflow_title')
+				->from('#__wf_workflows')
+				->where('id = '.(int)$workflow_id);
+			
+			$db->setQuery($query);
+			$workflow_title = $db->loadResult();
+			
+			$query->clear();
 			$query->select('a.id, a.title, a.ordering')
 			->from('#__wf_states AS a')
 			->where('published = 1')
@@ -181,15 +190,41 @@ class plgContentWorkflow extends JPlugin
 				return true;
 			}
 			
+			JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_workflow/tables');
 			$instance = JTable::getInstance('Instance', 'WorkflowTable');
-			$instnace->context = $context;
+			$instance->load(array('context'=>$context, 'item_id'=>$table->id));
+			$instance->context = $context;
 			$instance->item_id = $table->id;
 			$instance->workflow_id = $workflow_id; 
 			$instance->workflow_state_id = $start_state_id;
-			JFactory::getApplication()->enqueueMessage($context.' item was inserted into '.$row->title .' workflow.' );			
+			$instance->check();
+			$instance->store();
+			JFactory::getApplication()->enqueueMessage('The new item; '.$table->id.' of '.$context.' was inserted into '.$workflow_title.' workflow. Its state is '.$row->title );			
     	}
     	
     	return true;
+    }
+    
+    /**
+     * 
+     * Remove workflow instance if working item deleteddescription here ...
+     * @param string $context
+     * @param object $table
+     */
+    public function onContentAfterDelete($context, $table) 
+    {
+		JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_workflow/tables');
+		$instance = JTable::getInstance('Instance', 'WorkflowTable');
+		
+		$instance->load(array('context'=>$context, 'item_id'=>$table->id));
+		if ($instance === false) {
+			return true;
+		}
+		//delete workflow instance record
+		$instance->delete();
+		
+		return true;
+		
     }
     
     protected function compare($m1, $m2) 
