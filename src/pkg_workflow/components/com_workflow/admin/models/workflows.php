@@ -30,7 +30,7 @@ class WorkflowModelWorkflows extends JModelList
 				'alias', 'a.alias',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
-				'catid', 'a.catid', 'category_title',
+				'category_id', 'a.category_id', 'category_title',
 				'published', 'a.published',
 				'access', 'a.access', 'access_level',
 				'ordering', 'a.ordering',

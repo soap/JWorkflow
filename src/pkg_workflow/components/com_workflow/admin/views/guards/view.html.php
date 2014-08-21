@@ -43,6 +43,8 @@ class WorkflowViewGuards extends JViewLegacy
 		$this->items		= $this->get('Items');
 		$this->pagination	= $this->get('Pagination');
 		$this->state		= $this->get('State');
+		$this->filterForm    	= $this->get('FilterForm');
+		$this->activeFilters 	= $this->get('ActiveFilters');
 		$this->workflow		= $this->get('Workflow');
 		$this->transition	= $this->get('Transition');
 
@@ -53,7 +55,10 @@ class WorkflowViewGuards extends JViewLegacy
 		}
 
 		// Add the toolbar if it is not in modal
-		if ($this->getLayout() !== 'modal') $this->addToolbar();
+		if ($this->getLayout() !== 'modal') {
+			$this->addToolbar();
+			$this->sidebar = JHtmlSidebar::render();
+		}
 		
 		// Display the view layout.
 		parent::display();

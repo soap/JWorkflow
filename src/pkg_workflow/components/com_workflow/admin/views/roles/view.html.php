@@ -42,7 +42,9 @@ class WorkflowViewRoles extends JViewLegacy
 		$this->items		= $this->get('Items');
 		$this->pagination	= $this->get('Pagination');
 		$this->state		= $this->get('State');
-
+		$this->filterForm    	= $this->get('FilterForm');
+		$this->activeFilters 	= $this->get('ActiveFilters');
+		
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
@@ -50,7 +52,10 @@ class WorkflowViewRoles extends JViewLegacy
 		}
 
 		// Add the toolbar if it is not in modal
-		if ($this->getLayout() !== 'modal') $this->addToolbar();
+		if ($this->getLayout() !== 'modal') {
+			$this->addToolbar();
+			$this->sidebar = JHtmlSidebar::render();
+		}
 		
 		// Display the view layout.
 		parent::display();

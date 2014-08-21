@@ -32,7 +32,10 @@ class WorkflowViewDashboard extends JViewLegacy
         $this->user       = JFactory::getUser();
         $this->modules    = JFactory::getDocument()->loadRenderer('modules');
 
-        if ($this->getLayout() !== 'modal') $this->addToolbar();
+        if ($this->getLayout() !== 'modal') {
+        	$this->addToolbar();
+        	$this->sidebar = JHtmlSidebar::render();        	
+        }
 
         parent::display($tpl);
     }

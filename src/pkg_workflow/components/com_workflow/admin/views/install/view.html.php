@@ -48,7 +48,10 @@ class WorkflowViewInstall extends JViewLegacy
 		}
 
 		// Add the toolbar if it is not in modal
-		if ($this->getLayout() !== 'modal') $this->addToolbar();
+		if ($this->getLayout() !== 'modal') {
+			$this->addToolbar();
+			$this->sidebar = JHtmlSidebar::render();
+		}
 		
 		// Display the view layout.
 		parent::display();

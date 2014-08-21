@@ -36,7 +36,7 @@ class WorkflowViewState extends JViewLegacy
 	 * @return  void
 	 * @since   1.0
 	 */
-	public function display()
+	public function display($tpl = null)
 	{
 		// Intialiase variables.
 		$this->item		= $this->get('Item');
@@ -50,7 +50,7 @@ class WorkflowViewState extends JViewLegacy
 		}
 
 		$this->addToolbar();
-		parent::display();
+		parent::display($tpl = null);
 	}
 
 	/**

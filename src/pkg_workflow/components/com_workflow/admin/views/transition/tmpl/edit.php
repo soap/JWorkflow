@@ -1,12 +1,9 @@
 <?php
 defined('_JEXEC') or die;
 
-//JHtml::addIncludePath(JPATH_COMPONENT.'helpers/html');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
-//use jquery from  JBootstrap
-require_once(JPATH_SITE.'/plugins/system/JBootstrap/lib/cms/html/jquery.php');
 JHtml::_('jquery.framework');
 
 JHtml::_('script', 'com_workflow/workflow/workflow.js', false, true, false, false, false);
