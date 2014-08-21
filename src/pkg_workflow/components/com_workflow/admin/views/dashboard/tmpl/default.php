@@ -11,12 +11,11 @@ if (!defined('WFVERSION')) {
     define('WFVERSION', $wfv->getShortVersion());
 }
 ?>
-<div id="j-sidebar-container" class="span2">
-	<?php echo $this->sidebar; ?>
-</div>
-<div id="j-main-container" class="span10">
-	<div class="row-fluid">
-	<div class="span6">
+<div class="row-fluid">
+	<div class="span2">
+		<?php echo $this->sidebar?>
+	</div>
+	<div class="span6 hidden-phone">
             <?php if ($this->user->authorise('core.admin')) : ?>
                 <a class="thumbnail btn pull-left" href="<?php echo JRoute::_('index.php?option=com_config&view=component&component=com_workflow');?>">
                     <?php echo JHtml::image('com_workflow/workflow/header/icon-48-config.png', JText::_('COM_WORKFLOW_DASHBOARD_CONFIG'), null, true); ?>
@@ -25,9 +24,9 @@ if (!defined('WFVERSION')) {
             <?php endif; ?>
             <div class="clearfix"></div>
             <?php echo $modules->render('wf-dashboard-top', array('style' => 'xhtml'), null); ?>
-        		<?php echo $modules->render('wf-dashboard-left', array('style' => 'xhtml'), null); ?>
+        	<?php echo $modules->render('wf-dashboard-left', array('style' => 'xhtml'), null); ?>
 	</div>
-	<div class="span4" style="margin-left: 0;">
+	<div class="span4">
         <div class="well well-small">
         	<div class="module-title nav-header">JWorkflow <?php echo WFVERSION; ?></div>
             <p>
@@ -50,6 +49,5 @@ if (!defined('WFVERSION')) {
             </div>
         </div>
         <?php echo $modules->render('wf-dashboard-right', array('style' => 'xhtml'), null); ?>
-	</div>
 	</div>
 </div>
