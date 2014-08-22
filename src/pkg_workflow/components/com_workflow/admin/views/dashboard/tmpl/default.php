@@ -35,7 +35,7 @@ if (!defined('WFVERSION')) {
                 </a>
             </p>
             <p>
-                <a href="https://github.com/soap/Workflow/issues" class="btn btn-primary btn-wide btn-small" target="_blank">
+                <a href="https://github.com/soap/JWorkflow/issues" class="btn btn-primary btn-wide btn-small" target="_blank">
                     <span aria-hidden="true" class="icon-warning"></span> Report an Issue
                 </a>
             </p>

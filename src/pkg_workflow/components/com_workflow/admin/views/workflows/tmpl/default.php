@@ -8,6 +8,7 @@ JHtml::_('formbehavior.chosen', 'select');
 $user		= JFactory::getUser();
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
+$saveOrder	= $listOrder == 'a.ordering';
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_workflow&view=workflows');?>" method="post" name="adminForm" id="adminForm">
 	<div id="j-sidebar-container" class="span2">
@@ -26,45 +27,45 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 		<table class="table table-striped">
 			<thead>
 				<tr>
-				<th width="1%">
-					<input type="checkbox" name="toggle" value="" onclick="checkAll(this)" />
-				</th>
-				<th>
-					<?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
-				</th>
-				<th>
-					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_STATE_COUNT', 'state_count', $listDirn, $listOrder); ?>
-				</th>
-				<th>
-					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_TRANSITION_COUNT', 'transition_count', $listDirn, $listOrder); ?>
-				</th>
-				<th>
-					<?php echo JText::_('COM_WORKFLOW_HEADING_PROCESS')?>
-				</th>
-				<th width="5%">
-					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.published', $listDirn, $listOrder); ?>
-				</th>
+					<th width="1%" class="nowrap center hidden-phone">
+						<?php echo JHtml::_('searchtools.sort', '', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
+					</th>
+					<th width="1%" class="hidden-phone">
+						<?php echo JHtml::_('grid.checkall'); ?>
+					</th>
+					<th>
+						<?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
+					</th>
+					<th>
+						<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_STATE_COUNT', 'state_count', $listDirn, $listOrder); ?>
+					</th>
+					<th>
+						<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_TRANSITION_COUNT', 'transition_count', $listDirn, $listOrder); ?>
+					</th>
+					<th>
+						<?php echo JText::_('COM_WORKFLOW_HEADING_PROCESS')?>
+					</th>
+					<th width="5%">
+						<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.published', $listDirn, $listOrder); ?>
+					</th>
 				<th width="10%">
 					<?php echo JHtml::_('grid.sort', 'JCATEGORY', 'a.category_id', $listDirn, $listOrder); ?>
 				</th>
-				<th width="10%" class="nowrap">
-					<?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ORDERING', 'a.ordering', $listDirn, $listOrder); ?>
-					<?php echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'workflows.saveorder'); ?>
-				</th>
+
 				<th width="10%">
 					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
 				</th>
-				<th width="10%">
+				<th width="10%" class="nowrap hidden-phone">
 					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_CREATED_BY', 'a.created_by', $listDirn, $listOrder); ?>
 				</th>
-				<th width="5%">
-					<?php echo JHtml::_('grid.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>
+				<th width="5%" class="nowrap hidden-phone">
+					<?php echo JHtml::_('searchtools.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>
 				</th>
 				<th width="5%">
-					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
 				</th>
-				<th width="1%" class="nowrap">
-					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
+				<th width="1%" class="nowrap hidden-phone">
+					<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
 				</th>
 			</tr>
 		</thead>
@@ -84,7 +85,26 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 			$canCheckin	= $user->authorise('core.manage',		'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
 			$canChange	= $user->authorise('core.edit.state',	'com_workflow.workflow.'.$item->id) && $canCheckin;
 			?>
-			<tr class="row<?php echo $i % 2; ?>">
+			<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->category_id; ?>">
+				<td class="order nowrap center hidden-phone">
+							<?php
+							$iconClass = '';
+							if (!$canChange)
+							{
+								$iconClass = ' inactive';
+							}
+							elseif (!$saveOrder)
+							{
+								$iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
+							}
+							?>
+							<span class="sortable-handler<?php echo $iconClass ?>">
+								<i class="icon-menu"></i>
+							</span>
+							<?php if ($canChange && $saveOrder) : ?>
+								<input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering; ?>" class="width-20 text-area-order " />
+							<?php endif; ?>
+				</td>
 				<td class="center">
 					<?php echo JHtml::_('grid.id', $i, $item->id); ?>
 				</td>
@@ -122,21 +142,6 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				</td>
 				<td class="center">
 					<?php echo $this->escape($item->category_title); ?>
-				</td>
-				<td class="order">
-					<?php if ($canChange) : ?>
-						<span><?php echo $this->pagination->orderUpIcon($i,
-							($item->category_id == @$this->items[$i-1]->category_id),
-							'workflows.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-						<span><?php echo $this->pagination->orderDownIcon($i,
-							$this->pagination->total,
-							($item->category_id == @$this->items[$i+1]->category_id),
-							'workflows.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
-						<?php $disabled = $ordering ?  '' : 'disabled="disabled"'; ?>
-						<input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" <?php echo $disabled ?> class="text-area-order" />
-					<?php else : ?>
-						<?php echo (int) $item->ordering; ?>
-					<?php endif; ?>
 				</td>
 				<td class="center">
 					<?php echo $this->escape($item->access_level); ?>

@@ -204,7 +204,6 @@ CREATE TABLE IF NOT EXISTS `#__wf_workflows` (
   `title` varchar(100) NOT NULL,
   `alias` varchar(100) NOT NULL,
   `description` text NOT NULL,
-  `start_state_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   `created` datetime NOT NULL,
   `created_by` int(11) NOT NULL DEFAULT '0',
