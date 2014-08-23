@@ -1,51 +1,33 @@
 <?php
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.view');
+include_once __DIR__ . '/../default/view.php';
 
 /**
- * Workflow view.
  *
- * @package     Workflow
+ * @package     JWorkflow
  * @subpackage  com_workflow
  * @since       1.0
  */
-class WorkflowViewInstall extends JViewLegacy
+class WorkflowViewInstall extends WorkflowViewDefault
 {
-	/**
-	 * @var    array  The array of records to display in the list.
-	 * @since  1.0
-	 */
 	protected $items;
-
-	/**
-	 * @var    JPagination  The pagination object for the list.
-	 * @since  1.0
-	 */
 	protected $pagination;
-
-	/**
-	 * @var    JObject	The model state.
-	 * @since  1.0
-	 */
 	protected $state;
 
-	/**
-	 * Prepare and display the Install view.
-	 *
-	 * @return  void
-	 * @since   1.0
-	 */
-	public function display($tp = NULL)
-	{
-		// Initialise variables.
-		// $this->state		= $this->get('State');
 
-		// Check for errors.
-		if (count($errors = $this->get('Errors'))) {
-			JError::raiseError(500, implode("\n", $errors));
-			return false;
-		}
+	public function display($tpl = null)
+	{
+		$paths = new stdClass;
+		$paths->first = '';
+		$state = $this->get('state');
+
+		$this->paths = &$paths;
+		$this->state = &$state;
+
+		JPluginHelper::importPlugin('installer');
+
+		$dispatcher = JEventDispatcher::getInstance();
 
 		// Add the toolbar if it is not in modal
 		if ($this->getLayout() !== 'modal') {
@@ -54,7 +36,7 @@ class WorkflowViewInstall extends JViewLegacy
 		}
 		
 		// Display the view layout.
-		parent::display();
+		parent::display($tpl);
 	}
 
 	/**
