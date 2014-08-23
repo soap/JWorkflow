@@ -144,7 +144,7 @@ class WorkflowModelBinding extends JModelAdmin
 				$db		= JFactory::getDbo();
 				$query	= $db->getQuery(true);
 				$query->select('MAX(ordering)');
-				$query->from('#__wf_typemaps');
+				$query->from('#__wf_bindings');
 				$query->where('workflow_id = '.(int) $table->workflow_id);
 				
 				$max = (int) $db->setQuery($query)->loadResult();

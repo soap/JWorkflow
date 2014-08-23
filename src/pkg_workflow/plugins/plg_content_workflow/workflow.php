@@ -28,7 +28,7 @@ class plgContentWorkflow extends JPlugin
     		$db = JFactory::getDbo();
     		$query = $db->getQuery(true);
 			$query->select('workflow_id, params')
-				->from('#__wf_typemaps')
+				->from('#__wf_bindings')
 				->where('context = '.$db->quote($context))
 				->where('published = 1');
 			$db->setQuery($query);
@@ -116,7 +116,7 @@ class plgContentWorkflow extends JPlugin
     		$db = JFactory::getDbo();
     		$query = $db->getQuery(true);
     		$query->select('workflow_id, params')
-    		->from('#__wf_typemaps')
+    		->from('#__wf_bindings')
     		->where('context = '.$db->quote($context))
     		->where('published = 1');
     		$db->setQuery($query);

@@ -1,2 +1,2 @@
-ALTER TABLE `#__wf_plugins` ADD title VARCHAR (100) AFTER id;
+ALTER TABLE `#__wf_triggers` ADD title VARCHAR (100) AFTER id;
 

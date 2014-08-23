@@ -98,7 +98,7 @@ class WorkflowModelBindings extends JModelList
 				'a.published, a.access, a.created, a.ordering, a.language'
 			)
 		);
-		$query->from('#__wf_typemaps AS a');
+		$query->from('#__wf_bindings AS a');
 
 		// Join over the language
 		$query->select('l.title AS language_title');

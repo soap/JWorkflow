@@ -21,7 +21,7 @@ class WorkflowTableBinding extends JTable
 	 */
 	public function __construct($db)
 	{
-		parent::__construct('#__wf_typemaps', 'id', $db);
+		parent::__construct('#__wf_bindings', 'id', $db);
 	}
 
 	/**

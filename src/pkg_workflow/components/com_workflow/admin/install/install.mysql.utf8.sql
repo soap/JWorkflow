@@ -7,15 +7,12 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
-
---
--- Table structure for table `#__wf_guards`
 --
 -- Creation: Jul 30, 2013 at 07:32 AM
 -- Last update: Aug 01, 2013 at 04:13 PM
 --
 
-CREATE TABLE IF NOT EXISTS `#__wf_triggers` (
+CREATE TABLE IF NOT EXISTS `#__wf_trigger_instances` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `plugin_id` int(11) NOT NULL,
   `transition_id` int(11) NOT NULL DEFAULT '0',
@@ -39,13 +36,13 @@ CREATE TABLE IF NOT EXISTS `#__wf_triggers` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `#__wf_plugins`
+-- Table structure for table `#__wf_triggers`
 --
 -- Creation: Jul 30, 2013 at 08:25 AM
 -- Last update: Jul 30, 2013 at 08:42 AM
 --
 
-CREATE TABLE IF NOT EXISTS `#__wf_plugins` (
+CREATE TABLE IF NOT EXISTS `#__wf_triggers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
   `namespace` varchar(200) NOT NULL,
@@ -63,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `#__wf_plugins` (
   `access` tinyint(3) NOT NULL DEFAULT '0',
   `language` varchar(7) NOT NULL DEFAULT '*',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='stores component plugin, e.g. transition guard plugins' AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='stores workflow triggers, e.g. transition guards' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -165,13 +162,13 @@ CREATE TABLE IF NOT EXISTS `#__wf_transition_logs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `#__wf_typemaps`
+-- Table structure for table `#__wf_bindings`
 --
 -- Creation: Aug 01, 2013 at 02:28 PM
 -- Last update: Aug 01, 2013 at 02:43 PM
 --
 
-CREATE TABLE IF NOT EXISTS `#__wf_typemaps` (
+CREATE TABLE IF NOT EXISTS `#__wf_bindings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `context` varchar(50) NOT NULL,
   `workflow_id` int(11) NOT NULL,
