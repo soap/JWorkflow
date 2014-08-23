@@ -38,7 +38,7 @@ class JFormFieldPlugin extends JFormFieldList
 
         // Build the query
         $query->select('a.id AS value, a.namespace as text')
-              ->from('#__wf_plugins AS a');
+              ->from('#__wf_triggers AS a');
 
         // Filter by state
         if (!is_null($state)) $query->where('a.published = ' . $db->quote($state));

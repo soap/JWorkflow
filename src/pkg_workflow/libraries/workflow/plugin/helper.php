@@ -80,7 +80,7 @@ abstract class WFPluginHelper
 			$query = $db->getQuery(true);
 
 			$query->select('name, group, namespace, alias')
-				->from('#__wf_plugins')
+				->from('#__wf_triggers')
 				->where('access IN (' . $levels . ')')
 				->order('ordering');
 

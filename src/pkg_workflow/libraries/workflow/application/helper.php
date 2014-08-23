@@ -255,10 +255,12 @@ class WFApplicationHelper {
     
     protected static function getGuardsByTransition($transitionId)
     {
+    	if (empty($transitionId)) return array();
+    	
     	$db = JFactory::getDbo();
     	$query = $db->getQuery(true);
     	$query->select('id, namespace')
-    		->from('#__wf_triggers')
+    		->from('#__wf_trigger_instances')
     		->where('transition_id = '.$transitionId)
     		->where('published = 1'); //unpublished trigger, no effect
      
@@ -557,7 +559,7 @@ class WFTriggerRegistry {
     }
     
     private function init() {
-    	$this->triggers = array();
+    	//self::triggers = array();
     }
     
     static function getInstance() {
@@ -577,14 +579,14 @@ class WFTriggerRegistry {
         $query = $db->getQuery(true);
         
     	$query->select('a.namespace, a.group, a.name')
-    		->from('#__wf_plugins AS a')
+    		->from('#__wf_triggers AS a')
     		->where('published = 1');
     		
     	if (!empty($transitionId)) {
     		$sub_query = $db->getQuery(true);
     		
     		$sub_query->select('plugin_id')
-    			->from('#__wf_triggers AS g')
+    			->from('#__wf_trigger_instances AS g')
     			->where('g.transition_id ='.$transitionId);
     			
     		$query->where('a.id IN ('.$sub_query.')');	

@@ -29,10 +29,8 @@ class WorkflowViewTriggers extends JViewLegacy
 	 */
 	protected $state;
 
-	protected $workflow;
-	protected $transition;
 	/**
-	 * Prepare and display the Guards view.
+	 * Prepare and display the Plugins view.
 	 *
 	 * @return  void
 	 * @since   1.0
@@ -44,10 +42,8 @@ class WorkflowViewTriggers extends JViewLegacy
 		$this->pagination	= $this->get('Pagination');
 		$this->state		= $this->get('State');
 		$this->filterForm    	= $this->get('FilterForm');
-		$this->activeFilters 	= $this->get('ActiveFilters');		
-		$this->workflow		= $this->get('Workflow');
-		$this->transition	= $this->get('Transition');
-
+		$this->activeFilters 	= $this->get('ActiveFilters');
+		
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
@@ -76,23 +72,18 @@ class WorkflowViewTriggers extends JViewLegacy
 		$state	= $this->get('State');
 		$canDo	= WorkflowHelper::getActions();
 
-		JToolBarHelper::title(JText::_('COM_WORKFLOW_TRIGGERS_TITLE'));
-
-		if ($canDo->get('core.create') && $state->get('filter.transition_id')) {
-			JToolBarHelper::addNew('trigger.add', 'JTOOLBAR_NEW');
-		}
+		JToolBarHelper::title(JText::_('COM_WORKFLOW_PLUGINS_TITLE'));
 
 		if ($canDo->get('core.edit')) {
-			JToolBarHelper::editList('trigger.edit', 'JTOOLBAR_EDIT');
+			JToolBarHelper::editList('plugin.edit', 'JTOOLBAR_EDIT');
 		}
-
 		if ($canDo->get('core.edit.state')) {
-			JToolBarHelper::publishList('triggers.publish', 'JTOOLBAR_PUBLISH');
-			JToolBarHelper::unpublishList('triggers.unpublish', 'JTOOLBAR_UNPUBLISH');
+			JToolBarHelper::publishList('plugins.publish', 'JTOOLBAR_PUBLISH');
+			JToolBarHelper::unpublishList('plugins.unpublish', 'JTOOLBAR_UNPUBLISH');
 		}
 
 		if ($canDo->get('core.delete')) {
-			JToolBarHelper::deleteList('', 'triggers.delete','JTOOLBAR_DELETE');
+			JToolBarHelper::deleteList('', 'plugins.delete','JTOOLBAR_DELETE');
 		} 
 
 	}

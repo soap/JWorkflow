@@ -3,16 +3,16 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
 
 /**
- * Guard model.
+ * Trigger model.
  *
- * @package     Workflow
+ * @package     JWorkflow
  * @subpackage  com_workflow
  * @since       1.0
  */
 class WorkflowModelTrigger extends JModelAdmin
 {
 	/**
-	 * Method to get the Guard form.
+	 * Method to get the Plugin form.
 	 *
 	 * @param   array    $data      An optional array of data for the form to interogate.
 	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
@@ -32,41 +32,12 @@ class WorkflowModelTrigger extends JModelAdmin
 		if (empty($form)) {
 			return false;
 		}
-		
-		
-		/* When saving data, we do not load data while calling getForm()
-		 * but we depend on plugin_id to load additional form so we 
-		 * have to make sure that we trigger the event with data
-		 */
-		if (!empty($data)) {
-			$tmp = JArrayHelper::toObject($data);
-			// Import the appropriate plugin group.
-			JPluginHelper::importPlugin('workflow');
 
-			// Get the dispatcher.
-			$dispatcher = JDispatcher::getInstance();
-
-			// Trigger the form preparation event.
-			$results = $dispatcher->trigger('onContentPrepareForm', array($form, $tmp));
-
-			// Check for errors encountered while preparing the form.
-			if (count($results) && in_array(false, $results, true))
-			{
-				// Get the last error.
-				$error = $dispatcher->getError();
-
-				if (!($error instanceof Exception))
-				{
-					throw new Exception($error);
-				}
-			}			
-		}
-		 
 		return $form;
 	}
 
 	/**
-	 * Method to get a Guard.
+	 * Method to get a Plugin.
 	 *
 	 * @param   integer  $pk  An optional id of the object to get, otherwise the id from the model state is used.
 	 *
@@ -114,7 +85,7 @@ class WorkflowModelTrigger extends JModelAdmin
 	protected function getReorderConditions($table = null)
 	{
 		$condition = array(
-			'transition_id = '.(int) $table->transition_id
+			'group = '.(int) $table->group
 		);
 
 		return $condition;
@@ -148,44 +119,9 @@ class WorkflowModelTrigger extends JModelAdmin
 
 		if (empty($data)) {
 			$data = $this->getItem();
-			if (empty($data->id)) {
-				$transition_id = JFactory::getApplication()->input->get('transition_id', '', 'int');
-				$data->transition_id = $transition_id;	
-			}else{
-				// Import the appropriate plugin group.
-				JPluginHelper::importPlugin('workflow');
-
-				// Get the dispatcher.
-				$dispatcher = JDispatcher::getInstance();
-
-				// Trigger the form preparation event.
-				$results = $dispatcher->trigger('onContentPrepareData', array('com_workflow.trigger', $data));
-
-				// Check for errors encountered while preparing the form.
-				if (count($results) && in_array(false, $results, true))
-				{
-					// Get the last error.
-					$error = $dispatcher->getError();
-
-					if (!($error instanceof Exception))
-					{
-						throw new Exception($error);
-					}
-				}	
-			}		
 		}
-		
+
 		return $data;
-	}
-	
-	/**
-	 * Modify form definition before ready for display
-	 * @see JModelForm::preprocessForm()
-	 */
-	public function preprocessForm(JForm $form, $data, $group='workflow') 
-	{	
-		// Call parent method to trigger onContentPrepareForm event
-		parent::preprocessForm($form, $data, $group);	
 	}
 
 	/**
@@ -200,6 +136,14 @@ class WorkflowModelTrigger extends JModelAdmin
 	{
 		jimport('joomla.filter.output');
 
+		// Prepare the alias.
+		$table->alias = JApplication::stringURLSafe($table->alias);
+
+		// If the alias is empty, prepare from the value of the title.
+		if (empty($table->alias)) {
+			$table->alias = JApplication::stringURLSafe($table->namespace);
+		}
+
 		if (empty($table->id)) {
 			// For a new record.
 
@@ -209,7 +153,7 @@ class WorkflowModelTrigger extends JModelAdmin
 				$query	= $db->getQuery(true);
 				$query->select('MAX(ordering)');
 				$query->from('#__wf_triggers');
-				$query->where('transition_id = '.(int) $table->transition_id);
+				$query->where('group = '. $table->group);
 				
 				$max = (int) $db->setQuery($query)->loadResult();
 				
@@ -249,99 +193,4 @@ class WorkflowModelTrigger extends JModelAdmin
  			$this->metakey = implode(', ', $newKeys);
 		}
 	}
-	
-	/**
-	 * Method to save the form data.
-	 *
-	 * @param   array  $data  The form data.
-	 *
-	 * @return  boolean  True on success, False on error.
-	 *
-	 */
-	public function save($data)
-	{
-		// Initialise variables;
-		$dispatcher = JDispatcher::getInstance();
-		$table = $this->getTable();
-		$key = $table->getKeyName();
-		$pk = (!empty($data[$key])) ? $data[$key] : (int) $this->getState($this->getName() . '.id');
-		$isNew = true;
-
-		// Include the content plugins for the on save events.
-		JPluginHelper::importPlugin('content');
-		// Include the content plugins for the on prepare data events.
-		JPluginHelper::importPlugin('workflow');
-		// Allow an exception to be thrown.
-		try
-		{
-			// Load the row if saving an existing record.
-			if ($pk > 0)
-			{
-				$table->load($pk);
-				$isNew = false;
-			}
-
-			// Load optional fields so they get bound when present
-			$result = $dispatcher->trigger('onContentPrepareData', array($this->option . '.' . $this->name, &$table));
-			if (in_array(false, $result, true)) {
-				$this->setError($dispatcher->getError());
-				return false;
-			}
-						
-			// Bind the data.
-			if (!$table->bind($data))
-			{
-				$this->setError($table->getError());
-				return false;
-			}
-
-			// Prepare the row for saving
-			$this->prepareTable($table);
-
-			// Check the data.
-			if (!$table->check())
-			{
-				$this->setError($table->getError());
-				return false;
-			}
-
-			// Trigger the onContentBeforeSave event.
-			$result = $dispatcher->trigger($this->event_before_save, array($this->option . '.' . $this->name, &$table, $isNew));
-			if (in_array(false, $result, true))
-			{
-				$this->setError($table->getError());
-				return false;
-			}
-
-			// Store the data.
-			if (!$table->store())
-			{
-				$this->setError($table->getError());
-				return false;
-			}
-
-			// Clean the cache.
-			$this->cleanCache();
-
-			// Trigger the onContentAfterSave event.
-			$dispatcher->trigger($this->event_after_save, array($this->option . '.' . $this->name, &$table, $isNew));
-		}
-		catch (Exception $e)
-		{
-			$this->setError($e->getMessage());
-
-			return false;
-		}
-
-		$pkName = $table->getKeyName();
-
-		if (isset($table->$pkName))
-		{
-			$this->setState($this->getName() . '.id', $table->$pkName);
-		}
-		$this->setState($this->getName() . '.new', $isNew);
-
-		return true;
-	}
-
 }

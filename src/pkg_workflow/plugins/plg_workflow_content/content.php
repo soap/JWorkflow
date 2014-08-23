@@ -4,7 +4,7 @@ jimport('joomla.plugin.plugin');
 /**
  * Workflow Content Plugin.
  *
- * @package     Workflow
+ * @package     JWorkflow
  * @subpackage  plg_workflow_content
  * @since       1.0
  */
@@ -116,7 +116,7 @@ class plgWorkflowContent extends JPlugin
 				} 
 
 				JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_workflow/tables');
-				$table = JTable::getInstance('Trigger', 'WorkflowTable');
+				$table = JTable::getInstance('Triggerinstance', 'WorkflowTable');
 				$table->load($data->id);
 				$table->trigger_config = json_encode($data->trigger_config);
 				
@@ -138,7 +138,7 @@ class plgWorkflowContent extends JPlugin
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('*')
-			->from('#__wf_plugins AS a')
+			->from('#__wf_triggers AS a')
 			->where('a.id = '.$id);
 			
 		$db->setQuery($query);
