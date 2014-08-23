@@ -435,3 +435,4 @@
 /index.php
 /joomla.xml
 /*.txt
+/src/pkg_workflow/components/com_workflow/.idea
