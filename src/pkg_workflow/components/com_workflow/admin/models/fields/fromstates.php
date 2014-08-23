@@ -33,6 +33,8 @@ class JFormFieldFromStates extends JFormFieldCheckboxes {
         
         if ($this->form->getValue('workflow_id')) {
         	$this->workflow = $this->form->getValue('workflow_id');	
+        }else{
+        	return array();
         }
 
         // Get field attributes for the database query
@@ -52,7 +54,7 @@ class JFormFieldFromStates extends JFormFieldCheckboxes {
         // Filter by state
         if (!is_null($state)) $query->where('a.published = ' . $db->quote($state));
 
-        $query->order('a.title');
+        $query->order('a.title ASC');
 
         $db->setQuery((string) $query);
         $items = (array) $db->loadObjectList();
@@ -68,7 +70,7 @@ class JFormFieldFromStates extends JFormFieldCheckboxes {
                 'text', 
                 ((string)$exclude == (string)$item->value)
             );
-
+			$opt->checked = '';
             // Add the option object to the result set.
             $options[] = $opt;
         }

@@ -37,28 +37,28 @@ $saveOrder	= $listOrder == 'a.ordering';
 						<?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
 					</th>
 					<th>
-						<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_STATE_COUNT', 'state_count', $listDirn, $listOrder); ?>
+						<?php echo JHtml::_('searchtools.sort', 'COM_WORKFLOW_HEADING_STATE_COUNT', 'state_count', $listDirn, $listOrder); ?>
 					</th>
 					<th>
-						<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_TRANSITION_COUNT', 'transition_count', $listDirn, $listOrder); ?>
+						<?php echo JHtml::_('searchtools.sort', 'COM_WORKFLOW_HEADING_TRANSITION_COUNT', 'transition_count', $listDirn, $listOrder); ?>
 					</th>
 					<th>
 						<?php echo JText::_('COM_WORKFLOW_HEADING_PROCESS')?>
 					</th>
 					<th width="5%">
-						<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.published', $listDirn, $listOrder); ?>
+						<?php echo JHtml::_('searchtools.sort', 'JPUBLISHED', 'a.published', $listDirn, $listOrder); ?>
 					</th>
 				<th width="10%">
-					<?php echo JHtml::_('grid.sort', 'JCATEGORY', 'a.category_id', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('searchtools.sort', 'JCATEGORY', 'a.category_id', $listDirn, $listOrder); ?>
 				</th>
 
 				<th width="10%">
-					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%" class="nowrap hidden-phone">
-					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_CREATED_BY', 'a.created_by', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_CREATED_BY', 'a.created_by', $listDirn, $listOrder); ?>
 				</th>
-				<th width="5%" class="nowrap hidden-phone">
+				<th width="10%" class="nowrap hidden-phone">
 					<?php echo JHtml::_('searchtools.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>
 				</th>
 				<th width="5%">

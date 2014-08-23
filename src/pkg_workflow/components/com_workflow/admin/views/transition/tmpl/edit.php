@@ -37,95 +37,54 @@ JHtml::_('script', 'com_workflow/workflow/form.js', false, true, false, false, f
 
 <form action="<?php echo JRoute::_('index.php?option=com_workflow&layout=edit&id='.(int) $this->item->id); ?>"
 	method="post" name="adminForm" id="transition-form" class="form-validate">
-	<div class="width-60 fltlft">
-		<fieldset class="adminform">
-			<ul class="adminformlist">
-				<li>
-					<?php echo $this->form->getLabel('title'); ?>
-					<?php echo $this->form->getInput('title'); ?>
-				</li>
-
-				<li>
-					<?php echo $this->form->getLabel('alias'); ?>
-					<?php echo $this->form->getInput('alias'); ?>
-				</li>
-
-				<li>
-					<?php echo $this->form->getLabel('workflow_id'); ?>
-					<?php echo $this->form->getInput('workflow_id'); ?>
-				</li>
-
-				<li>
-					<?php echo $this->form->getLabel('target_state_id'); ?>
-				</li>
-				<div id="jform_target_state_id_element">
-                    <div id="jform_target_state_id_reload">
-						<?php echo $this->form->getInput('target_state_id'); ?>
+	
+	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
+	
+	<div class="form-horizontal">
+		<?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'details')); ?>
+		
+		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details', empty($this->item->id) ? JText::_('COM_WORKFLOW_NEW_TRANSITION', true) : JText::_('COM_WORKFLOW_EDIT_TRANSITION', true)); ?>
+		<div class="row-fluid">
+			<div class="span9">
+				<div class="row-fluid form-horizontal-desktop">
+					<div class="span8">
+						<?php echo $this->form->renderField('workflow_id'); ?>
+						<?php echo $this->form->renderField('target_state_id'); ?>
+						<?php echo $this->form->renderField('system_path')?>
+						<?php echo $this->form->renderField('ordering'); ?>
+					</div>
+					<div class="span4">
+						<?php echo $this->form->renderField('fromstates')?>
 					</div>
 				</div>
-				
-				<li>
-					<?php echo $this->form->getLabel('system_path'); ?>
-					<?php echo $this->form->getInput('system_path'); ?>
-				</li>
-				
-				<li>
-					<?php echo $this->form->getLabel('published'); ?>
-					<?php echo $this->form->getInput('published'); ?>
-				</li>
+			</div>
+			<div class="span3">
+				<?php echo JLayoutHelper::render('joomla.edit.global', $this); ?>
+			</div>
+		</div>
+		<?php echo JHtml::_('bootstrap.endTab'); ?>
 
-				<li>
-					<?php echo $this->form->getLabel('ordering'); ?>
-					<?php echo $this->form->getInput('ordering'); ?>
-				</li>
+		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing', JText::_('JGLOBAL_FIELDSET_PUBLISHING', true)); ?>
+		<div class="row-fluid form-horizontal-desktop">
+			<div class="span6">
+				<?php echo JLayoutHelper::render('joomla.edit.publishingdata', $this); ?>
+			</div>
+			<div class="span6">
+				<?php echo JLayoutHelper::render('joomla.edit.metadata', $this); ?>
+			</div>
+		</div>
+		<?php echo JHtml::_('bootstrap.endTab'); ?>
 
-				<li>
-					<?php echo $this->form->getLabel('access'); ?>
-					<?php echo $this->form->getInput('access'); ?>
-				</li>
+		<?php echo JLayoutHelper::render('joomla.edit.params', $this); ?>
 
-				<li>
-					<?php echo $this->form->getLabel('language'); ?>
-					<?php echo $this->form->getInput('language'); ?>
-				</li>
-
-				<li>
-					<?php echo $this->form->getLabel('note'); ?>
-					<?php echo $this->form->getInput('note'); ?>
-				</li>
-			</ul>
-
-			<?php echo $this->form->getLabel('description'); ?>
-			<div class="clr"></div>
-			<?php echo $this->form->getInput('description'); ?>
-
-		</fieldset>
-	</div>
-	<div class="width-40 fltrt">
-		<?php echo JHtml::_('sliders.start','transition-sliders-'.$this->item->id, array('useCookie' => 1)); ?>
-		
-		<?php if ($this->item->id) :?>
-		<?php echo JHtml::_('sliders.panel',JText::_('COM_WORKFLOW_STATETRANSITION_SETTINGS'), 'fromstates'); ?>
-		<fieldset class="panelform">
-			<ul class="adminformlist">
-				<li>
-				<?php echo $this->form->getLabel('fromstates'); ?>
-				<?php echo $this->form->getInput('fromstates'); ?>
-				</li>
-			</ul>
-		</fieldset>
+		<?php if (isset($assoc)) : ?>
+			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'associations', JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS', true)); ?>
+			<?php echo JHtml::_('bootstrap.endTab'); ?>
 		<?php endif; ?>
-		<?php echo $this->loadTemplate('params'); ?>
 
-		<?php //echo $this->loadTemplate('metadata'); ?>
-		<?php echo JHtml::_('sliders.end'); ?>
-
+		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 	</div>
-	<div class="clr"></div>
-	
-	<?php echo $this->form->getInput('elements'); ?>
-	<input type="hidden" name="view" value="<?php echo htmlspecialchars($this->get('Name'), ENT_COMPAT, 'UTF-8');?>" />
-	
 	<input type="hidden" name="task" value="" />
+	<input type="hidden" name="view" value="transition" />
 	<?php echo JHtml::_('form.token'); ?>
 </form>

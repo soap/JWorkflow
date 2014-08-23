@@ -78,6 +78,12 @@ class WorkflowHelper
 			$vName == 'transitions'
 		);
 		
+		/*JHtmlSidebar::addEntry(
+			JText::_('COM_WORKFLOW_SUBMENU_ROLES'),
+			'index.php?option=com_workflow&view=roles',
+			$vName == 'roles'
+		);*/
+				
 		if ($vName == 'triggers') {
 			JHtmlSidebar::addEntry(
 				JText::_('COM_WORKFLOW_SUBMENU_TRIGGERS'),
@@ -98,11 +104,6 @@ class WorkflowHelper
 			$vName == 'install'
 		);	
 		
-		JHtmlSidebar::addEntry(
-			JText::_('COM_WORKFLOW_SUBMENU_ROLES'),
-			'index.php?option=com_workflow&view=roles',
-			$vName == 'roles'
-		);	
 	}
 
 	
