@@ -21,22 +21,22 @@ final class WFVersion
     public $PRODUCT = 'Workflow';
 
     /** @var  string  Release version. */
-    public $RELEASE = '1.1';
+    public $RELEASE = '1.5';
 
     /** @var  string  Maintenance version. */
-    public $DEV_LEVEL = '8';
+    public $DEV_LEVEL = '0';
 
     /** @var  string  Development status. */
     public $DEV_STATUS = 'RC';
 
     /** @var  string  Build number. */
-    public $BUILD = '2';
+    public $BUILD = '1';
 
     /** @var  string  Code name. */
-    public $CODENAME = 'Meemee';
+    public $CODENAME = 'Nada';
 
     /** @var  string  Release date. */
-    public $RELDATE = '27-Feb-2014';
+    public $RELDATE = '31-Aug-2014';
 
     /** @var  string  Release time. */
     public $RELTIME = '20:00';
