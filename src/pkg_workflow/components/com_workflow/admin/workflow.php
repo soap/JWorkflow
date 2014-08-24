@@ -12,8 +12,8 @@ jimport('workflow.framework');
 
 //@todo Fix this CONSTANT not defined in library
 // define guard/action plugin path
-if (!defined('WFPATH_PLUGINS')) {
-	define('WFPATH_PLUGINS', JPATH_ADMINISTRATOR.'/components/com_workflow/plugins');
+if (!defined('WFPATH_TRIGGERS')) {
+	define('WFPATH_TRIGGERS', JPATH_ADMINISTRATOR.'/components/com_workflow/plugins');
 }
 
 // Register our JHtmlRegonline class to Joomla libraries

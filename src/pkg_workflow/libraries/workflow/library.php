@@ -16,8 +16,8 @@ if (!defined('JPATH_PLATFORM')) {
 }
 
 // define guard/action plugin path
-if (!defined('WFPATH_PLUGINS')) {
-	define('WFPATH_PLUGINS', JPATH_ADMINISTRATOR.'/components/com_workflow/plugins');
+if (!defined('WFPATH_TRIGGERS')) {
+	define('WFPATH_TRIGGERS', JPATH_ADMINISTRATOR.'/components/com_workflow/plugins');
 }
 // Register the Workflow library
 JLoader::registerPrefix('WF', JPATH_PLATFORM . '/workflow');

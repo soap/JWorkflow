@@ -178,11 +178,11 @@ class plgAbstractTrigger {
    		}	
    		
    		$lang = JFactory::getLanguage();
-   		if (!defined('WFPATH_PLUGINS')) {
+   		if (!defined('WFPATH_TRIGGERS')) {
    			$_path = JPATH_ADMINISTRATOR.'/components/com_workflow/plugins';
-   			define('WFPATH_PLUGINS', $_path);
+   			define('WFPATH_TRIGGERS', $_path);
    		}else{
-   			$_path = WFPATH_PLUGINS;
+   			$_path = WFPATH_TRIGGERS;
    		}
    		
 		return $lang->load(strtolower($extension), $_path . '/' . $this->_type . '/' . $this->_name, null, false, false)

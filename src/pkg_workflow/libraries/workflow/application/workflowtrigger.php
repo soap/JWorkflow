@@ -175,7 +175,7 @@ class plgAbstractTrigger {
    		}	
    		
    		$lang = JFactory::getLanguage();
-		return $lang->load(strtolower($extension), 'WFPATH_PLUGINS' . '/' . $this->_type . '/' . $this->_name, null, false, false)
-			|| $lang->load(strtolower($extension), 'WFPATH_PLUGINS' . '/' . $this->_type . '/' . $this->_name, $lang->getDefault(), false, false);
+		return $lang->load(strtolower($extension), 'WFPATH_TRIGGERS' . '/' . $this->_type . '/' . $this->_name, null, false, false)
+			|| $lang->load(strtolower($extension), 'WFPATH_TRIGGERS' . '/' . $this->_type . '/' . $this->_name, $lang->getDefault(), false, false);
    	}
 }

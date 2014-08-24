@@ -34,7 +34,7 @@ class plgWorkflowContent extends JPlugin
 		} 
 		$plugin = $this->getPlugin($data->plugin_id);
 		if ($plugin) {
-			$path = WFPATH_PLUGINS . '/' . $plugin->group . '/' .$plugin->name;
+			$path = WFPATH_TRIGGERS . '/' . $plugin->group . '/' .$plugin->name;
 			JForm::addFormPath($path . '/forms');
 			JFormHelper::addFieldPath($path . '/fields');
 			
@@ -61,7 +61,7 @@ class plgWorkflowContent extends JPlugin
 			if (!empty($data->plugin_id)) {
 				$plugin = $this->getPlugin($data->plugin_id);
 				if ($plugin) {
-					$path = WFPATH_PLUGINS . '/' . $plugin->group . '/' .$plugin->name;
+					$path = WFPATH_TRIGGERS . '/' . $plugin->group . '/' .$plugin->name;
 					JForm::addFormPath($path . '/forms');
 					JFormHelper::addFieldPath($path . '/fields');
 			
