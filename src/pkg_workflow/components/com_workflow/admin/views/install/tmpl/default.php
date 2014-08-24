@@ -1,8 +1,8 @@
-
 <?php
 defined('_JEXEC') or die;
 
 JHtml::_('bootstrap.tooltip');
+JHtml::_('behavior.framework');
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function()
@@ -136,7 +136,7 @@ JHtml::_('bootstrap.tooltip');
 
 	<input type="hidden" name="type" value="" />
 	<input type="hidden" name="installtype" value="upload" />
-	<input type="hidden" name="task" value="workflow.install" />
+	<input type="hidden" name="task" value="install.install" />
 	<?php echo JHtml::_('form.token'); ?>
 
 	<?php echo JHtml::_('bootstrap.endTabSet'); ?>

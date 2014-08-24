@@ -85,7 +85,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 
 		if (!$source)
 		{
-			$this->parent->setPath('source', JPATH_PLUGINS . '/' . $this->parent->extension->folder . '/' . $this->parent->extension->element);
+			$this->parent->setPath('source', WFPATH_TRIGGERS . '/' . $this->parent->extension->folder . '/' . $this->parent->extension->element);
 		}
 
 		$this->manifest = $this->parent->getManifest();
@@ -100,9 +100,9 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 			{
 				foreach ($element->children() as $file)
 				{
-					if ((string) $file->attributes()->plugin)
+					if ((string) $file->attributes()->trigger)
 					{
-						$name = strtolower((string) $file->attributes()->plugin);
+						$name = strtolower((string) $file->attributes()->trigger);
 						break;
 					}
 				}
@@ -202,9 +202,9 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 
 		// Check to see if a plugin by the same name is already installed.
 		$query = $db->getQuery(true)
-			->select($db->quoteName('extension_id'))
-			->from($db->quoteName('#__extensions'))
-			->where($db->quoteName('folder') . ' = ' . $db->quote($group))
+			->select($db->quoteName('id'))
+			->from($db->quoteName('#__wf_triggers'))
+			->where($db->quoteName('group') . ' = ' . $db->quote($group))
 			->where($db->quoteName('element') . ' = ' . $db->quote($element));
 		$db->setQuery($query);
 
@@ -432,10 +432,10 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 		{
 			// Store in the extensions table (1.6)
 			$row->name = $this->get('name');
-			$row->type = 'plugin';
+			$row->type = 'trigger';
 			$row->ordering = 0;
 			$row->element = $element;
-			$row->folder = $group;
+			$row->group = $group;
 			$row->enabled = 0;
 			$row->protected = 0;
 			$row->access = 1;
@@ -450,7 +450,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 			$row->manifest_cache = $this->parent->generateManifestCache();
 
 			// Editor plugins are published by default
-			if ($group == 'editors')
+			if ($group == 'guard')
 			{
 				$row->enabled = 1;
 			}
@@ -468,8 +468,8 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 
 			// Since we have created a plugin item, we add it to the installation step stack
 			// so that if we have to rollback the changes we can undo it.
-			$this->parent->pushStep(array('type' => 'extension', 'id' => $row->extension_id));
-			$id = $row->extension_id;
+			$this->parent->pushStep(array('type' => 'extension', 'id' => $row->id));
+			$id = $row->id;
 		}
 
 		// Let's run the queries for the plugin
@@ -918,15 +918,3 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 	}
 }
 
-/**
- * Deprecated class placeholder. You should use JInstallerAdapterPlugin instead.
- *
- * @package     Joomla.Libraries
- * @subpackage  Installer
- * @since       3.1
- * @deprecated  4.0
- * @codeCoverageIgnore
- */
-class JInstallerPlugin extends JInstallerAdapterPlugin
-{
-}

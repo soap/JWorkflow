@@ -17,11 +17,11 @@ if (!defined('JPATH_PLATFORM')) {
 
 // define guard/action plugin path
 if (!defined('WFPATH_TRIGGERS')) {
-	define('WFPATH_TRIGGERS', JPATH_ADMINISTRATOR.'/components/com_workflow/plugins');
+	define('WFPATH_TRIGGERS', JPATH_ADMINISTRATOR.'/components/com_workflow/triggers');
 }
 // Register the Workflow library
 JLoader::registerPrefix('WF', JPATH_PLATFORM . '/workflow');
-
+JLoader::register('JInstallerAdapterTrigger', JPATH_PLATFORM . '/workflow/installer/adapter/trigger.php');
 
 // Add include paths
 JHtml::addIncludePath(JPATH_PLATFORM . '/workflow/html');
