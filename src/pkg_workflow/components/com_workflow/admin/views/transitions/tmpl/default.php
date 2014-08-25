@@ -139,12 +139,12 @@ $saveOrder	= $listOrder == 'a.ordering';
 						<?php echo $this->escape($item->target_state_title)?>
 					</td>
 					<td class="center">
-						<a href="<?php echo JRoute::_('index.php?option=com_workflow&task=transition.triggers&id='.$item->id.'&filter_type=1');?>">
+						<a href="<?php echo JRoute::_('index.php?option=com_workflow&task=transition.triggerinstances&id='.$item->id.'&filter_type=guard');?>">
 							<?php echo $item->guard_count?>
 						</a>
 					</td>
 					<td class="center">
-						<a href="<?php echo JRoute::_('index.php?option=com_workflow&task=transition.triggers&id='.$item->id.'&filter_type=2');?>">
+						<a href="<?php echo JRoute::_('index.php?option=com_workflow&task=transition.triggerinstances&id='.$item->id.'&filter_type=action');?>">
 							<?php echo $item->action_count?>
 						</a>
 					</td>				

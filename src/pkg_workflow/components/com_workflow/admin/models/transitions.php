@@ -75,10 +75,6 @@ class WorkflowModelTransitions extends JModelList
 		$this->setState('filter.workflow_id', $value);
 		// Set as active workflow
 		$app->setUserState('com_workflow.filter.workflow_id', $value);
-		
-		$value = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
-		$this->setState('filter.language', $value);
-
 
 		// Set list state ordering defaults.
 		parent::populateState($ordering, $direction);
@@ -99,14 +95,14 @@ class WorkflowModelTransitions extends JModelList
 		
 		$sub_query->select('COUNT(*)')
 			->from('#__wf_trigger_instances AS g')
-			->join('LEFT', '#__wf_triggers AS pl ON pl.id=g.plugin_id')
+			->join('LEFT', '#__wf_triggers AS pl ON pl.id=g.trigger_id')
 			->where('g.transition_id = a.id')
 			->where('pl.folder = '.$db->quote('guard'));
 			
 		$sub_query2 = $db->getQuery(true);
 		$sub_query2->select('COUNT(*)')
 			->from('#__wf_trigger_instances AS g2')
-			->join('LEFT', '#__wf_triggers AS pl2 ON pl2.id=g2.plugin_id')
+			->join('LEFT', '#__wf_triggers AS pl2 ON pl2.id=g2.trigger_id')
 			->where('g2.transition_id = a.id')
 			->where('pl2.folder = '.$db->quote('action'));			
 		// Select the required fields from the table.
@@ -114,16 +110,12 @@ class WorkflowModelTransitions extends JModelList
 			$this->getState(
 				'list.select',
 				'a.id, a.title, a.alias, a.checked_out, a.checked_out_time, a.workflow_id, ' .
-				'a.target_state_id, a.published, a.access, a.created, a.ordering, a.language,' .
+				'a.target_state_id, a.published, a.access, a.created, a.ordering, ' .
 				'('.$sub_query.') AS guard_count, ' .
 				'('.$sub_query2.') AS action_count ' 
 			)
 		);
 		$query->from('#__wf_transitions AS a');
-
-		// Join over the language
-		$query->select('l.title AS language_title');
-		$query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
 
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
@@ -178,11 +170,6 @@ class WorkflowModelTransitions extends JModelList
 			JArrayHelper::toInteger($workflowId);
 			$workflowId = implode(',', $categoryId);
 			$query->where('a.workflow_id IN ('.$workflowId.')');
-		}
-
-		// Filter on the language.
-		if ($language = $this->getState('filter.language')) {
-			$query->where('a.language = '.$db->quote($language));
 		}
 
 

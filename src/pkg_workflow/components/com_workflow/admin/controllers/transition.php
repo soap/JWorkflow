@@ -13,13 +13,13 @@ jimport('joomla.application.component.controllerform');
 class WorkflowControllerTransition extends JControllerForm
 {
 	
-	public function triggers($key = null, $urlVar = null) 
+	public function triggerinstances($key = null, $urlVar = null) 
 	{
 		$recordId = JFactory::getApplication()->input->get('id', null, 'int');
 		// Redirect to the edit screen.
 		$this->setRedirect(
 			JRoute::_(
-				'index.php?option=' . $this->option . '&view=triggers'
+				'index.php?option=' . $this->option . '&view=triggerinstances'
 				. $this->getRedirectToTriggersAppend($recordId), false
 			)
 		);

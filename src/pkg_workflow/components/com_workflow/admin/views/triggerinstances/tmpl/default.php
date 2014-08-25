@@ -8,8 +8,7 @@ $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_workflow&view=triggerinstances');?>" method="post" name="adminForm" id="adminForm">
-	<strong><?php echo $this->workflow->title.' --> '.$this->transition->title?></strong>
-	<hr />
+
 <?php if (!empty( $this->sidebar)) : ?>
 	<div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>
@@ -18,7 +17,9 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 <?php else : ?>
 	<div id="j-main-container">
 <?php endif;?>
-	<table class="adminlist">
+	<span class="label label-primary"><?php echo $this->workflow->title?></span>
+	<span class="label label-info"><?php echo $this->transition->title?></span>
+	<table class="table table-striped">
 		<thead>
 			<tr>
 				<th width="1%">
@@ -30,15 +31,11 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				<th width="10%">
 					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_TRIGGER_TYPE', 'p.group', $listDirn, $listOrder); ?>					
 				</th>
-				<th width="10%">
+				<th width="20%">
 					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_TRANSITION', 'a.transition_id', $listDirn, $listOrder); ?>
 				</th>				
 				<th width="5%">
 					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.published', $listDirn, $listOrder); ?>
-				</th>
-				<th width="10%" class="nowrap">
-					<?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ORDERING', 'a.ordering', $listDirn, $listOrder); ?>
-					<?php echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'guards.saveorder'); ?>
 				</th>
 				<th width="10%">
 					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_CREATED_BY', 'a.created_by', $listDirn, $listOrder); ?>
@@ -92,22 +89,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php echo $this->escape($item->transition_title); ?>
 				</td>				
 				<td class="center">
-					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'triggers.', $canChange); ?>
-				</td>
-				<td class="order">
-					<?php if ($canChange) : ?>
-						<span><?php echo $this->pagination->orderUpIcon($i,
-							($item->transition_id == @$this->items[$i-1]->transition_id),
-							'guards.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-						<span><?php echo $this->pagination->orderDownIcon($i,
-							$this->pagination->total,
-							($item->transition_id == @$this->items[$i+1]->transition_id),
-							'guards.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
-						<?php $disabled = $ordering ?  '' : 'disabled="disabled"'; ?>
-						<input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" <?php echo $disabled ?> class="text-area-order" />
-					<?php else : ?>
-						<?php echo (int) $item->ordering; ?>
-					<?php endif; ?>
+					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'triggerinstances.', $canChange); ?>
 				</td>
 				<td class="center">
 					<?php echo $this->escape($item->author_name); ?>

@@ -78,8 +78,8 @@ class WorkflowModelTriggerinstances extends JModelList
 		$query->select('ua.name AS author_name');
 		$query->join('LEFT', '#__users AS ua ON ua.id = a.created_by');
 		
-		$query->select('p.group AS trigger_type');
-		$query->join('LEFT', '#__wf_triggers AS p ON p.id = a.plugin_id');
+		$query->select('p.folder AS trigger_type');
+		$query->join('LEFT', '#__wf_triggers AS p ON p.id = a.trigger_id');
 
 		// Filter by search in title
 		$search = $this->getState('filter.search');
@@ -104,11 +104,13 @@ class WorkflowModelTriggerinstances extends JModelList
 		$type = $this->getState('filter.type');
 		if(is_numeric($type)) {
 			if ($type == '1') {
-				$query->where('p.group = ' . $db->quote('guard'));
+				$query->where('p.folder = ' . $db->quote('guard'));
 			}
 			if ($type == '2') {
-				$query->where('p.group = ' . $db->quote('action'));
+				$query->where('p.folder = ' . $db->quote('action'));
 			}			
+		}else{
+			$query->where('p.folder='.$db->quote($type));
 		}
 		
 		// Filter by a single or group of categories.

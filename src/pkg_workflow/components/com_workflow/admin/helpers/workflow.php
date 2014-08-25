@@ -78,6 +78,13 @@ class WorkflowHelper
 			$vName == 'transitions'
 		);
 		
+		if ($vName == 'triggerinstances') {
+			JHtmlSidebar::addEntry(
+			JText::_('COM_WORKFLOW_SUBMENU_INSTANCES'),
+			'index.php?option=com_workflow&view=triggerinstances',
+			$vName == 'triggerinstances'
+					);
+		}		
 		/*JHtmlSidebar::addEntry(
 			JText::_('COM_WORKFLOW_SUBMENU_ROLES'),
 			'index.php?option=com_workflow&view=roles',
@@ -89,14 +96,6 @@ class WorkflowHelper
 			'index.php?option=com_workflow&view=triggers',
 			$vName == 'triggers'
 		);
-				
-		if ($vName == 'triggers') {
-			JHtmlSidebar::addEntry(
-				JText::_('COM_WORKFLOW_SUBMENU_INSTANCES'),
-				'index.php?option=com_workflow&view=triggerinstances',
-				$vName == 'triggerinstances'
-			);	
-		}
 
 		JHtmlSidebar::addEntry(
 			JText::_('COM_WORKFLOW_SUBMENU_INSTALL'),
