@@ -17,7 +17,7 @@
 			<option value="">JOPTION_SELECT_PUBLISHED</option>
 		</field>
 		<field
-			name="group"
+			name="folder"
 			type="list"
 			label="COM_WORKFLOW_OPTION_FILTER_GROUP"
 			description="COM_WORKFLOW_OPTION_FILTER_DESC"
@@ -62,8 +62,8 @@
 			<option value="a.state DESC">JSTATUS_DESC</option>
 			<option value="a.title ASC">JGLOBAL_TITLE_ASC</option>
 			<option value="a.title DESC">JGLOBAL_TITLE_DESC</option>
-			<option value="group ASC">COM_WORKFLOW_GROUP_ASC</option>
-			<option value="group DESC">COM_WORKFLOW_GROUP_DESC</option>
+			<option value="a.folder ASC">COM_WORKFLOW_GROUP_ASC</option>
+			<option value="a.folder DESC">COM_WORKFLOW_GROUP_DESC</option>
 			<option value="association ASC" requires="associations">JASSOCIATIONS_ASC</option>
 			<option value="association DESC" requires="associations">JASSOCIATIONS_DESC</option>
 			<option value="a.access ASC">JGRID_HEADING_ACCESS_ASC</option>

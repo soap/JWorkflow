@@ -71,10 +71,6 @@ $saveOrder	= $listOrder == 'a.ordering';
 						<?php echo JHtml::_('grid.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>
 					</th>
 				
-					<th width="5%">
-						<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
-					</th>
-				
 					<th width="1%" class="nowrap">
 						<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
 					</th>
@@ -168,13 +164,6 @@ $saveOrder	= $listOrder == 'a.ordering';
 					</td>
 					<td class="center">
 						<?php echo JHTML::_('date',$item->created, 'Y-m-d'); ?>
-					</td>
-					<td class="center">
-						<?php if ($item->language == '*'): ?>
-							<?php echo JText::_('JALL'); ?>
-						<?php else: ?>
-							<?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
-						<?php endif; ?>
 					</td>
 					<td class="center">
 						<?php echo (int) $item->id; ?>

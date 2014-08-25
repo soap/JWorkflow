@@ -137,14 +137,14 @@ class WorkflowModelTriggers extends JModelList
 		// Filter by a single or group of categories.
 		$folder = $this->getState('filter.folder');
 		if ($folder) {
-			$query->where('a.folder=('.$folder.')');
+			$query->where('a.folder='.$db->quote($folder));
 		}
 	    
 		// Add the list ordering clause.
 		$orderCol	= $this->state->get('list.ordering');
 		$orderDirn	= $this->state->get('list.direction');
-		if ($orderCol == 'a.ordering' || $orderCol == 'category_title') {
-			$orderCol = 'category_title '.$orderDirn.', a.ordering';
+		if ($orderCol == 'a.ordering' || $orderCol == 'a.folder') {
+			$orderCol = 'a.folder '.$orderDirn.', a.ordering';
 		}
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 

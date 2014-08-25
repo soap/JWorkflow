@@ -72,9 +72,6 @@ class WorkflowModelWorkflows extends JModelList
 		$value = $app->getUserStateFromRequest($this->context.'.filter.category_id', 'filter_category_id');
 		$this->setState('filter.category_id', $value);
 
-		$value = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
-		$this->setState('filter.language', $value);
-
 		// Set list state ordering defaults.
 		parent::populateState($ordering, $direction);
 	}
@@ -156,11 +153,6 @@ class WorkflowModelWorkflows extends JModelList
 			JArrayHelper::toInteger($categoryId);
 			$categoryId = implode(',', $categoryId);
 			$query->where('a.category_id IN ('.$categoryId.')');
-		}
-
-		// Filter on the language.
-		if ($language = $this->getState('filter.language')) {
-			$query->where('a.language = '.$db->quote($language));
 		}
 		
 		// Add the list ordering clause.

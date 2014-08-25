@@ -70,9 +70,6 @@ class WorkflowModelBindings extends JModelList
 
 		$value = $app->getUserStateFromRequest($this->context.'.filter.workflow_', 'filter_workflow_id');
 		$this->setState('filter.workflow_id', $value);
-
-		$value = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
-		$this->setState('filter.language', $value);
 		
 		// Set list state ordering defaults.
 		parent::populateState($ordering, $direction);
@@ -153,11 +150,6 @@ class WorkflowModelBindings extends JModelList
 			JArrayHelper::toInteger($workflowId);
 			$workflowId = implode(',', $workflowId);
 			$query->where('a.workflow_id IN ('.$workflowId.')');
-		}
-
-		// Filter on the language.
-		if ($language = $this->getState('filter.language')) {
-			$query->where('a.language = '.$db->quote($language));
 		}
 
 

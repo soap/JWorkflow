@@ -85,7 +85,7 @@ class WorkflowModelTrigger extends JModelAdmin
 	protected function getReorderConditions($table = null)
 	{
 		$condition = array(
-			'group = '.(int) $table->group
+			'folder = '.$table->folder
 		);
 
 		return $condition;
@@ -136,14 +136,6 @@ class WorkflowModelTrigger extends JModelAdmin
 	{
 		jimport('joomla.filter.output');
 
-		// Prepare the alias.
-		$table->alias = JApplication::stringURLSafe($table->alias);
-
-		// If the alias is empty, prepare from the value of the title.
-		if (empty($table->alias)) {
-			$table->alias = JApplication::stringURLSafe($table->namespace);
-		}
-
 		if (empty($table->id)) {
 			// For a new record.
 
@@ -153,7 +145,7 @@ class WorkflowModelTrigger extends JModelAdmin
 				$query	= $db->getQuery(true);
 				$query->select('MAX(ordering)');
 				$query->from('#__wf_triggers');
-				$query->where('group = '. $table->group);
+				$query->where('folder = '. $table->folder);
 				
 				$max = (int) $db->setQuery($query)->loadResult();
 				
@@ -166,31 +158,5 @@ class WorkflowModelTrigger extends JModelAdmin
 			}
 		}
 
-		// Clean up keywords -- eliminate extra spaces between phrases
-		// and cr (\r) and lf (\n) characters from string
-		if (!empty($this->metakey)) {
-			// Only process if not empty.
-
-			// array of characters to remove.
-			$strip = array("\n", "\r", '"', '<', '>');
-			
-			// Remove bad characters.
-			$clean = JString::str_ireplace($strip, ' ', $this->metakey); 
-
-			// Create array using commas as delimiter.
-			$oldKeys = explode(',', $clean);
-			$newKeys = array();
-			
-			foreach ($oldKeys as $key)
-			{
-				// Ignore blank keywords
-				if (trim($key)) {
-					$newKeys[] = trim($key);
-				}
-			}
-
- 			// Put array back together, comma delimited.
- 			$this->metakey = implode(', ', $newKeys);
-		}
 	}
 }

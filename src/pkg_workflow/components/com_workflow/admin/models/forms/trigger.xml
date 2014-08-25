@@ -10,44 +10,29 @@
 			class="readonly"
 			size="10"
 			readonly="true"  />
-
-		<field name="transition_id"
-			type="transition"
-			label="COM_WORKFLOW_FIELD_TRANSITION_LABEL"
-			description="COM_WORKFLOW_FIELD_TRANSITION_DESC"
-			size="45"
-			readonly="true" />
 			
-		<field name="plugin_id"
-			type="plugin"
-			state="1"
-			label="COM_WORKFLOW_FIELD_PLUGIN_LABEL"
-			description="COM_WORKFLOW_FIELD_PLUGIN_DESC"
-			class="inputbox"
-			required="true" />
+		<field name="folder"
+			type="text"
+			label="COM_WORKFLOW_FIELD_GROUP_LABEL"
+			description="COM_WORKFLOW_FIELD_GROUP_DESC"
+			class="inputbox readonly"
+			readonly="true" />
+
+		<field name="name"
+			type="text"
+			label="COM_WORKFLOW_FIELD_NAME_LABEL"
+			description="COM_WORFKLOW_FIELD_NAME_DESC"
+			class="inputbox readonly"
+			size="50"
+			readonly="true"/>
 			
 		<field name="namespace"
 			type="text"
 			label="COM_WORKFLOW_FIELD_NAMESPACE_LABEL"
 			description="COM_WORKFLOW_FIELD_NAMESPACE_DESC"
 			class="inputbox readonly"
-			size="55"
-			readonly="true" />
-						
-		<field name="title"
-			type="text"
-			label="JGLOBAL_TITLE"
-			description="JFIELD_TITLE_DESC"
-			class="inputbox"
-			size="55"
-			required="true" />
-			
-		<field name="note"
-			type="text"
-			label="JFIELD_NOTE_LABEL"
-			description="JFIELD_NOTE_DESC"
-			class="inputbox"
-			size="45" />
+			size="50"
+			readonly="true"/>
 
 		<field name="published"
 			type="list"
@@ -72,6 +57,13 @@
 			default="0"
 			class="inputbox"
 			size="6" />
+
+		<field name="access"
+			type="accesslevel"
+			label="JFIELD_ACCESS_LABEL"
+			description="JFIELD_ACCESS_DESC"
+			class="inputbox"
+			size="1" />
 
 		<field name="metadesc"
 			type="textarea"
@@ -123,18 +115,5 @@
 			readonly="true"
 			filter="unset" />
 	</fieldset>
-
-	<fields name="params">
-		<fieldset name="basic" label="COM_WORKFLOW_BASIC_PARAMS_FIELDSET_LABEL">
-			<field name="show_title"
-				type="list"
-				label="JGLOBAL_SHOW_TITLE_LABEL"
-				description="COM_WORKFLOW_PARAM_SHOW_TITLE_DESC">
-				<option value="">JGLOBAL_USE_GLOBAL</option>
-				<option value="0">JHIDE</option>
-				<option value="1">JSHOW</option>
-			</field>
-		</fieldset>
-	</fields>
 
 </form>

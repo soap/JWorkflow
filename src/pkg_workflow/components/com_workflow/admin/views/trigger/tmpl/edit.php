@@ -9,9 +9,8 @@ JHtml::_('behavior.keepalive');
 	// Attach a behaviour to the submit button to check validation.
 	Joomla.submitbutton = function(task)
 	{
-		var form = document.id('guard-form');
-		if (task == 'trigger.cancel' || document.formvalidator.isValid(form)) {
-			<?php //echo $this->form->getField('description')->save(); ?>
+		var form = document.id('plugin-form');
+		if (task == 'plugin.cancel' || document.formvalidator.isValid(form)) {
 			Joomla.submitform(task, form);
 		}
 		else {
@@ -33,63 +32,25 @@ JHtml::_('behavior.keepalive');
 </script>
 
 <form action="<?php echo JRoute::_('index.php?option=com_workflow&layout=edit&id='.(int) $this->item->id); ?>"
-	method="post" name="adminForm" id="guard-form" class="form-validate">
-	<div class="width-60 fltlft">
-		<fieldset class="adminform">
-			<ul class="adminformlist">
-				<li>
-					<?php echo $this->form->getLabel('id'); ?>
-					<?php echo $this->form->getInput('id'); ?>
-				</li>
-				
-				<li>
-					<?php echo $this->form->getLabel('title'); ?>
-					<?php echo $this->form->getInput('title'); ?>
-				</li>
-								
-				<li>
-					<?php echo $this->form->getLabel('transition_id'); ?>
-					<?php echo $this->form->getInput('transition_id'); ?>
-				</li>
-							
-				<li>
-					<?php echo $this->form->getLabel('plugin_id'); ?>
-					<?php echo $this->form->getInput('plugin_id'); ?>
-				</li>
-				
-				<li>
-					<?php echo $this->form->getLabel('namespace'); ?>
-					<?php echo $this->form->getInput('namespace'); ?>
-				</li>
-				
-				<li>
-					<?php echo $this->form->getLabel('published'); ?>
-					<?php echo $this->form->getInput('published'); ?>
-				</li>
-
-				<li>
-					<?php echo $this->form->getLabel('ordering'); ?>
-					<?php echo $this->form->getInput('ordering'); ?>
-				</li>
-
-				<li>
-					<?php echo $this->form->getLabel('note'); ?>
-					<?php echo $this->form->getInput('note'); ?>
-				</li>
-			</ul>
-
-		</fieldset>
+	method="post" name="adminForm" id="plugin-form" class="form-validate">
+	<div class="form-horizontal">
+		<div class="row-fluid">
+			<div class="span9">
+				<div class="row-fluid form-horizontal-desktop">
+					<div class="span10">
+						<?php echo $this->form->renderField('namespace'); ?>
+						<?php echo $this->form->renderField('group'); ?>
+						<?php echo $this->form->renderField('element'); ?>
+					</div>
+					<div class="span2">
+					</div>
+				</div>
+			</div>
+			<div class="span3">
+				<?php echo JLayoutHelper::render('joomla.edit.global', $this); ?>
+			</div>
+		</div>
 	</div>
-	<div class="width-40 fltrt">
-		<?php echo JHtml::_('sliders.start','trigger-sliders-'.$this->item->id, array('useCookie' => 1)); ?>
-
-		<?php echo $this->loadTemplate('config'); ?>
-		<?php echo $this->loadTemplate('metadata'); ?>
-		<?php echo JHtml::_('sliders.end'); ?>
-
-	</div>
-	<div class="clr"></div>
-
 	<input type="hidden" name="task" value="" />
 	<?php echo JHtml::_('form.token'); ?>
 </form>

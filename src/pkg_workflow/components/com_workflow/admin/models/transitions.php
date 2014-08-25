@@ -101,14 +101,14 @@ class WorkflowModelTransitions extends JModelList
 			->from('#__wf_trigger_instances AS g')
 			->join('LEFT', '#__wf_triggers AS pl ON pl.id=g.plugin_id')
 			->where('g.transition_id = a.id')
-			->where('pl.group = '.$db->quote('guard'));
+			->where('pl.folder = '.$db->quote('guard'));
 			
 		$sub_query2 = $db->getQuery(true);
 		$sub_query2->select('COUNT(*)')
 			->from('#__wf_trigger_instances AS g2')
 			->join('LEFT', '#__wf_triggers AS pl2 ON pl2.id=g2.plugin_id')
 			->where('g2.transition_id = a.id')
-			->where('pl2.group = '.$db->quote('action'));			
+			->where('pl2.folder = '.$db->quote('action'));			
 		// Select the required fields from the table.
 		$query->select(
 			$this->getState(
