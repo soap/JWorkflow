@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="3.1" type="trigger" group="action" methdo="upgrade">
+<extension version="3.1" type="trigger" group="action" method="upgrade">
 	<name>plg_action_contentupdate</name>
+	<namespance>Workflow.Transition.Guard.Action.Contentupdate</namespance>
 	<author>Prasit Gebsaap</author>
 	<creationDate>February 2014</creationDate>
 	<copyright>Copyright (C) 2005 - 2014 Prasit Gebsaap. All rights reserved.</copyright>

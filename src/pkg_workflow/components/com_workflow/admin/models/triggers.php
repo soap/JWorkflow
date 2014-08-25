@@ -97,7 +97,7 @@ class WorkflowModelTriggers extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.namespace, a.group, a.name, a.checked_out, a.checked_out_time,' .
+				'a.id, a.namespace, a.folder, a.name, a.checked_out, a.checked_out_time,' .
 				'a.published, a.access, a.created, a.ordering, a.language'
 			)
 		);
@@ -114,11 +114,6 @@ class WorkflowModelTriggers extends JModelList
 		// Join over the asset groups.
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
-		
-		// Join over the categories.
-		$query->select('c.title AS category_title');
-		$query->join('LEFT', '#__categories AS c ON c.id = a.group');
-		
 		
 		// Join over the users for the author.
 		$query->select('ua.name AS author_name');
@@ -151,12 +146,12 @@ class WorkflowModelTriggers extends JModelList
 		// Filter by a single or group of categories.
 		$categoryId = $this->getState('filter.category_id');
 		if (is_numeric($categoryId)) {
-			$query->where('a.group IN ('.$categoryId.')');
+			$query->where('a.folder IN ('.$categoryId.')');
 		}
 		else if (is_array($categoryId)) {
 			JArrayHelper::toInteger($categoryId);
 			$categoryId = implode(',', $categoryId);
-			$query->where('a.group IN ('.$categoryId.')');
+			$query->where('a.folder IN ('.$categoryId.')');
 		}
 		
 		// Filter on the language.

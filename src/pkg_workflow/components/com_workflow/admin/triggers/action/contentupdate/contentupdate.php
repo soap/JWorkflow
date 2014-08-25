@@ -6,7 +6,7 @@ jimport('workflow.plugin.workflowtrigger');
 class plgActionContentupdate extends plgAbstractTrigger 
 {
 	protected $_type = 'action';
-   	protected $_namespace = 'Workflow.Transition.Action.Contentupdate';
+   	protected $_namespace = 'Workflow.Transition.Guard.Action.Contentupdate';
    
     public function __construct($params = array()) 
     {

@@ -34,22 +34,18 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_GROUP', 'a.groupname', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%">
-					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_FILENAME', 'a.name', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_NAME', 'a.name', $listDirn, $listOrder); ?>
 				</th>
 				<th width="5%">
 					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.published', $listDirn, $listOrder); ?>
 				</th>											
-				<th width="10%" class="nowrap">
-					<?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ORDERING', 'a.ordering', $listDirn, $listOrder); ?>
-					<?php echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'plugins.saveorder'); ?>
-				</th>
 				<th width="10%">
 					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%">
 					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_CREATED_BY', 'a.created_by', $listDirn, $listOrder); ?>
 				</th>
-				<th width="5%">
+				<th width="10%">
 					<?php echo JHtml::_('grid.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>
 				</th>
 				<th width="5%">
@@ -92,29 +88,13 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php endif; ?>
 				</td>
 				<td class="center">
-					<?php echo $this->escape($item->group); ?>
+					<?php echo $this->escape($item->folder); ?>
 				</td>	
 				<td class="center">
 					<?php echo $this->escape($item->name); ?>
 				</td>												
 				<td class="center">
 					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'plugins.', $canChange); ?>
-				</td>
-
-				<td class="order">
-					<?php if ($canChange) : ?>
-						<span><?php echo $this->pagination->orderUpIcon($i,
-							($item->group == @$this->items[$i-1]->group),
-							'plugins.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-						<span><?php echo $this->pagination->orderDownIcon($i,
-							$this->pagination->total,
-							($item->group == @$this->items[$i+1]->group),
-							'plugins.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
-						<?php $disabled = $ordering ?  '' : 'disabled="disabled"'; ?>
-						<input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" <?php echo $disabled ?> class="text-area-order" />
-					<?php else : ?>
-						<?php echo (int) $item->ordering; ?>
-					<?php endif; ?>
 				</td>
 				<td class="center">
 					<?php echo $this->escape($item->access_level); ?>

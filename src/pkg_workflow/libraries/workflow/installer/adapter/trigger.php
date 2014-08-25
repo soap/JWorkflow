@@ -189,7 +189,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 
 		if (!empty($element) && !empty($group))
 		{
-			$this->parent->setPath('extension_root', JPATH_PLUGINS . '/' . $group . '/' . $element);
+			$this->parent->setPath('extension_root', JPATH_ADMINISTRATOR . '/com_workflow/triggers/' . $group . '/' . $element);
 		}
 		else
 		{
@@ -423,6 +423,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 
 			$row->load($id);
 			$row->name = $this->get('name');
+			$row->namespace = (string)$xml->attributes('namespace');
 			$row->manifest_cache = $this->parent->generateManifestCache();
 
 			// Update the manifest cache and name
@@ -432,6 +433,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 		{
 			// Store in the extensions table (1.6)
 			$row->name = $this->get('name');
+			$row->namespace = (string) $xml->attribute('namespace');
 			$row->type = 'trigger';
 			$row->ordering = 0;
 			$row->element = $element;
@@ -491,7 +493,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 			// Set the schema version to be the latest update version
 			if ($this->manifest->update)
 			{
-				$this->parent->setSchemaVersion($this->manifest->update->schemas, $row->extension_id);
+				$this->parent->setSchemaVersion($this->manifest->update->schemas, $row->_id);
 			}
 		}
 		elseif (strtolower($this->route) == 'update')
@@ -604,7 +606,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 
 		// First order of business will be to load the plugin object table from the database.
 		// This should give us the necessary information to proceed.
-		$row = JTable::getInstance('extension');
+		$row = JTable::getInstance('Trigger', 'WorkflowTable');
 
 		if (!$row->load((int) $id))
 		{
@@ -623,7 +625,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 		}
 
 		// Get the plugin folder so we can properly build the plugin path
-		if (trim($row->folder) == '')
+		if (trim($row->group) == '')
 		{
 			JLog::add(JText::_('JLIB_INSTALLER_ERROR_PLG_UNINSTALL_FOLDER_FIELD_EMPTY'), JLog::WARNING, 'jerror');
 
@@ -631,7 +633,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 		}
 
 		// Set the plugin root path
-		$this->parent->setPath('extension_root', JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element);
+		$this->parent->setPath('extension_root', JPATH_PLUGINS . '/' . $row->group . '/' . $row->element);
 
 		$this->parent->setPath('source', $this->parent->getPath('extension_root'));
 
@@ -639,8 +641,8 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 		$this->manifest = $this->parent->getManifest();
 
 		// Attempt to load the language file; might have uninstall strings
-		$this->parent->setPath('source', JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element);
-		$this->loadLanguage(JPATH_PLUGINS . '/' . $row->folder . '/' . $row->element);
+		$this->parent->setPath('source', JPATH_PLUGINS . '/' . $row->group . '/' . $row->element);
+		$this->loadLanguage(JPATH_PLUGINS . '/' . $row->group . '/' . $row->element);
 
 		/**
 		 * ---------------------------------------------------------------------------------------------
@@ -661,7 +663,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 				include_once $manifestScriptFile;
 			}
 			// If a dash is present in the folder, remove it
-			$folderClass = str_replace('-', '', $row->folder);
+			$folderClass = str_replace('-', '', $row->group);
 
 			// Set the class name
 			$classname = 'plg' . $folderClass . $row->element . 'InstallerScript';
@@ -729,12 +731,12 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 		// Remove the schema version
 		$query = $db->getQuery(true)
 			->delete('#__schemas')
-			->where('extension_id = ' . $row->extension_id);
+			->where('extension_id = ' . $row->id);
 		$db->setQuery($query);
 		$db->execute();
 
 		// Now we will no longer need the plugin object, so let's delete it
-		$row->delete($row->extension_id);
+		$row->delete($row->id);
 		unset($row);
 
 		// Remove the plugin's folder
@@ -758,15 +760,15 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 	public function discover()
 	{
 		$results = array();
-		$folder_list = JFolder::folders(JPATH_SITE . '/plugins');
+		$folder_list = JFolder::folders(JPATH_ADMINISTRATOR . '/com_workflow/triggers');
 
 		foreach ($folder_list as $folder)
 		{
-			$file_list = JFolder::files(JPATH_SITE . '/plugins/' . $folder, '\.xml$');
+			$file_list = JFolder::files(JPATH_ADMINISTRATOR . '/com_workflow/triggers/' . $folder, '\.xml$');
 
 			foreach ($file_list as $file)
 			{
-				$manifest_details = JInstaller::parseXMLInstallFile(JPATH_SITE . '/plugins/' . $folder . '/' . $file);
+				$manifest_details = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/com_workflow/triggers/' . $folder . '/' . $file);
 				$file = JFile::stripExt($file);
 
 				// Ignore example plugins
@@ -775,28 +777,28 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 					continue;
 				}
 
-				$extension = JTable::getInstance('extension');
-				$extension->set('type', 'plugin');
+				$extension = JTable::getInstance('Trigger', 'WorkflowTable');
+				$extension->set('type', 'trigger');
 				$extension->set('client_id', 0);
 				$extension->set('element', $file);
-				$extension->set('folder', $folder);
+				$extension->set('group', $folder);
 				$extension->set('name', $file);
-				$extension->set('state', -1);
+				$extension->set('published', -1);
 				$extension->set('manifest_cache', json_encode($manifest_details));
 				$extension->set('params', '{}');
 				$results[] = $extension;
 			}
 
-			$folder_list = JFolder::folders(JPATH_SITE . '/plugins/' . $folder);
+			$folder_list = JFolder::folders(JPATH_ADMINISTRATOR . '/com_workflow/triggers/' . $folder);
 
 			foreach ($folder_list as $plugin_folder)
 			{
-				$file_list = JFolder::files(JPATH_SITE . '/plugins/' . $folder . '/' . $plugin_folder, '\.xml$');
+				$file_list = JFolder::files(JPATH_ADMINISTRATOR . '/com_workflow/triggers/' . $folder . '/' . $plugin_folder, '\.xml$');
 
 				foreach ($file_list as $file)
 				{
 					$manifest_details = JInstaller::parseXMLInstallFile(
-						JPATH_SITE . '/plugins/' . $folder . '/' . $plugin_folder . '/' . $file
+						JPATH_ADMINISTRATOR . '/com_workflow/triggers/' . $folder . '/' . $plugin_folder . '/' . $file
 					);
 					$file = JFile::stripExt($file);
 
@@ -806,13 +808,13 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 					}
 
 					// Ignore example plugins
-					$extension = JTable::getInstance('extension');
-					$extension->set('type', 'plugin');
+					$extension = JTable::getInstance('Trigger', 'WorkflowTable');
+					$extension->set('type', 'trigger');
 					$extension->set('client_id', 0);
 					$extension->set('element', $file);
-					$extension->set('folder', $folder);
+					$extension->set('group', $folder);
 					$extension->set('name', $file);
-					$extension->set('state', -1);
+					$extension->set('publish', -1);
 					$extension->set('manifest_cache', json_encode($manifest_details));
 					$extension->set('params', '{}');
 					$results[] = $extension;
@@ -839,14 +841,14 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 		 */
 		$client = JApplicationHelper::getClientInfo($this->parent->extension->client_id);
 
-		if (is_dir($client->path . '/plugins/' . $this->parent->extension->folder . '/' . $this->parent->extension->element))
+		if (is_dir($client->path . '/triggers/' . $this->parent->extension->group . '/' . $this->parent->extension->element))
 		{
-			$manifestPath = $client->path . '/plugins/' . $this->parent->extension->folder . '/' . $this->parent->extension->element . '/'
+			$manifestPath = $client->path . '/triggers/' . $this->parent->extension->group . '/' . $this->parent->extension->element . '/'
 				. $this->parent->extension->element . '.xml';
 		}
 		else
 		{
-			$manifestPath = $client->path . '/plugins/' . $this->parent->extension->folder . '/' . $this->parent->extension->element . '.xml';
+			$manifestPath = $client->path . '/triggers/' . $this->parent->extension->group . '/' . $this->parent->extension->element . '.xml';
 		}
 
 		$this->parent->manifest = $this->parent->isManifest($manifestPath);
@@ -864,14 +866,14 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 		$this->parent->setPath('manifest', $manifestPath);
 		$manifest_details = JInstaller::parseXMLInstallFile($manifestPath);
 		$this->parent->extension->manifest_cache = json_encode($manifest_details);
-		$this->parent->extension->state = 0;
+		$this->parent->extension->published = 0;
 		$this->parent->extension->name = $manifest_details['name'];
-		$this->parent->extension->enabled = ('editors' == $this->parent->extension->folder) ? 1 : 0;
+		$this->parent->extension->enabled = ('editors' == $this->parent->extension->group) ? 1 : 0;
 		$this->parent->extension->params = $this->parent->getParams();
 
 		if ($this->parent->extension->store())
 		{
-			return $this->parent->extension->get('extension_id');
+			return $this->parent->extension->get('id');
 		}
 		else
 		{
