@@ -28,15 +28,13 @@ class WorkflowModelTriggers extends JModelList
 			$config['filter_fields'] = array(
 					'id', 'a.id',
 					'namespace', 'a.namespace',
-					'alias', 'a.alias',
 					'name', 'a.name',
 					'checked_out', 'a.checked_out',
 					'checked_out_time', 'a.checked_out_time',
-					'group', 'a.group', 'category_title',
+					'folder', 'a.folder', 'group',
 					'published', 'a.published',
 					'access', 'a.access', 'access_level',
 					'ordering', 'a.ordering',
-					'language', 'a.language',
 					'created', 'a.created',
 					'created_by', 'a.created_by',
 					'modified', 'a.modified',
@@ -71,11 +69,8 @@ class WorkflowModelTriggers extends JModelList
 		$value = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $value);
 		
-		$value = $app->getUserStateFromRequest($this->context.'.filter.category_id', 'filter_category_id');
-		$this->setState('filter.category_id', $value);
-		
-		$value = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
-		$this->setState('filter.language', $value);
+		$value = $app->getUserStateFromRequest($this->context.'.filter.folder', 'filter_folder');
+		$this->setState('filter.folder', $value);
 		
 		// Set list state ordering defaults.
 		parent::populateState($ordering, $direction);
@@ -98,14 +93,10 @@ class WorkflowModelTriggers extends JModelList
 			$this->getState(
 				'list.select',
 				'a.id, a.namespace, a.folder, a.name, a.checked_out, a.checked_out_time,' .
-				'a.published, a.access, a.created, a.ordering, a.language'
+				'a.published, a.access, a.created, a.ordering'
 			)
 		);
 		$query->from('#__wf_triggers AS a');
-
-		// Join over the language
-		$query->select('l.title AS language_title');
-		$query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
 
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
@@ -144,19 +135,9 @@ class WorkflowModelTriggers extends JModelList
 		}
 		
 		// Filter by a single or group of categories.
-		$categoryId = $this->getState('filter.category_id');
-		if (is_numeric($categoryId)) {
-			$query->where('a.folder IN ('.$categoryId.')');
-		}
-		else if (is_array($categoryId)) {
-			JArrayHelper::toInteger($categoryId);
-			$categoryId = implode(',', $categoryId);
-			$query->where('a.folder IN ('.$categoryId.')');
-		}
-		
-		// Filter on the language.
-		if ($language = $this->getState('filter.language')) {
-			$query->where('a.language = '.$db->quote($language));
+		$folder = $this->getState('filter.folder');
+		if ($folder) {
+			$query->where('a.folder=('.$folder.')');
 		}
 	    
 		// Add the list ordering clause.

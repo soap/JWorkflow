@@ -44,11 +44,18 @@ CREATE TABLE IF NOT EXISTS `#__wf_trigger_instances` (
 
 CREATE TABLE IF NOT EXISTS `#__wf_triggers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(100) NOT NULL,
-  `namespace` varchar(200) NOT NULL,
-  `alias` varchar(200) NOT NULL,
-  `group` varchar(200) NOT NULL COMMENT 'folder in component plugins folder',
+  `type` varchar(50) NOT NULL DEFAULT 'trigger',
   `name` varchar(200) NOT NULL,
+  `folder` varchar(50) NOT NULL COMMENT 'folder under trigger based',
+  `element` varchar(50) NOT NULL DEFAULT 'trigger',
+  `namespace` varchar(200) NOT NULL,
+  `client_id` tinyint(3) NOT NULL,
+  `enabled` tinyint(2) NOT NULL DEFAULT '1',
+  `protected` tinyint(2) NOT NULL DEFAULT '0',
+  `manifest_cache` text NOT NULL,
+  `custom_data` text NOT NULL,
+  `system_data` text NOT NULL,
+  `params` text NOT NULL,
   `checked_out` int(11) NOT NULL DEFAULT '0',
   `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `created_by` int(11) NOT NULL DEFAULT '0',
@@ -58,7 +65,6 @@ CREATE TABLE IF NOT EXISTS `#__wf_triggers` (
   `published` tinyint(3) NOT NULL DEFAULT '1',
   `ordering` int(11) NOT NULL,
   `access` tinyint(3) NOT NULL DEFAULT '0',
-  `language` varchar(7) NOT NULL DEFAULT '*',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='stores workflow triggers, e.g. transition guards' AUTO_INCREMENT=1 ;
 

@@ -21,17 +21,17 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 			<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 		</div>
 		<?php else : ?>
-	<table class="adminlist">
+		<table class="table table-striped">
 		<thead>
 			<tr>
-				<th width="1%">
+				<th width="1%" classs="hidden-phone">
 					<input type="checkbox" name="toggle" value="" onclick="checkAll(this)" />
 				</th>
 				<th>
 					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_NAMESPACE', 'a.namespace', $listDirn, $listOrder); ?>
 				</th>
-				<th width="10%">
-					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_GROUP', 'a.groupname', $listDirn, $listOrder); ?>
+				<th width="10%" class="center">
+					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_GROUP', 'a.folder', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%">
 					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_NAME', 'a.name', $listDirn, $listOrder); ?>
@@ -47,9 +47,6 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				</th>
 				<th width="10%">
 					<?php echo JHtml::_('grid.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>
-				</th>
-				<th width="5%">
-					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
 				</th>
 				<th width="1%" class="nowrap">
 					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -78,10 +75,10 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				</td>
 				<td>
 					<?php if ($item->checked_out) : ?>
-						<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'plugins.', $canCheckin); ?>
+						<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'triggers.', $canCheckin); ?>
 					<?php endif; ?>
 					<?php if ($canCreate || $canEdit) : ?>
-					<a href="<?php echo JRoute::_('index.php?option=com_workflow&task=plugin.edit&id='.$item->id);?>">
+					<a href="<?php echo JRoute::_('index.php?option=com_workflow&task=trigger.edit&id='.$item->id);?>">
 						<?php echo $this->escape($item->namespace); ?></a>
 					<?php else : ?>
 						<?php echo $this->escape($item->namespace); ?>
@@ -104,13 +101,6 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				</td>
 				<td class="center">
 					<?php echo JHTML::_('date',$item->created, 'Y-m-d'); ?>
-				</td>
-				<td class="center">
-					<?php if ($item->language == '*'): ?>
-						<?php echo JText::_('JALL'); ?>
-					<?php else: ?>
-						<?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
-					<?php endif; ?>
 				</td>
 				<td class="center">
 					<?php echo (int) $item->id; ?>
