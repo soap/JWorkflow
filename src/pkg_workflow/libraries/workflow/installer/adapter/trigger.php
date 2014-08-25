@@ -185,11 +185,12 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 			}
 		}
 
-		$group = (string) $xml->attributes()->group;
+		$group = (string) $xml->attributes()->group
+		;
 
 		if (!empty($element) && !empty($group))
 		{
-			$this->parent->setPath('extension_root', JPATH_ADMINISTRATOR . '/com_workflow/triggers/' . $group . '/' . $element);
+			$this->parent->setPath('extension_root', JPATH_ADMINISTRATOR . '/components/com_workflow/triggers/' . $group . '/' . $element);
 		}
 		else
 		{
@@ -204,7 +205,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 		$query = $db->getQuery(true)
 			->select($db->quoteName('id'))
 			->from($db->quoteName('#__wf_triggers'))
-			->where($db->quoteName('group') . ' = ' . $db->quote($group))
+			->where($db->quoteName('folder') . ' = ' . $db->quote($group))
 			->where($db->quoteName('element') . ' = ' . $db->quote($element));
 		$db->setQuery($query);
 
@@ -423,7 +424,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 
 			$row->load($id);
 			$row->name = $this->get('name');
-			$row->namespace = (string)$xml->attributes('namespace');
+			$row->namespace = (string)$xml->namespace;
 			$row->manifest_cache = $this->parent->generateManifestCache();
 
 			// Update the manifest cache and name
@@ -433,11 +434,11 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 		{
 			// Store in the extensions table (1.6)
 			$row->name = $this->get('name');
-			$row->namespace = (string) $xml->attribute('namespace');
+			$row->namespace = (string) $xml->namespace;
 			$row->type = 'trigger';
 			$row->ordering = 0;
 			$row->element = $element;
-			$row->group = $group;
+			$row->folder = $group;
 			$row->enabled = 0;
 			$row->protected = 0;
 			$row->access = 1;
@@ -760,15 +761,15 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 	public function discover()
 	{
 		$results = array();
-		$folder_list = JFolder::folders(JPATH_ADMINISTRATOR . '/com_workflow/triggers');
+		$folder_list = JFolder::folders(JPATH_ADMINISTRATOR . '/components/com_workflow/triggers');
 
 		foreach ($folder_list as $folder)
 		{
-			$file_list = JFolder::files(JPATH_ADMINISTRATOR . '/com_workflow/triggers/' . $folder, '\.xml$');
+			$file_list = JFolder::files(JPATH_ADMINISTRATOR . '/components/com_workflow/triggers/' . $folder, '\.xml$');
 
 			foreach ($file_list as $file)
 			{
-				$manifest_details = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/com_workflow/triggers/' . $folder . '/' . $file);
+				$manifest_details = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . '/components/com_workflow/triggers/' . $folder . '/' . $file);
 				$file = JFile::stripExt($file);
 
 				// Ignore example plugins
@@ -789,16 +790,16 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 				$results[] = $extension;
 			}
 
-			$folder_list = JFolder::folders(JPATH_ADMINISTRATOR . '/com_workflow/triggers/' . $folder);
+			$folder_list = JFolder::folders(JPATH_ADMINISTRATOR . '/components/com_workflow/triggers/' . $folder);
 
 			foreach ($folder_list as $plugin_folder)
 			{
-				$file_list = JFolder::files(JPATH_ADMINISTRATOR . '/com_workflow/triggers/' . $folder . '/' . $plugin_folder, '\.xml$');
+				$file_list = JFolder::files(JPATH_ADMINISTRATOR . '/components/com_workflow/triggers/' . $folder . '/' . $plugin_folder, '\.xml$');
 
 				foreach ($file_list as $file)
 				{
 					$manifest_details = JInstaller::parseXMLInstallFile(
-						JPATH_ADMINISTRATOR . '/com_workflow/triggers/' . $folder . '/' . $plugin_folder . '/' . $file
+						JPATH_ADMINISTRATOR . '/components/com_workflow/triggers/' . $folder . '/' . $plugin_folder . '/' . $file
 					);
 					$file = JFile::stripExt($file);
 
