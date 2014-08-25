@@ -32,7 +32,7 @@ class WorkflowControllerTriggers extends JControllerAdmin
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 	
 		$eid   = $this->input->get('cid', array(), 'array');
-		$model = $this->getModel('install');
+		$model = $this->getModel('trigger');
 	
 		JArrayHelper::toInteger($eid, array());
 		$model->remove($eid);

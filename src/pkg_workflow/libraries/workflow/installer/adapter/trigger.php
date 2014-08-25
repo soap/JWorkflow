@@ -626,7 +626,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 		}
 
 		// Get the plugin folder so we can properly build the plugin path
-		if (trim($row->group) == '')
+		if (trim($row->folder) == '')
 		{
 			JLog::add(JText::_('JLIB_INSTALLER_ERROR_PLG_UNINSTALL_FOLDER_FIELD_EMPTY'), JLog::WARNING, 'jerror');
 
@@ -634,7 +634,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 		}
 
 		// Set the plugin root path
-		$this->parent->setPath('extension_root', JPATH_PLUGINS . '/' . $row->group . '/' . $row->element);
+		$this->parent->setPath('extension_root', JPATH_ADMINISTRATOR . '/components/com_workflow/triggers/' . $row->folder . '/' . $row->element);
 
 		$this->parent->setPath('source', $this->parent->getPath('extension_root'));
 
@@ -642,8 +642,8 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 		$this->manifest = $this->parent->getManifest();
 
 		// Attempt to load the language file; might have uninstall strings
-		$this->parent->setPath('source', JPATH_PLUGINS . '/' . $row->group . '/' . $row->element);
-		$this->loadLanguage(JPATH_PLUGINS . '/' . $row->group . '/' . $row->element);
+		$this->parent->setPath('source', JPATH_ADMINISTRATOR . '/components/com_workflow/triggers' . '/' . $row->folder . '/' . $row->element);
+		$this->loadLanguage(JPATH_ADMINISTRATOR . '/components/com_workflow/triggers' . '/' . $row->folder . '/' . $row->element);
 
 		/**
 		 * ---------------------------------------------------------------------------------------------
@@ -664,7 +664,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 				include_once $manifestScriptFile;
 			}
 			// If a dash is present in the folder, remove it
-			$folderClass = str_replace('-', '', $row->group);
+			$folderClass = str_replace('-', '', $row->folder);
 
 			// Set the class name
 			$classname = 'plg' . $folderClass . $row->element . 'InstallerScript';

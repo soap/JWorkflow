@@ -188,6 +188,9 @@ class WorkflowModelTrigger extends JModelAdmin
 	
 			// Get an installer object for the extension type
 			$installer = JInstaller::getInstance();
+			$adapter = new JInstallerAdapterTrigger($installer, $this->getDbo());
+			$installer->setAdapter('trigger', $adapter);
+			
 			$row = JTable::getInstance('Trigger', 'WorkflowTable');
 	
 			// Uninstall the chosen extensions
@@ -213,20 +216,20 @@ class WorkflowModelTrigger extends JModelAdmin
 					if ($result === false)
 					{
 						// There was an error in uninstalling the package
-						$msgs[] = JText::sprintf('COM_INSTALLER_UNINSTALL_ERROR', $rowtype);
+						$msgs[] = JText::sprintf('COM_WORKFLOW_UNINSTALL_ERROR', $rowtype);
 						$result = false;
 					}
 					else
 					{
 						// Package uninstalled sucessfully
-						$msgs[] = JText::sprintf('COM_INSTALLER_UNINSTALL_SUCCESS', $rowtype);
+						$msgs[] = JText::sprintf('COM_WORKFLOW_UNINSTALL_SUCCESS', $rowtype);
 						$result = true;
 					}
 				}
 				else
 				{	
 						// There was an error in uninstalling the package
-						$msgs[] = JText::sprintf('COM_INSTALLER_UNINSTALL_ERROR', $rowtype);
+						$msgs[] = JText::sprintf('COM_WORKFLOW_UNINSTALL_ERROR', $rowtype);
 						$result = false;
 				}
 			}
