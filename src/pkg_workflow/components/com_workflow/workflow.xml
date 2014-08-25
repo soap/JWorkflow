@@ -63,7 +63,7 @@
 			<menu view="workflows">COM_WORKFLOW_SUBMENU_WORKFLOWS</menu>
 			<menu view="states">COM_WORKFLOW_SUBMENU_STATES</menu>
 			<menu view="transitions">COM_WORKFLOW_SUBMENU_TRANSITIONS</menu>
-			<menu view="plugins">COM_WORKFLOW_SUBMENU_PLUGINS</menu>
+			<menu view="triggers">COM_WORKFLOW_SUBMENU_TRIGGERS</menu>
 		</submenu>
 	</administration>
 </extension>

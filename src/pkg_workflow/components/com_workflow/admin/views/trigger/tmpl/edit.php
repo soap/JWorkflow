@@ -9,8 +9,8 @@ JHtml::_('behavior.keepalive');
 	// Attach a behaviour to the submit button to check validation.
 	Joomla.submitbutton = function(task)
 	{
-		var form = document.id('plugin-form');
-		if (task == 'plugin.cancel' || document.formvalidator.isValid(form)) {
+		var form = document.id('trigger-form');
+		if (task == 'trigger.cancel' || document.formvalidator.isValid(form)) {
 			Joomla.submitform(task, form);
 		}
 		else {
@@ -32,14 +32,15 @@ JHtml::_('behavior.keepalive');
 </script>
 
 <form action="<?php echo JRoute::_('index.php?option=com_workflow&layout=edit&id='.(int) $this->item->id); ?>"
-	method="post" name="adminForm" id="plugin-form" class="form-validate">
+	method="post" name="adminForm" id="trigger-form" class="form-validate">
 	<div class="form-horizontal">
 		<div class="row-fluid">
 			<div class="span9">
 				<div class="row-fluid form-horizontal-desktop">
 					<div class="span10">
+						<?php echo $this->form->renderField('name');?>
 						<?php echo $this->form->renderField('namespace'); ?>
-						<?php echo $this->form->renderField('group'); ?>
+						<?php echo $this->form->renderField('folder'); ?>
 						<?php echo $this->form->renderField('element'); ?>
 					</div>
 					<div class="span2">

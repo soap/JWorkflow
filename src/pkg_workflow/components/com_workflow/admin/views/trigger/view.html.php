@@ -70,22 +70,22 @@ class WorkflowViewTrigger extends JViewLegacy
 			JText::_(
 				'COM_WORKFLOW_'.
 				($checkedOut
-					? 'VIEW_PLUGIN'
-					: ($isNew ? 'ADD_PLUGIN' : 'EDIT_PLUGIN')).'_TITLE'
+					? 'VIEW_TRIGGER'
+					: ($isNew ? 'ADD_TRIGGER' : 'EDIT_TRIGGER')).'_TITLE'
 			)
 		);
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')) {
-			JToolBarHelper::apply('plugin.apply', 'JTOOLBAR_APPLY');
-			JToolBarHelper::save('plugin.save', 'JTOOLBAR_SAVE');;
+			JToolBarHelper::apply('trigger.apply', 'JTOOLBAR_APPLY');
+			JToolBarHelper::save('trigger.save', 'JTOOLBAR_SAVE');;
 		}
 
 		if (empty($this->item->id))  {
-			JToolBarHelper::cancel('plugin.cancel', 'JTOOLBAR_CANCEL');
+			JToolBarHelper::cancel('trigger.cancel', 'JTOOLBAR_CANCEL');
 		}
 		else {
-			JToolBarHelper::cancel('plugin.cancel', 'JTOOLBAR_CLOSE');
+			JToolBarHelper::cancel('trigger.cancel', 'JTOOLBAR_CLOSE');
 		}
 	}
 }

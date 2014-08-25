@@ -27,25 +27,25 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				<th width="1%" classs="hidden-phone">
 					<input type="checkbox" name="toggle" value="" onclick="checkAll(this)" />
 				</th>
-				<th>
+				<th width="10%" class="center">
+					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_NAME', 'a.name', $listDirn, $listOrder); ?>
+				</th>				
+				<th class="center">
 					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_NAMESPACE', 'a.namespace', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%" class="center">
 					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_GROUP', 'a.folder', $listDirn, $listOrder); ?>
 				</th>
-				<th width="10%">
-					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_NAME', 'a.name', $listDirn, $listOrder); ?>
-				</th>
-				<th width="5%">
+				<th width="5%" class="center">
 					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.published', $listDirn, $listOrder); ?>
 				</th>											
-				<th width="10%">
+				<th width="10%" class="center">
 					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
 				</th>
-				<th width="10%">
+				<th width="10%" class="center">
 					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_CREATED_BY', 'a.created_by', $listDirn, $listOrder); ?>
 				</th>
-				<th width="10%">
+				<th width="10%" class="center">
 					<?php echo JHtml::_('grid.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>
 				</th>
 				<th width="1%" class="nowrap">
@@ -79,16 +79,16 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php endif; ?>
 					<?php if ($canCreate || $canEdit) : ?>
 					<a href="<?php echo JRoute::_('index.php?option=com_workflow&task=trigger.edit&id='.$item->id);?>">
-						<?php echo $this->escape($item->namespace); ?></a>
+						<?php echo $this->escape($item->name); ?></a>
 					<?php else : ?>
-						<?php echo $this->escape($item->namespace); ?>
+						<?php echo $this->escape($item->name); ?>
 					<?php endif; ?>
 				</td>
 				<td class="center">
-					<?php echo $this->escape($item->folder); ?>
-				</td>	
+					<?php echo $this->escape($item->namespace); ?>
+				</td>					
 				<td class="center">
-					<?php echo $this->escape($item->name); ?>
+					<?php echo $this->escape($item->folder); ?>
 				</td>												
 				<td class="center">
 					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'plugins.', $canChange); ?>

@@ -159,4 +159,89 @@ class WorkflowModelTrigger extends JModelAdmin
 		}
 
 	}
+	
+	/**
+	 * Remove (uninstall) an extension
+	 *
+	 * @param   array  $eid  An array of identifiers
+	 *
+	 * @return  boolean  True on success
+	 *
+	 * @since   1.5
+	 */
+	public function remove($eid = array())
+	{
+		$user = JFactory::getUser();
+	
+		if ($user->authorise('core.delete', 'com_workflow'))
+		{
+			$failed = array();
+	
+			/*
+			 * Ensure eid is an array of extension ids in the form id => client_id
+			* TODO: If it isn't an array do we want to set an error and fail?
+			*/
+			if (!is_array($eid))
+			{
+				$eid = array($eid => 0);
+			}
+	
+			// Get an installer object for the extension type
+			$installer = JInstaller::getInstance();
+			$row = JTable::getInstance('Trigger', 'WorkflowTable');
+	
+			// Uninstall the chosen extensions
+			$msgs = array();
+			$result = false;
+			foreach ($eid as $id)
+			{
+				$id = trim($id);
+				$row->load($id);
+	
+				$langstring = 'COM_WORKFLOW_TYPE_TYPE_' . strtoupper($row->type);
+				$rowtype = JText::_($langstring);
+				if (strpos($rowtype, $langstring) !== false)
+				{
+					$rowtype = $row->type;
+				}
+	
+				if ($row->type && $row->type == 'trigger')
+				{
+					$result = $installer->uninstall($row->type, $id);
+	
+					// Build an array of extensions that failed to uninstall
+					if ($result === false)
+					{
+						// There was an error in uninstalling the package
+						$msgs[] = JText::sprintf('COM_INSTALLER_UNINSTALL_ERROR', $rowtype);
+						$result = false;
+					}
+					else
+					{
+						// Package uninstalled sucessfully
+						$msgs[] = JText::sprintf('COM_INSTALLER_UNINSTALL_SUCCESS', $rowtype);
+						$result = true;
+					}
+				}
+				else
+				{	
+						// There was an error in uninstalling the package
+						$msgs[] = JText::sprintf('COM_INSTALLER_UNINSTALL_ERROR', $rowtype);
+						$result = false;
+				}
+			}
+			$msg = implode("<br />", $msgs);
+			$app = JFactory::getApplication();
+			$app->enqueueMessage($msg);
+			$this->setState('action', 'remove');
+			$this->setState('name', $installer->get('name'));
+			$app->setUserState('com_workflow.message', $installer->message);
+			$app->setUserState('com_workflow.extension_message', $installer->get('extension_message'));
+			return $result;
+		}
+		else
+		{
+			JError::raiseWarning(403, JText::_('JERROR_CORE_DELETE_NOT_PERMITTED'));
+		}
+	}	
 }

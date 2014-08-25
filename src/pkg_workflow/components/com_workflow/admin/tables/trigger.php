@@ -3,21 +3,20 @@ defined('_JEXEC') or die;
 jimport('joomla.database.table');
 
 /**
- * TriggerInstance table.
+ * Trigger table.
  *
- * @package     Workflow
+ * @package     JWorkflow
  * @subpackage  com_workflow
  * @since       1.0
  */
 class WorkflowTableTrigger extends JTable
 {
-	
 	/**
 	 * Constructor.
 	 *
 	 * @param   JDatabase  $db  A database connector object.
 	 *
-	 * @return  WorkflowTableTringgerInstance
+	 * @return  WorkflowTableTrigger
 	 * @since   1.0
 	 */
 	public function __construct($db)
@@ -42,16 +41,6 @@ class WorkflowTableTrigger extends JTable
 			$registry->loadArray($array['params']);
 			$array['params'] = (string) $registry;
 		}
-					
-		if (isset($array['plugin_id']) && !empty($array['plugin_id'])) {
-			$query = $this->_db->getQuery(true);
-			$query->select('namespace')
-				->from('#__wf_plugins AS a')
-				->where('a.id ='.(int)$array['plugin_id']);
-			$this->_db->setQuery($query);
-			
-			$array['namespace'] = $this->_db->loadResult();
-		}
 
 		return parent::bind($array, $ignore);
 	}
@@ -64,14 +53,9 @@ class WorkflowTableTrigger extends JTable
 	 */
 	public function check()
 	{
-		// Check for valid plugin
-		if (empty($this->plugin_id)) {
-			$this->setError(JText::_('COM_WORKFLOW_ERROR_GUARD_PLUGIN'));
-			return false;
-		}
-		
-		if (empty($this->transition_id)) {
-			$this->setError(JText::_('COM_WORKFLOW_ERROR_GUARD_TRANSITION'));
+		// Check for valid name.
+		if (trim($this->namespace) === '') {
+ 			$this->setError(JText::_('COM_WORKFLOW_ERROR_TRIGGER_NAMESPACE'));
 			return false;
 		}
 
@@ -89,7 +73,7 @@ class WorkflowTableTrigger extends JTable
 	public function store($updateNulls = false)
 	{
 		// Initialiase variables.
-		$date	= JFactory::getDate()->toSQL();
+		$date	= JFactory::getDate()->toSql();
 		$userId	= JFactory::getUser()->get('id');
 
 		if (empty($this->id)) {
@@ -106,10 +90,4 @@ class WorkflowTableTrigger extends JTable
 		// Attempt to store the data.
 		return parent::store($updateNulls);
 	}
-    
-    function getNameSpace()
-    {
-        return $this->namespace;    
-    } 
-    
 }

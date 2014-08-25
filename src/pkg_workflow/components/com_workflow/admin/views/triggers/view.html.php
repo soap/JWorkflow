@@ -11,30 +11,12 @@ jimport('joomla.application.component.view');
  */
 class WorkflowViewTriggers extends JViewLegacy
 {
-	/**
-	 * @var    array  The array of records to display in the list.
-	 * @since  1.0
-	 */
 	protected $items;
 
-	/**
-	 * @var    JPagination  The pagination object for the list.
-	 * @since  1.0
-	 */
 	protected $pagination;
 
-	/**
-	 * @var    JObject	The model state.
-	 * @since  1.0
-	 */
 	protected $state;
 
-	/**
-	 * Prepare and display the Plugins view.
-	 *
-	 * @return  void
-	 * @since   1.0
-	 */
 	public function display($tp = NULL)
 	{
 		// Initialise variables.
@@ -72,18 +54,18 @@ class WorkflowViewTriggers extends JViewLegacy
 		$state	= $this->get('State');
 		$canDo	= WorkflowHelper::getActions();
 
-		JToolBarHelper::title(JText::_('COM_WORKFLOW_PLUGINS_TITLE'));
+		JToolBarHelper::title(JText::_('COM_WORKFLOW_TRIGGERS_TITLE'));
 
 		if ($canDo->get('core.edit')) {
-			JToolBarHelper::editList('plugin.edit', 'JTOOLBAR_EDIT');
+			JToolBarHelper::editList('trigger.edit', 'JTOOLBAR_EDIT');
 		}
 		if ($canDo->get('core.edit.state')) {
-			JToolBarHelper::publishList('plugins.publish', 'JTOOLBAR_PUBLISH');
-			JToolBarHelper::unpublishList('plugins.unpublish', 'JTOOLBAR_UNPUBLISH');
+			JToolBarHelper::publishList('triggers.publish', 'JTOOLBAR_PUBLISH');
+			JToolBarHelper::unpublishList('triggers.unpublish', 'JTOOLBAR_UNPUBLISH');
 		}
 
 		if ($canDo->get('core.delete')) {
-			JToolBarHelper::deleteList('', 'plugins.delete','JTOOLBAR_DELETE');
+			JToolbarHelper::deleteList('', 'triggers.remove', 'JTOOLBAR_UNINSTALL');
 		} 
 
 	}

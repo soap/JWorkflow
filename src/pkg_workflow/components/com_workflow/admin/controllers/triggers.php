@@ -25,4 +25,17 @@ class WorkflowControllerTriggers extends JControllerAdmin
 	{
 		return parent::getModel($name, $prefix, $config);
 	}
+	
+	public function remove()
+	{
+		// Check for request forgeries
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+	
+		$eid   = $this->input->get('cid', array(), 'array');
+		$model = $this->getModel('install');
+	
+		JArrayHelper::toInteger($eid, array());
+		$model->remove($eid);
+		$this->setRedirect(JRoute::_('index.php?option=com_workflow&view=triggers', false));
+	}	
 }
