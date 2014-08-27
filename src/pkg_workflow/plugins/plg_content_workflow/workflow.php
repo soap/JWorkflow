@@ -227,20 +227,23 @@ class plgContentWorkflow extends JPlugin
 		
     }
     
-    public function onContentPrepare($context, &$article, &$params, $page)
-    {
-
-    }
-    
+    /**
+     * always disable state edit in com_content edit
+     * @param unknown $form
+     * @param unknown $data
+     * @return boolean
+     */
     public function onContentPrepareForm($form, $data) 
     {
-    	if (is_object($data) && empty($data->id)) {
-    		$form->setFieldAttribute('state', 'disabled', 'true');
-    	}
+    	$name = $form->getName();
+    	if ( !in_array($name, array('com_content.article')) ) {
+  			return true;  		
+    	} 
     	
-    	if (is_array($data) && empty($data['id'])) {
-    		$form->setFieldAttribute('state', 'disabled', 'true');
-    	}
+    	//force state disabled and workflow process state
+    	$form->setFieldAttribute('state', 'disabled', 'true');
+    	
+    	return true;
     }
     
     public function onContentPrepareData($context, $data)
