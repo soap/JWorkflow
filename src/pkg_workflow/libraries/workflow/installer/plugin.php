@@ -100,7 +100,7 @@ class WFInstallerPlugin extends JAdapterInstance
 			}
 			if ($name)
 			{
-				$extension = "plg_${group}_${name}";
+				$extension = "trg_${group}_${name}";
 				$lang = JFactory::getLanguage();
 				$source = $path ? $path : JPATH_PLUGINS . "/$group/$name";
 				$folder = (string) $element->attributes()->folder;

@@ -13,9 +13,9 @@ jimport('joomla.base.adapterinstance');
 jimport('joomla.filesystem.folder');
 
 /**
- * Plugin installer
+ * Trigger installer based on Plugin 's installer by Joomla
  *
- * @package     Joomla.Libraries
+ * @package     JWorkflow
  * @subpackage  Installer
  * @since       3.1
  */
@@ -110,9 +110,9 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 
 			if ($name)
 			{
-				$extension = "plg_${group}_${name}";
+				$extension = "trg_${group}_${name}";
 				$lang = JFactory::getLanguage();
-				$source = $path ? $path : JPATH_PLUGINS . "/$group/$name";
+				$source = $path ? $path : JPATH_ADMINISTRATOR . "/components/triggers/$group/$name";
 				$folder = (string) $element->attributes()->folder;
 
 				if ($folder && file_exists("$path/$folder"))
@@ -279,7 +279,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 			$groupClass = str_replace('-', '', $group);
 
 			// Set the class name
-			$classname = 'plg' . $groupClass . $element . 'InstallerScript';
+			$classname = 'trg' . $groupClass . $element . 'InstallerScript';
 
 			if (class_exists($classname))
 			{
@@ -667,7 +667,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 			$folderClass = str_replace('-', '', $row->folder);
 
 			// Set the class name
-			$classname = 'plg' . $folderClass . $row->element . 'InstallerScript';
+			$classname = 'trg' . $folderClass . $row->element . 'InstallerScript';
 
 			if (class_exists($classname))
 			{
@@ -899,7 +899,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 		 * If it's not in the extensions table we just add it
 		 */
 		$client = JApplicationHelper::getClientInfo($this->parent->extension->client_id);
-		$manifestPath = $client->path . '/plugins/' . $this->parent->extension->folder . '/' . $this->parent->extension->element . '/'
+		$manifestPath = $client->path . '/triggers/' . $this->parent->extension->folder . '/' . $this->parent->extension->element . '/'
 			. $this->parent->extension->element . '.xml';
 		$this->parent->manifest = $this->parent->isManifest($manifestPath);
 		$this->parent->setPath('manifest', $manifestPath);
