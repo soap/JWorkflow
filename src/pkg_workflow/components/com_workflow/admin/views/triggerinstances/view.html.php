@@ -5,7 +5,7 @@ jimport('joomla.application.component.view');
 /**
  * Workflow view.
  *
- * @package     Workflow
+ * @package     JWorkflow
  * @subpackage  com_workflow
  * @since       1.0
  */
@@ -76,24 +76,25 @@ class WorkflowViewTriggerinstances extends JViewLegacy
 		$state	= $this->get('State');
 		$canDo	= WorkflowHelper::getActions();
 
-		JToolBarHelper::title(JText::_('COM_WORKFLOW_TRIGGERS_TITLE'));
+		JToolBarHelper::title(JText::_('COM_WORKFLOW_TRIGGER_INTSTANCES_TITLE'));
 
 		if ($canDo->get('core.create') && $state->get('filter.transition_id')) {
-			JToolBarHelper::addNew('trigger.add', 'JTOOLBAR_NEW');
+			JToolBarHelper::addNew('triggerinstance.add', 'JTOOLBAR_NEW');
 		}
 
 		if ($canDo->get('core.edit')) {
-			JToolBarHelper::editList('trigger.edit', 'JTOOLBAR_EDIT');
+			JToolBarHelper::editList('triggerinstance.edit', 'JTOOLBAR_EDIT');
 		}
 
 		if ($canDo->get('core.edit.state')) {
-			JToolBarHelper::publishList('triggers.publish', 'JTOOLBAR_PUBLISH');
-			JToolBarHelper::unpublishList('triggers.unpublish', 'JTOOLBAR_UNPUBLISH');
+			JToolBarHelper::publishList('triggersinstances.publish', 'JTOOLBAR_PUBLISH');
+			JToolBarHelper::unpublishList('triggerinstances.unpublish', 'JTOOLBAR_UNPUBLISH');
 		}
 
 		if ($canDo->get('core.delete')) {
-			JToolBarHelper::deleteList('', 'triggers.delete','JTOOLBAR_DELETE');
+			JToolBarHelper::deleteList('', 'triggerinstances.delete','JTOOLBAR_DELETE');
 		} 
 
+		JToolBarHelper::cancel('triggerinstances.cancel', 'JTOOLBAR_BACK');
 	}
 }
