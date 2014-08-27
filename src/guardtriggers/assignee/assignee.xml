@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.1" type="trigger" group="action" method="upgrade">
+	<name>trg_guard_contentupdate</name>
+	<namespace>Workflow.Transition.Guard.Assignee</namespace>
+	<author>Prasit Gebsaap</author>
+	<creationDate>February 2014</creationDate>
+	<copyright>Copyright (C) 2005 - 2014 Prasit Gebsaap. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>soap@joomlant.org</authorEmail>
+	<authorUrl>www.joomlant.org</authorUrl>
+	<version>1.0.1</version>
+	<description>TRG_GUARD_ASSIGNEE_XML_DESCRIPTION</description>
+	<files>
+		<filename trigger="assignee">assignee.php</filename>
+		<folder>forms</folder>
+		<folder>language</folder>
+		<filename>index.html</filename>
+	</files>
+	<config>
+	</config>
+</extension>

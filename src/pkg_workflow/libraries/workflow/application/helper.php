@@ -541,7 +541,7 @@ class WFApplicationHelper {
     
     public function getVersion()
     {
-    	return 'Workflow 1.1.8 [library 1.1.3, component 1.1.3]';
+    	return 'Workflow 1.5.0 [library 1.5.0, component 1.5.0]';
     }
     
 }
@@ -578,14 +578,14 @@ class WFTriggerRegistry {
     	$db = JFactory::getDbo();
         $query = $db->getQuery(true);
         
-    	$query->select('a.namespace, a.group, a.name')
+    	$query->select('a.namespace, a.folder, a.element, a.name')
     		->from('#__wf_triggers AS a')
     		->where('published = 1');
     		
     	if (!empty($transitionId)) {
     		$sub_query = $db->getQuery(true);
     		
-    		$sub_query->select('plugin_id')
+    		$sub_query->select('trigger_id')
     			->from('#__wf_trigger_instances AS g')
     			->where('g.transition_id ='.$transitionId);
     			
@@ -593,18 +593,19 @@ class WFTriggerRegistry {
     	}
         
         $db->setQuery($query);
-        $plugins = $db->loadObjectList();
+        $triggers = $db->loadObjectList();
         
-        if (empty($plugins) || JError::isError($plugins)) return false;
+        if (empty($triggers) || JError::isError($triggers)) return false;
         
         $registry = self::getInstance();	
-        foreach($plugins as $plugin) 
+        foreach($triggers as $trigger) 
         {
-            $sFullPath  = JPATH_ADMINISTRATOR.'/components/com_workflow/plugins/';
-            $sFullPath .= trim($plugin->group).'/'.trim($plugin->name).'/';
-            $sFullPath .= trim($plugin->name).'.php';
-            $className	= 'plg'.ucfirst($plugin->group).ucfirst($plugin->name);
-            $registry->registerWorkflowTrigger($plugin->namespace, $className, $sFullPath);
+        	$trigger->group = $trigger->folder;
+            $sFullPath  = JPATH_ADMINISTRATOR.'/components/com_workflow/triggers/';
+            $sFullPath .= trim($trigger->group).'/'.trim($trigger->element).'/';
+            $sFullPath .= trim($trigger->element).'.php';
+            $className	= 'plg'.ucfirst($trigger->group).ucfirst($trigger->element);
+            $registry->registerWorkflowTrigger($trigger->namespace, $className, $sFullPath);
         }
         return true;        
     }    
