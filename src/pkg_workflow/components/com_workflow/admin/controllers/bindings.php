@@ -5,7 +5,7 @@ jimport('joomla.application.component.controlleradmin');
 /**
  * Bindings Subcontroller.
  *
- * @package     Workflow
+ * @package     JWorkflow
  * @subpackage  com_workflow
  * @since       1.0
  */
