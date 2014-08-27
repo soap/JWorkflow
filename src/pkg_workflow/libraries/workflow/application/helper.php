@@ -547,7 +547,7 @@ class WFApplicationHelper {
 }
 
 class WFTriggerRegistry {
-    private static $triggers;
+    private static $triggers = array();
     
 	private static $instance;
     
@@ -604,15 +604,15 @@ class WFTriggerRegistry {
             $sFullPath  = JPATH_ADMINISTRATOR.'/components/com_workflow/triggers/';
             $sFullPath .= trim($trigger->group).'/'.trim($trigger->element).'/';
             $sFullPath .= trim($trigger->element).'.php';
-            $className	= 'plg'.ucfirst($trigger->group).ucfirst($trigger->element);
+            $className	= 'trg'.ucfirst($trigger->group).ucfirst($trigger->element);
             $registry->registerWorkflowTrigger($trigger->namespace, $className, $sFullPath);
         }
         return true;        
     }    
         
     public function registerWorkflowTrigger($sNamespace, $sClassname, $sPath) {
-    	if (!array_key_exists($sNamespace, $this->triggers)) {
-        	$this->triggers[$sNamespace] = array('class' => $sClassname, 'path' => $sPath);
+    	if (!array_key_exists($sNamespace, self::$triggers)) {
+        	self::$triggers[$sNamespace] = array('class' => $sClassname, 'path' => $sPath);
     	}
     	return true;
     }

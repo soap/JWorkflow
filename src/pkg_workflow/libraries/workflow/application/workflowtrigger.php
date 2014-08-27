@@ -4,7 +4,7 @@ defined( '_JEXEC' ) or die;
  * Abstract class for workflow trigger (transition guard trigger and action trigger)
  * 
  */
-class plgAbstractTrigger {
+class trgAbstractTrigger {
     protected 	$_namespace = 'core.workflowtriggers.abstractbase';
     protected 	$_type = 'abstract'; //guard, action
     protected	$_name;
@@ -171,7 +171,7 @@ class plgAbstractTrigger {
    	{
    		if (empty($extension)) 
    		{
-   			$extension = 'plg_' . $this->_type . '_' . $this->_name;
+   			$extension = 'trg_' . $this->_type . '_' . $this->_name;
    		}	
    		
    		$lang = JFactory::getLanguage();
