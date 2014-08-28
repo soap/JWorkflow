@@ -49,7 +49,16 @@ JHtml::_('script', 'com_workflow/workflow/form.js', false, true, false, false, f
 				<div class="row-fluid form-horizontal-desktop">
 					<div class="span8">
 						<?php echo $this->form->renderField('workflow_id'); ?>
-						<?php echo $this->form->renderField('target_state_id'); ?>
+						<div class="control-group">
+							<div class="control-label">
+								<?php echo $this->form->getLabel('target_state_id')?>
+							</div>		
+							<div class="controls">
+								<div id="jform_target_state_id_reload">
+									<?php echo $this->form->getInput('target_state_id'); ?>
+								</div>
+							</div>
+						</div>
 						<?php echo $this->form->renderField('system_path')?>
 						<?php echo $this->form->renderField('ordering'); ?>
 					</div>
@@ -84,6 +93,8 @@ JHtml::_('script', 'com_workflow/workflow/form.js', false, true, false, false, f
 
 		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 	</div>
+	
+	<?php echo $this->form->getInput('elements')?>
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="view" value="transition" />
 	<?php echo JHtml::_('form.token'); ?>
