@@ -71,7 +71,7 @@ class WorkflowViewTransitions extends JViewLegacy
 		// Initialise variables.
 		$state	= $this->get('State');
 		$canDo	= WorkflowHelper::getActions();
-
+		$state  = $this->get('State');
 		JToolBarHelper::title(JText::_('COM_WORKFLOW_TRANSITIONS_TITLE'));
 
 		if ($canDo->get('core.create')) {

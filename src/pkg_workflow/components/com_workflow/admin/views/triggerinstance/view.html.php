@@ -79,21 +79,21 @@ class WorkflowViewTriggerinstance extends JViewLegacy
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')) {
-			JToolBarHelper::apply('trigger.apply', 'JTOOLBAR_APPLY');
-			JToolBarHelper::save('trigger.save', 'JTOOLBAR_SAVE');
-			JToolBarHelper::custom('trigger.save2new', 'save-new.png', null, 'JTOOLBAR_SAVE_AND_NEW', false);
+			JToolBarHelper::apply('triggerinstance.apply', 'JTOOLBAR_APPLY');
+			JToolBarHelper::save('triggerinstance.save', 'JTOOLBAR_SAVE');
+			JToolBarHelper::custom('triggerinstance.save2new', 'save-new.png', null, 'JTOOLBAR_SAVE_AND_NEW', false);
 		}
 
 		// If an existing item, can save to a copy.
 		if (!$isNew && $canDo->get('core.create')) {
-			JToolBarHelper::custom('trigger.save2copy', 'save-copy.png', null, 'JTOOLBAR_SAVE_AS_COPY', false);
+			JToolBarHelper::custom('triggerinstance.save2copy', 'save-copy.png', null, 'JTOOLBAR_SAVE_AS_COPY', false);
 		}
 
 		if (empty($this->item->id))  {
-			JToolBarHelper::cancel('trigger.cancel', 'JTOOLBAR_CANCEL');
+			JToolBarHelper::cancel('triggerinstance.cancel', 'JTOOLBAR_CANCEL');
 		}
 		else {
-			JToolBarHelper::cancel('trigger.cancel', 'JTOOLBAR_CLOSE');
+			JToolBarHelper::cancel('triggerinstance.cancel', 'JTOOLBAR_CLOSE');
 		}
 	}
 }

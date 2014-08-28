@@ -18,7 +18,7 @@
 			size="45"
 			readonly="true" />
 			
-		<field name="plugin_id"
+		<field name="trigger_id"
 			type="plugin"
 			state="1"
 			label="COM_WORKFLOW_FIELD_PLUGIN_LABEL"
