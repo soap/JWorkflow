@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="3.1" type="trigger" group="action" method="upgrade">
+<extension version="3.1" type="trigger" group="guard" method="upgrade">
 	<name>trg_guard_requiredfields</name>
 	<namespace>Workflow.Transition.Guard.Requiredfields</namespace>
 	<author>Prasit Gebsaap</author>
