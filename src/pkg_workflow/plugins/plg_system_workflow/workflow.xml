@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.1" type="plugin" group="system">
+	<name>PLG_SYSTEM_WORKFLOW</name>
+	<author>Prasit Gebsaap</author>
+	<creationDate>August 2014</creationDate>
+	<copyright>Copyright (C) 2014 Prasit Gebsaap. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>soap@joomlant.org</authorEmail>
+	<authorUrl>www.joomlant.org</authorUrl>
+	<version>1.0.0</version>
+	<description>PLG_SYSTEM_WORKFLOW_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="workflow">workflow.php</filename>
+		<filename>index.html</filename>
+		<folder>language</folder>
+	</files>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+			</fieldset>
+		</fields>
+	</config>
+</extension>
