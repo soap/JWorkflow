@@ -2,8 +2,9 @@
 /**
  * Workflow utility class to be used by component developer
  * @author Prasit Gebsaap
- * @version 1.1.8 RC3 Dated: 2014--28
- * @copyright 2010-2013 by Prasit Gebsaap
+ * @version 1.5.0 RC3 Dated: 2014-08-31
+ * @copyright 2010-2014 by Prasit Gebsaap
+ * @internal workflow state stored in JWorkflow table instead of working since version 1.5.0
  */
 // no direct access
 defined('_JEXEC') or die;
@@ -75,7 +76,18 @@ class WFApplicationHelper {
 
         return true;
     }
-    	
+
+    /**
+     * 
+     * @param unknown $oDocument
+     * @param unknown $oUser
+     * @param boolean $includeBlocked
+     * @deprecated use getTransitionsForInstanceUser
+     */
+    public static function getTransitionsForDocumentUser($oDocument, $oUser, $includeBlocked = false)
+    {
+    	self::getTransitionsForDocumentUser($oDocument, $oUser, $includeBlocked);
+    }
     /**
      * Gets the transitions that are available for a document by virtue
      * of its workflow state, and also by virtue of the user that wishes
@@ -85,7 +97,8 @@ class WFApplicationHelper {
      * and/or user are met for the given user.
      * @internal tested on 2010-03-19
      */
-    public static function getTransitionsForDocumentUser($oDocument, $oUser, $includeBlocked = false) {
+    public static function getTransitionsForInstanceUser($oDocument, $oUser, $includeBlocked = false) 
+    {
         $oState = self::getWorkflowStateForDocument($oDocument);
         if (is_null($oState) || JError::isError($oState)) {
             return $oState;
@@ -134,21 +147,33 @@ class WFApplicationHelper {
     }
     
     /**
+     * 
+     * @param unknown $oDocument
+     * @param unknown $aOptions
+     * @deprecated version 1.5.0 use getWorkflowStateForInstance instead
+     */
+    public static function getWorkflowStateForDocument($oDocument, $aOptions = array())
+    {
+    	self::getWorkflowStateForInstance($oDocument, $aOptions);	
+    }
+    
+    /**
      * Gets the workflow state that applies to the given document,
      * returning null if there is no workflow assigned.
      * if options contains ids then only id will be returned.
+     * @sinc 1.5.0
      * @internal verified on 2013-07-16, not test yet 
      */
-    protected function getWorkflowStateForDocument ($oDocument, $aOptions = array()) 
+    public static function getWorkflowStateForInstance ($oInstance, $aOptions = array()) 
     {
     	$type = 'object';
         if (array_key_exists('type', $aOptions)) {
         	$type = $aOptions['type'];
         }
-		if (!isset($oDocument->workflow_state_id)) {
+		if (!isset($oInstance->workflow_state_id)) {
 			return false;
 		}
-        $iWorkflowStateId = $oDocument->workflow_state_id;
+        $iWorkflowStateId = $oInstance->workflow_state_id;
 
         if (JError::isError($iWorkflowStateId)) {
             return $iWorkflowStateId;
