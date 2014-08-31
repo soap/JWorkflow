@@ -15,8 +15,13 @@ defined('_JEXEC') or die;
  */
 class plgSystemWorkflow extends JPlugin
 {
+	
 	public function onAfterRender()
 	{
+		if (JFactory::getDocument()->getType() !== 'html') {
+			return true;	
+		}
+		
 		$app = JFactory::getApplication();
 		$component = $app->input->getCmd('option', null);
 		$view = $app->input->getCmd('view', null);
@@ -27,19 +32,91 @@ class plgSystemWorkflow extends JPlugin
 		if (($app->getName() == 'administrator') && (($view == 'articles') || empty($view))) {
 			$this->disableBackendButtons();
 			return true;
-		}		
+		}	
+		
+		return true;	
+	}
+	
+	public function onAfterDispatch()
+	{
+		if (JFactory::getDocument()->getType() !== 'html') {
+			return true;
+		}
+		
+		$app = JFactory::getApplication();
+		$component = $app->input->getCmd('option', null);
+		$view = $app->input->getCmd('view', null);
+		if ( ($component !== 'com_content')) {
+			return true;
+		}
+		
+		if (($app->getName() == 'administrator') && (($view == 'articles') || empty($view))) {
+			
+			$doc = JFactory::getDocument();
+			$doc->addScript(JUri::root(true).'/media/com_workflow/workflow/js/articles.js');
+			
+			$buf = $doc->getBuffer('component');
+			
+			$js = '<script type="text/javascript">
+					WFArticles.removeButtons(\'adminForm\');
+				   </script>';
+			$buf = $buf.$js;
+			$doc->setBuffer($buf, 'component');				
+
+			return true;
+		}
+		
+		return true;
 	}
 	
 	protected function disableBackendButtons()
 	{
 		$buffer = JResponse::getBody();
 		
+		$publish = $this->params->get('publish_button', 'none');
 		$regex = '/(<div class="btn-wrapper"  id="toolbar-publish">)(.*?)(<\/div>)/s';
-		$buffer = preg_replace($regex, '$1<button disabled="disabled"><span class="icon-publish"></span>Publish</button>$3', $buffer);
-		
+		if ($publish === 'hide') {
+			$buffer = preg_replace($regex, '$1$3', $buffer);
+		}else if ($publish === 'disable') {
+			$label = JText::_('JPUBLISHED');
+			$buffer = preg_replace($regex, '$1<button disabled="disabled"><span class="icon-publish"></span>'.$label.'</button>$3', $buffer);				
+		}
+		$unpublish = $this->params->get('unpublish_button', 'none');
 		$regex = '/(<div class="btn-wrapper"  id="toolbar-unpublish">)(.*?)(<\/div>)/s';
-		$buffer = preg_replace($regex, '$1<button disabled="disabled"><span class="icon-unpublish"></span>Unpublish</button>$3', $buffer);		
-
+		if ($unpublish == 'hide') {
+			$buffer = preg_replace($regex, '$1$3', $buffer);
+		}else if ($unpublish=='disable') {
+			$label = JText::_('JUNPUBLISHED');
+			$buffer = preg_replace($regex, '$1<button disabled="disabled"><span class="icon-unpublish"></span>'.$label.'</button>$3', $buffer);
+		}
+		
+		$featured = $this->params->get('featured_button', 'none');
+		$regex = '/(<div class="btn-wrapper"  id="toolbar-featured">)(.*?)(<\/div>)/s';
+		if ($featured == 'hide') {
+			$buffer = preg_replace($regex, '$1$3', $buffer);				
+		}else if ($featured=='disable') {
+			$label = JText::_('JFEATURED');
+			$buffer = preg_replace($regex, '$1<button disabled="disabled"><span class="icon-featured"></span>'.$label.'</button>$3', $buffer);
+		}
+		
+		$archive = $this->params->get('archive_button', 'none');
+		$regex = '/(<div class="btn-wrapper"  id="toolbar-archive">)(.*?)(<\/div>)/s';
+		if ($archive == 'hide') {
+			$buffer = preg_replace($regex, '$1$3', $buffer);
+		}else if ($archive=='disable') {
+			$label = JText::_('JARCHIVE');
+			$buffer = preg_replace($regex, '$1<button disabled="disabled"><span class="icon-archive"></span>'.$label.'</button>$3', $buffer);
+		}
+		
+		$trash = $this->params->get('trash_button', 'none');
+		$regex = '/(<div class="btn-wrapper"  id="toolbar-trash">)(.*?)(<\/div>)/s';
+		if ($trash == 'hide') {
+			$buffer = preg_replace($regex, '$1$3', $buffer);
+		}else if ($trash=='disable') {
+			$label = JText::_('JTRASH');
+			$buffer = preg_replace($regex, '$1<button disabled="disabled"><span class="icon-trash"></span>'.$label.'</button>$3', $buffer);
+		}	
+		
 		$this->checkBuffer($buffer);
 		JResponse::setBody($buffer);
 		
@@ -64,4 +141,5 @@ class plgSystemWorkflow extends JPlugin
 			JError::raiseError(500, $message);
 		}
 	}
+	
 }
