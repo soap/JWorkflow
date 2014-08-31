@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- $Id$ -->
-<extension type="component" version="2.5.0" method="upgrade">
+<extension type="component" version="3.1.0" method="upgrade">
 	<name>COM_WORKFLOW</name>
 	<author>Prasit Gebsaap</author>
 	<creationDate>2014 Feb</creationDate>
@@ -8,7 +8,7 @@
 	<license>GNU General Public License version 2 or later.</license>
 	<authorEmail>soap@joomlant.com</authorEmail>
 	<authorUrl>www.joomlant.com</authorUrl>
-	<version>1.5.0 RC1</version>
+	<version>1.5.0 RC2</version>
 	<description>COM_WORKFLOW_XML_DESCRIPTION</description>
 	<files folder="site">
         <filename>workflow.php</filename>
