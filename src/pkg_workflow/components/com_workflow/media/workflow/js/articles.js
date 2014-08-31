@@ -15,19 +15,48 @@ var WFArticles =
 	        }
 	       
 	        var f = jQuery('#' + fi);
-	       
+	        var l = f.attr('action');
+		    var q = l.split('?');
+		    var u = q[0].replace('/administrator','');
+		    console.log('url to make a call for workflow is ' + u);
 	        jQuery("#articleList > tbody", f).find('tr').each( 
 	        	/* each row */	
 	        	function (rIdx, row) {
 	        		/* Find id of article */
 	        		var id = jQuery('td:nth-child(2)', this).find(':checkbox').prop('value');
-	        		/* Find state change button and replace dropdown items with JWorkflow 's */
 	        		var target = jQuery('td:nth-child(3)', this);
+	        		jQuery.ajax(
+	        		{
+	        			url: u + '?option=com_workflow',
+	        			data: 'task=instance.state&context=com_content.article&id=' + id + '&tmpl=component&format=json',
+	        			type: 'POST',
+	        			cache: false,
+	        			dataType: 'json',
+	        			success: function(resp)
+	        			{
+	        				if (resp.success == true) {
+	        					if (resp.data != 'undefined') {
+	        						var title = resp.data.title;
+	        						jQuery('ul.dropdown-menu', target).prepend('<li class="disabled"><a href="#"><span class="icon"> state: '+ title +'</span></a></li><li class="divider"></li>');
+	        					}
+	        				}
+	        			},
+	        			error: function(resp, e, msg)
+	        			{
+	        				//Workflow.displayMsg(resp, msg);
+	        			},
+	        			complete: function()
+	        			{
+	        				
+	        			}
+	        		});
+	        		/* Find state change button and replace dropdown items with JWorkflow 's */
+	        		
 	        		target.find('div > a')
 	        			.prop('onclick', null)
 	        			.addClass('disabled')
 	        			.prop('title', 'This behavior was disabled by JWorkflow');
-	        			jQuery('ul.dropdown-menu', target).html('<li><a href="#"><span class="icon-trash"></span> Test '+ id +'</a></li>');
+	        			jQuery('ul.dropdown-menu', target).html('<li><a href="#"><span class="icon-trash"></span> Submit </a></li>');
 	        	}
 	        );
 		}
