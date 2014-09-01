@@ -86,7 +86,7 @@ class WFApplicationHelper {
      */
     public static function getTransitionsForDocumentUser($oDocument, $oUser, $includeBlocked = false)
     {
-    	self::getTransitionsForDocumentUser($oDocument, $oUser, $includeBlocked);
+    	self::getTransitionsForInstanceUser($oDocument, $oUser, $includeBlocked);
     }
     /**
      * Gets the transitions that are available for a document by virtue
@@ -97,9 +97,9 @@ class WFApplicationHelper {
      * and/or user are met for the given user.
      * @internal tested on 2010-03-19
      */
-    public static function getTransitionsForInstanceUser($oDocument, $oUser, $includeBlocked = false) 
+    public static function getTransitionsForInstanceUser($oInstance, $oUser, $includeBlocked = false) 
     {
-        $oState = self::getWorkflowStateForDocument($oDocument);
+        $oState = self::getWorkflowStateForInstance($oInstance);
         if (is_null($oState) || JError::isError($oState)) {
             return $oState;
         }
@@ -212,7 +212,7 @@ class WFApplicationHelper {
      * the workflow transitions using the 'ids' option.
      * @internal tested on 2010-03-19
      */
-    protected function getTransitionsFrom($oState, $aOptions = array()) 
+    protected static function getTransitionsFrom($oState, $aOptions = array()) 
     {
     	$type = 'object';
         if (array_key_exists( 'type', $aOptions)) {
@@ -307,7 +307,7 @@ class WFApplicationHelper {
     /**
      * Gets guard triggers for specified transition object
      */
-    function getGuardTriggersForTransition($oTransition) {
+    protected static function getGuardTriggersForTransition($oTransition) {
         $aTriggers = self::getTriggersForTransition($oTransition);
 
         if ( empty($aTriggers) || $aTriggers === false ) {
