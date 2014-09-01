@@ -263,6 +263,7 @@ CREATE TABLE IF NOT EXISTS `#__wf_instances` (
   `workflow_state_id` int(11) NOT NULL,
   `context` varchar(50) NOT NULL,
   `item_id` int(11) NOT NULL,
+  `binding_id` int(11) NULL,  
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
