@@ -67,4 +67,4 @@ var WFtransition =
 		Joomla.submitbutton(task); 
 	}
 	
-}	
+};	
