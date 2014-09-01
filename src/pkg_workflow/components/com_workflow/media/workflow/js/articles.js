@@ -37,7 +37,7 @@ var WFArticles =
 	        				if (resp.success == true) {
 	        					if (resp.data != 'undefined') {
 	        						var title = resp.data.title;
-	        						jQuery('ul.dropdown-menu', target).prepend('<li class="disabled"><a href="#"><span class="icon"> state: '+ title +'</span></a></li><li class="divider"></li>');
+	        						jQuery('ul.dropdown-menu', target).html('<li class="disabled"><a href="#"><span class="icon"> state: '+ title +'</span></a></li><li class="divider"></li>');
 	        					}
 	        				}
 	        			},
@@ -56,7 +56,37 @@ var WFArticles =
 	        			.prop('onclick', null)
 	        			.addClass('disabled')
 	        			.prop('title', 'This behavior was disabled by JWorkflow');
-	        			jQuery('ul.dropdown-menu', target).html('<li><a href="#"><span class="icon-trash"></span> Submit </a></li>');
+	        		
+	        		jQuery.ajax(
+	    	        {
+	    	        	url: u + '?option=com_workflow',
+	    	        	data: 'task=instance.transitions&context=com_content.article&id=' + id + '&tmpl=component&format=json',
+	    	        	type: 'POST',
+	    	        	cache: false,
+	    	        	dataType: 'json',
+	    	        	success: function(resp)
+	    	        	{
+	    	        		//console.log('query for transitions success for item id = '+id);
+	    	        		//console.log(resp.data[0].title);
+	    	        		if (resp.success == true) {
+	    	        			if (resp.data != 'undefined') {
+	    	        				var ix = 0;
+	    	        				for (ix = 0; ix < resp.data.length; ix++) {
+	    	        					jQuery('ul.dropdown-menu', target).append('<li><a href="#"><span class="icon"> '+ resp.data[ix].title +'</span></a></li>');
+	    	        				}	
+	    	        			}
+	    	        		}
+	    	        	},
+	    	        	error: function(resp, e, msg)
+	    	        	{
+	    	        		//Workflow.displayMsg(resp, msg);
+	    	        	},
+	    	        	complete: function()
+	    	        	{
+	    	        				
+	    	        	}
+	    	        });
+	        
 	        	}
 	        );
 		}
