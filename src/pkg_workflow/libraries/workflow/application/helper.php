@@ -327,7 +327,7 @@ class WFApplicationHelper {
     /**
      * Gets action triggers for specified transition object
      */
-    function getActionTriggersForTransition($oTransition) {
+    protected static function getActionTriggersForTransition($oTransition) {
         $aTriggers =  WFApplicationHelper::getTriggersForTransition($oTransition);
         if (JError::isError($aTriggers)) {
             return $aTriggers;
@@ -463,7 +463,7 @@ class WFApplicationHelper {
     		$data = array(
     				'id'		=> 	0,
     				'context'	=>	$context,
-    				'item_id'	=> 	$oDocument->id,
+    				'item_id'	=> 	$oInstance->item_id,
     				'title'		=>	$sTitle,
     				'comment'	=>	$comment,
     				'from_state_id'	=>	$oSourceState->get('id'),
@@ -478,7 +478,7 @@ class WFApplicationHelper {
     	
     	// walk the action triggers.
     	foreach ($aActionTriggers as $oTrigger) {
-    		$res = $oTrigger->afterTransition($oDocumente, $oUser, $oInstance);
+    		$res = $oTrigger->afterTransition($oDocument, $oUser, $oInstance);
     		if (JError::isError($res)) {
     			return $res;
     		}
@@ -649,7 +649,7 @@ class WFApplicationHelper {
         return true;    
     }  
     
-    protected function isWaitingForSystem() 
+    protected static function isWaitingForSystem() 
     {
     	return false;	
     }
@@ -739,7 +739,7 @@ class WFTriggerRegistry {
     	self::init();		
     }
     
-    private function init() {
+    private static function init() {
     	//self::triggers = array();
     }
     
