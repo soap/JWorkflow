@@ -90,8 +90,43 @@ var WFArticles =
 	        				jQuery('a.wf-transition', target).click(function() {
 	        					var item_id = jQuery(this).attr('item_id');
 	        					var transition_id = jQuery(this).attr('transition');
-	        					alert('Transition ID = '+transition_id+', Item ID = '+item_id);
+	        					var link = baseUrl + '?option=com_workflow&tmpl=component&format=json';
+	        					
+	        					var tdata = 'transition_id='+transition_id+'&context=com_content.article';
+	        					WFArticles.doTransition(link, tdata, target, item_id);
 	        				});
+	        			}
+	        		}
+	        	},
+	        	
+	        	error: function(resp, e, msg)
+	        	{
+	        		//Workflow.displayMsg(resp, msg);
+	        	},
+	        	complete: function()
+	        	{
+	        				
+	        	}
+	        });			
+		},
+		
+		
+		doTransition: function (transitionUrl, transitionData, target, item_id)
+		{
+			jQuery.ajax(
+			{
+	        	url: transitionUrl+'&task=instance.transition',
+	        	data: transitionData+'&item_id='+item_id,
+				type: 'POST',
+				async: false,
+	        	cache: false,
+	        	dataType: 'json',
+	        	success: function(resp)
+	        	{
+	        		if (resp.success == true) {
+	        			if (resp.data != 'undefined') {
+	        				var u = transitionUrl.split('?');
+	        				WFArticles.loadWorkflowState(u[0], target, item_id);
 	        			}
 	        		}
 	        	},
@@ -103,6 +138,6 @@ var WFArticles =
 	        	{
 	        				
 	        	}
-	        });			
+			});
 		}
 };
