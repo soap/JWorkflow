@@ -119,7 +119,7 @@ class WFApplicationHelper {
             	$blocked = false;
             	foreach ($aGuardTriggers as $oTrigger) {
             		$explain = '';
-                	if (!$oTrigger->allowTransition($oDocument, $oUser)) 
+                	if (!$oTrigger->allowTransition($oInstance, $oUser)) 
                 	{
                     	//if only one guard not allow, guards this transition
                     	$blocked = true;
@@ -246,7 +246,7 @@ class WFApplicationHelper {
         return $aRet;
     }    
     
-    public function getTransition($transitionId) 
+    public static function getTransition($transitionId) 
     {
     	$transition = JTable::getInstance('Transition', 'WorkflowTable');
     	$transition->load($transitionId);
@@ -365,6 +365,134 @@ class WFApplicationHelper {
     }
     
     /**
+     * 
+     * @param unknown $oTransition
+     * @param unknown $oInstance
+     * @param unknown $oUser
+     * @param string $context
+     * @param string $comment
+     * @throws Exception
+     * @return unknown
+     */
+    
+    public static function performTransitionOnInstance($oTransition, $oInstance, $oUser,  $context='', $comment='')
+    {
+    	$oWorkflow = JTable::getInstance('Workflow', 'WorkflowTable');
+    	$oWorkflow->load($oInstance->workflow_id);
+    	if (empty($oWorkflow))
+    	{
+    		JError::raiseError(500, JText::_('COM_WORKFLOW_ERROR_DOCUMENT_NOTHAVE_WORKFLOW'));
+    	}
+    	if (JError::isError($oWorkflow))
+    	{
+    		return $oWorkflow; // return JException ?
+    	}
+    	
+    	if ($oDocument = self::getDocument($oInstance) == false) {
+    		
+    	}
+    	
+    	// walk the action triggers.
+    	$aActionTriggers = WFApplicationHelper::getActionTriggersForTransition($oTransition);
+    	if (JError::isError($aActionTriggers)) {
+    		return $aActionTriggers; // error out?
+    	}
+    	
+    	foreach ($aActionTriggers as $oTrigger) {
+    		$res = $oTrigger->precheckTransition($oInstance, $oUser);
+    		if (JError::isError($res)) {
+    			return $res;
+    		}
+    	}
+    	
+    	$oSourceState = WFApplicationHelper::getWorkflowStateForInstance($oInstance);
+    	$iStateId = $oTransition->getTargetStateId();
+    	
+    	$oTargetState = JTable::getInstance('State', 'WorkflowTable');
+    	$oTargetState->load($iStateId);
+    	
+    	// Import workflow plugin
+    	JPluginHelper::importPlugin('workflow');
+    	// Get the dispatcher.
+    	$dispatcher = JDispatcher::getInstance();
+    	$results = $dispatcher->trigger('onWorkflowBeforeTransition',
+    			array($context, $oInstance, $oUser, $comment, $oTransition, $oSourceState, $oTargetState)
+    	);
+    	
+    	// Check for errors encountered while
+    	if (count($results) && in_array(false, $results, true))
+    	{
+    		// Get the last error.
+    		$error = $dispatcher->getError();
+    	
+    		if (!($error instanceof Exception))
+    		{
+    			throw new Exception($error);
+    		}
+    	}
+    	
+    	$oInstance->workflow_state_id = $iStateId;
+    	$res = $oInstance->store(); //save to database
+    	if (JError::isError($res))
+    	{
+    		return $res;
+    	}
+    	
+    	$results = $dispatcher->trigger('onWorkflowAfterTransition',
+    			array($context, $oInstance, $oUser, $comment, $oTransition, $oSourceState, $oTargetState)
+    	);
+    	
+    	// Check for errors encountered while
+    	if (count($results) && in_array(false, $results, true))
+    	{
+    		// Get the last error.
+    		$error = $dispatcher->getError();
+    	
+    		if (!($error instanceof Exception))
+    		{
+    			throw new Exception($error);
+    		}
+    	}
+    	
+    	if (!empty($context))
+    	{
+    		$sSourceName = $oSourceState->get('title');
+    		$sTargetName = $oTargetState->get('title');
+    		$sTitle = JText::sprintf('COM_WORKFLOW_LOG_TRANSITION_CHANGED', $sSourceName, $sTargetName );
+    		 
+    		$data = array(
+    				'id'		=> 	0,
+    				'context'	=>	$context,
+    				'item_id'	=> 	$oDocument->id,
+    				'title'		=>	$sTitle,
+    				'comment'	=>	$comment,
+    				'from_state_id'	=>	$oSourceState->get('id'),
+    				'transition_id'	=>	$oTransition->get('id')
+    		);
+    		$oTransactionLog = JTable::getInstance('Transitionlog', 'WorkflowTable');
+    		$oTransactionLog->reset();
+    		$oTransactionLog->bind($data);
+    		$oTransactionLog->store();
+    	
+    	}
+    	
+    	// walk the action triggers.
+    	foreach ($aActionTriggers as $oTrigger) {
+    		$res = $oTrigger->afterTransition($oDocumente, $oUser, $oInstance);
+    		if (JError::isError($res)) {
+    			return $res;
+    		}
+    	}
+    	
+    	/* Create work item to list waiting object for user */
+    	/* Clear existing todo items for groups and users from start state and re-create fro the target state */
+    	//CpPermission::updatePermissionLookUp( $oDocument );
+    	
+    	self::performSystemActionOnInstance( $oInstance, $context );
+    	return true;    	
+    }
+    
+    /**
      * Peforms a workflow transition on a document, changing it from one workflow state to another state,
      * with possible side effects (user scripts, plugins and so forth)
      * 
@@ -375,6 +503,7 @@ class WFApplicationHelper {
      * @param object User who perform the transition
      * @param string His/Her comment when perform the transition
      * @param string context to be insert in log database
+     * @deprecated sinc 1.5.0, see performTransitionOnInstance
      */
     public static function performTransitionOnDocument($oTransition, $oDocument, $oUser,  $context='', $comment='')
     {
@@ -489,16 +618,22 @@ class WFApplicationHelper {
             
     }
     
+    
+    static function performSystemActionOnDocument( $oDocument, $context ) 
+    {
+    	self::performSystemActionOnInstance($oDocument, $context);	
+    }
+    
     /**
      * Check if document is waiting for system action.
      * If yes, action on the document
      * @param object Document to be processed
      */
-    static function performSystemActionOnDocument( $oDocument, $context ) {
+    static function performSystemActionOnInstance( $oInstance, $context ) {
         /* Check if document is waiting for system action */
-        if (!self::isWaitingForSystem($oDocument)) return true; 
+        if (!self::isWaitingForSystem($oInstance)) return true; 
         /* Get available system transitions */
-        $transitions = self::getTransitionsForDocumentUser($oDocument, null);
+        $transitions = self::getTransitionsForInstanceUser($oInstance, null);
         $selected_transition = null;
         foreach ($transitions as $transition ) {
             if ($transition->system_path == 1) {
@@ -508,7 +643,7 @@ class WFApplicationHelper {
         }
         /* Perform transition on document */
         if (!empty($selected_transition)) {
-            return self::performTransitionOnDocument($transition, $oDocument, null, context);
+            return self::performTransitionOnInstance($transition, $oInstance, null, context);
         }
         
         return true;    
@@ -518,6 +653,27 @@ class WFApplicationHelper {
     {
     	return false;	
     }
+    
+    protected static function getDocument($oInstance)
+    {
+    	$oBinding = JTable::getInstance('Binding', 'WorkflowTable');
+    	$oBinding->load($oInstance->binding_id);
+    	
+    	$oResult = false;
+    	if (!empty($oBinding->params)) {
+    		$oBinding->params = new JRegistry($oBinding->params);
+    		$path = $oBinding->params->get('table_path');
+    		$prefix = $oBinding->params->get('table_prefix');
+    		$name = $oBinding->params->get('table_name');
+    		
+    		$path = JPath::clean(JPATH_ADMINISTRATOR.'/'.$path);
+    		JTable::addIncludePath($path);
+    		$oResult = JTable::getInstance($name, $prefix);
+    	}
+
+    	return $oResult;
+    } 
+    
     
     public static function getStateName($stateId) 
     {
@@ -635,17 +791,17 @@ class WFTriggerRegistry {
         return true;        
     }    
         
-    public function registerWorkflowTrigger($sNamespace, $sClassname, $sPath) {
+    public static function registerWorkflowTrigger($sNamespace, $sClassname, $sPath) {
     	if (!array_key_exists($sNamespace, self::$triggers)) {
         	self::$triggers[$sNamespace] = array('class' => $sClassname, 'path' => $sPath);
     	}
     	return true;
     }
 
-    public function getWorkflowTrigger($sNamespace) {
+    public static function getWorkflowTrigger($sNamespace) {
     	
         if (array_key_exists( $sNamespace, $this->triggers)){
-            $aInfo = $this->triggers[$sNamespace];
+            $aInfo = self::$triggers[$sNamespace];
         }else{
 			return null;
         }
@@ -663,8 +819,8 @@ class WFTriggerRegistry {
 
     function listWorkflowTriggers() {
         $triggerlist = array();
-        foreach ($this->triggers as $sNamespace => $aTrigInfo) {
-            $oTriggerObj = $this->getWorkflowTrigger($sNamespace);
+        foreach (self::$triggers as $sNamespace => $aTrigInfo) {
+            $oTriggerObj = self::getWorkflowTrigger($sNamespace);
             $triggerlist[$sNamespace] = $oTriggerObj->getInfo();
         }
         return $triggerlist;

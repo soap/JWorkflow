@@ -127,7 +127,7 @@ class trgAbstractTrigger {
      *  
      * return true for transition allowed on doc, false for transition not allowed on doc.
      */
-    public function allowTransition($oDocument, $oUser) {
+    public function allowTransition($oDocument, $oUser, $oInstance=null) {
         return true;  // abstract base class
     }
     
@@ -137,18 +137,18 @@ class trgAbstractTrigger {
      * 
      */
     
-    public function precheckTransition($oDocument, $oUser) {
+    public function precheckTransition($oDocument, $oUser, $oInstance=null) {
         return true;
     }
     
-    /*
-    Multiple triggers can occur on a given transition.  If this trigger fails,
-    return a JError::error (the overall system -will- roll the db back - 
-    no need to do it yourself) with a -useful- human error message.
-    
-    Any other return is simply discarded.
-     */
-    public function afterTransition($oDocument, $oUser) {
+    /**
+     * Multiple triggers can occur on a given transition.  If this trigger fails,
+     * return a JError::error (the overall system -will- roll the db back - 
+     * no need to do it yourself) with a -useful- human error message.
+     * 
+     * Any other return is simply discarded.
+    */
+    public function afterTransition($oDocument, $oUser, $oInstance=null) {
         return true;
     }
     
