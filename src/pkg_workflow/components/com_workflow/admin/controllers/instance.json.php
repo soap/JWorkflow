@@ -78,7 +78,7 @@ class WorkflowControllerInstance extends WFControllerFormJson
 		
 		$input = array('context'=>$context, 'item_id'=>$itemId, 'user'=>$user, 
 					'transition_id'=>$transitionId, 'comment'=>$comment);
-		var_dump($input['user']); jexit();
+		
 		if (!$this->allowTransition($input, 'item_id')) {
 			$this->_messages[] = JText::_('COM_WORKFLOW_APPLICATION_ERROR_TRANSITION_NOT_PERMITTED');
 			$this->sendResponse();	
@@ -96,6 +96,41 @@ class WorkflowControllerInstance extends WFControllerFormJson
 		$this->sendResponse();
 	}
 	
+	/**
+	 *
+	 * validate if transtion if requirement match before perform transition on work item
+	 */
+	public function validate()
+	{
+		$jinput = JFactory::getApplication()->input;
+	
+		$transition_id   = $jinput->get('transition_id', 0, 'int');
+		$context = $jinput->getCmd('context', null);
+		$comment = $jinput->get('comment', '', 'string');
+	
+		$sdata = array();
+		$sdata['transition_id'] = $transition_id;
+		$sdata['comment'] = $comment;
+	
+		$model = $this->getModel();
+	
+		$data = array();
+		$data['success']	= true;
+		$data['messages']	= array();
+		$data['data'] 		= array();
+	
+		if (!$model->validateTransition($sdata)) {
+			$data['success'] = false;
+			$data['messages'][] = $model->getError();
+			 
+			$this->sendResponse($data);
+		}
+	
+		$data['messages'][] = '';
+	
+		$this->sendResponse($data);
+	
+	}
 	protected function allowTransition($data = array(), $key = 'id')
 	{
 		$id     = (int) isset($data[$key]) ? $data[$key] : 0;

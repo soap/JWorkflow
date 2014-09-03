@@ -10,6 +10,7 @@ var WFArticles =
 	     */
 		removeButtons: function(fi)
 		{
+			
 	        if (typeof fi == 'undefined') {
 	            fi = 'adminForm';
 	        }
@@ -91,9 +92,21 @@ var WFArticles =
 	        					var item_id = jQuery(this).attr('item_id');
 	        					var transition_id = jQuery(this).attr('transition');
 	        					var link = baseUrl + '?option=com_workflow&tmpl=component&format=json';
-	        					
+	        		
 	        					var tdata = 'transition_id='+transition_id+'&context=com_content.article';
-	        					WFArticles.doTransition(link, tdata, target, item_id);
+	        					/*
+	        					jQuery('#transition-dialog').modal({
+	        						backdrop: 'static',
+	        						keyboard: true,
+	        						show: true
+	        					});*/
+	        					jQuery('input#transition-comment').val('');
+	        					jQuery.blockUI({message: jQuery('#transition-dialog'),  css: { width: '375px', top: '100px' } });
+	        					jQuery('button#transition-yes').click(function(){
+	        						
+	        						WFArticles.doTransition(link, tdata, target, item_id, jQuery('input#transition-comment').val());
+	        					});
+	        					
 	        				});
 	        			}
 	        		}
@@ -111,12 +124,13 @@ var WFArticles =
 		},
 		
 		
-		doTransition: function (transitionUrl, transitionData, target, item_id)
+		doTransition: function (transitionUrl, transitionData, target, item_id, comment)
 		{
+			console.log('Try to make transition for com_content.article.'+item_id+' with comment '+comment);
 			jQuery.ajax(
 			{
 	        	url: transitionUrl+'&task=instance.transition',
-	        	data: transitionData+'&item_id='+item_id,
+	        	data: transitionData+'&item_id=' + item_id + '&comment=' + comment ,
 				type: 'POST',
 				async: false,
 	        	cache: false,
@@ -141,10 +155,11 @@ var WFArticles =
 	        	error: function(resp, e, msg)
 	        	{
 	        		//Workflow.displayMsg(resp, msg);
+	        		jQuery.unblockUI();
 	        	},
 	        	complete: function()
 	        	{
-	        				
+	        		jQuery.unblockUI();
 	        	}
 			});
 		}

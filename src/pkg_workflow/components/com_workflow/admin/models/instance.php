@@ -69,10 +69,9 @@ class WorkflowModelInstance extends JModelItem
 		$user = isset($data['user']) ? $data['user'] : JFactory::getUser();
 		$context = $data['context'];
 		$comment = $data['comment'];
-		
+
 		if (!WFApplicationHelper::performTransitionOnInstance($transition, $instance, $user, $context, $comment))
 		{
-			$data['messages'][] =
 			$this->setError(JText::_('COM_WORKFLOW_APPLICATION_ERROR_TRANSITION_FAILED'));
 			
 			return false;
@@ -104,4 +103,41 @@ class WorkflowModelInstance extends JModelItem
 		return $db->loadResult();
 		
 	} 
+	
+	/**
+	 *
+	 * Validate workflow transition contraints (not content itemr)
+	 * @param unknown_type $data
+	 * @return boolean
+	 */
+	public function validateTransition($data = array())
+	{
+		if (empty($data)) return true;
+	
+		if ((int)$data['transition_id'] > 0) {
+	
+			$transition = JTable::getInstance('Transition', 'WorflwoTable');
+			$transition->load((int)$data['transition_id']);
+			if (!empty($transition->params)) $transition->params = new JRegistry($transition->params);
+			if (isset($transition->params)) {	
+				if ($transition->params->get('comment_required') =='1') {
+					if (trim($data['comment']) == '') {
+						$msg = JText::sprintf("COM_WORKFLOW_FIELD_IS_REQUIRED", "comment", $transition->title);
+						
+						$this->setError($msg);
+						return false;
+					}
+				}
+			}
+				
+			return true;
+		}
+		else {
+			$this->setError(JText::_('COM_WORKFLOW_ERROR_TRANSITION_CANNOT_LOAD'));
+			return false;
+		}
+	
+		return true;
+	
+	}	
 }

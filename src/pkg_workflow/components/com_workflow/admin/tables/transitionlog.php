@@ -91,7 +91,7 @@ class WorkflowTableTransitionlog extends JTable
 			$this->modified	= $date;
 			$this->modified_by	= $userId;
 		}
-
+		JLog::add('comment ++++++ '.$this->comment,JLog::DEBUG,'jworkflow');
 		// Attempt to store the data.
 		return parent::store($updateNulls);
 	}

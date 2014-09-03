@@ -57,15 +57,36 @@ class plgSystemWorkflow extends JPlugin
 			
 			$doc->addScript(JUri::root(true).'/media/com_workflow/workflow/js/articles.js');
 			$doc->addScript(JUri::root(true).'/media/com_workflow/workflow/js/pnotify.custom.min.js');
+			$doc->addScript(JUri::root(true).'/media/com_workflow/workflow/js/jquery.blockUI.js');
 			$doc->addStyleSheet(JUri::root(true).'/media/com_workflow/workflow/css/pnotify.custom.min.css');
 			$buf = $doc->getBuffer('component');
 			
-			$html = '<script type="text/javascript">
+			$js = '<script type="text/javascript">
 					WFArticles.removeButtons(\'adminForm\');
 					PNotify.prototype.options.styling = "bootstrap2"; //jqueryui
 					var stack_bar_top = {"dir1": "down", "dir2": "right", "push": "top", "spacing1": 0, "spacing2": 0};
 				   </script>';
-			$buf = $buf.$html;
+			$html = '
+				<div id="transition-dialog" style="display:none; cursor: default">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">			
+								<button type="button" class="close" aria-hidden="true" onclick="jQuery.unblockUI();">×</button>
+								<h4 class="modal-title">You are about to make a transition</h4>
+							</div>
+							<div class="modal-body">
+								<p>Please provide your comment below.</p>
+								<input type="text" name="comment" id="transition-comment" value="" />
+							</div>
+			
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary" id="transition-yes">Continue</button>
+								<button type="button" class="btn btn-default" onclick="jQuery.unblockUI();">Cancel</button>
+							</div>
+						</div>
+					</div>
+				</div>';
+			$buf = $buf.$js.$html;
 			$doc->setBuffer($buf, 'component');				
 
 			return true;
