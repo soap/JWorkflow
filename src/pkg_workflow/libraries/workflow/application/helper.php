@@ -461,17 +461,17 @@ class WFApplicationHelper {
     		$sTitle = JText::sprintf('COM_WORKFLOW_LOG_TRANSITION_CHANGED', $sSourceName, $sTargetName );
     		$date	= JFactory::getDate()->toSql();
     		$data = array(
-    				'id'		=> 	null,
-    				'context'	=>	$context,
-    				'item_id'	=> 	$oInstance->item_id,
-    				'title'		=>	$sTitle,
-    				'comment'	=>	$comment,
+    				'id'			=> 	null,
+    				'context'		=>	$context,
+    				'item_id'		=> 	$oInstance->item_id,
+    				'title'			=>	$sTitle,
+    				'comment'		=>	$comment,
     				'from_state_id'	=>	$oSourceState->get('id'),
     				'transition_id'	=>	$oTransition->get('id'),
-    				'created_by' => $oUser->id, 
-    				'created' => $date
+    				'created_by' 	=> $oUser->id, 
+    				'created' 		=> $date
     		);
-
+			JLog::add($context.'.'.$oInstance->item_id .', '.$oUser->get('name').', '.$sTitle. ', '.$comment, JLog::DEBUG, 'jworkflow');
     		$oTransitionLog = JTable::getInstance('Transitionlog', 'WorkflowTable');
     		$oTransitionLog->reset();
     		$oTransitionLog->bind($data);
@@ -480,7 +480,7 @@ class WFApplicationHelper {
     		}else{
     			 
     		}
-    	
+    		//JLog::add('comment is '.$data['comment'], JLog::DEBUG, 'jworkflow');
     	}
     	
     	// walk the action triggers.

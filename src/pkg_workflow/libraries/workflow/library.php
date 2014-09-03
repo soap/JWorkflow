@@ -34,6 +34,18 @@ JForm::addRulePath(JPATH_PLATFORM . '/workflow/form/rules');
 JFactory::getLanguage()->load('com_workflow', JPATH_SITE.'/components/com_workflow');
 JFactory::getLanguage()->load('com_workflow', JPATH_SITE.'/administrator/components/com_workflow');
 
+JLog::addLogger(
+	array(
+		// Sets file name
+		'text_file' => 'jworkflow.log.php'
+		),
+		// Sets messages of all log levels to be sent to the file
+		JLog::ALL,
+		// The log category/categories which should be recorded in this file
+		// In this case, it's just the one category from our extension, still
+		// we need to put it inside an array
+		array('jworkflow')
+);
 
 // Define version
 if (!defined('WFVERSION')) {
