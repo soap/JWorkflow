@@ -125,6 +125,14 @@ var WFArticles =
 	        	{
 	        		if (resp.success == true) {
 	        			if (resp.data != 'undefined') {
+	        				 jQuery(function(){
+	        				        new PNotify({
+	        				            title: resp.data.title,
+	        				            text: resp.data.text,
+	        				            type: 'success',
+	        				            width: '450px'
+	        				        });
+	        				    });
 	        				var u = transitionUrl.split('?');
 	        				WFArticles.loadWorkflowState(u[0], target, item_id);
 	        			}

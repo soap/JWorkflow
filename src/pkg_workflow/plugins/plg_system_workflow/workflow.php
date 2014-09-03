@@ -52,15 +52,20 @@ class plgSystemWorkflow extends JPlugin
 		
 		if (($app->getName() == 'administrator') && (($view == 'articles') || empty($view))) {
 			
+			JHtml::_('jquery.ui');
 			$doc = JFactory::getDocument();
-			$doc->addScript(JUri::root(true).'/media/com_workflow/workflow/js/articles.js');
 			
+			$doc->addScript(JUri::root(true).'/media/com_workflow/workflow/js/articles.js');
+			$doc->addScript(JUri::root(true).'/media/com_workflow/workflow/js/pnotify.custom.min.js');
+			$doc->addStyleSheet(JUri::root(true).'/media/com_workflow/workflow/css/pnotify.custom.min.css');
 			$buf = $doc->getBuffer('component');
 			
-			$js = '<script type="text/javascript">
+			$html = '<script type="text/javascript">
 					WFArticles.removeButtons(\'adminForm\');
+					PNotify.prototype.options.styling = "bootstrap2"; //jqueryui
+					var stack_bar_top = {"dir1": "down", "dir2": "right", "push": "top", "spacing1": 0, "spacing2": 0};
 				   </script>';
-			$buf = $buf.$js;
+			$buf = $buf.$html;
 			$doc->setBuffer($buf, 'component');				
 
 			return true;
