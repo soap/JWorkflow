@@ -58,8 +58,9 @@ class WorkflowTableTransitionlog extends JTable
 			return false;
 		}
 		
-		if (trim($this->item_id) === '' || ($this->item_id)) {
-			$this->setError(JText::_('COM_WORKFLOW_ERROR_TRANSITIONLOG_CONTEXT'));
+		$this->item_id = trim($this->item_id);
+		if (empty($this->item_id)) {
+			$this->setError(JText::_('COM_WORKFLOW_ERROR_TRANSITIONLOG_ITEM_ID'));
 			return false;
 		}
 
@@ -67,7 +68,7 @@ class WorkflowTableTransitionlog extends JTable
 	}
 
 	/**
-	 * Overload the store method for the Weblinks table.
+	 * Overload the store method for the table.
 	 *
 	 * @param   boolean  $updateNulls  Toggle whether null values should be updated.
 	 *
@@ -82,8 +83,8 @@ class WorkflowTableTransitionlog extends JTable
 
 		if (empty($this->id)) {
 			// New record.
-			$this->created		= $date;
-			$this->created_by	= $userId;
+			if (empty($this->created)) $this->created		= $date;
+			if (empty($this->created_by)) $this->created_by	= $userId;
 		} 
 		else {
 			// Existing record.

@@ -17,7 +17,7 @@ var WFArticles =
 	        var f = jQuery('#' + fi);
 	        var l = f.attr('action');
 		    var q = l.split('?');
-		    var u = q[0].replace('/administrator','');
+		    var u = q[0];
 		    //console.log('url to make a call for workflow is ' + u);
 	        jQuery("#articleList > tbody", f).find('tr').each( 
 	        	/* each row */	

@@ -78,7 +78,7 @@ class WorkflowControllerInstance extends WFControllerFormJson
 		
 		$input = array('context'=>$context, 'item_id'=>$itemId, 'user'=>$user, 
 					'transition_id'=>$transitionId, 'comment'=>$comment);
-
+		var_dump($input['user']); jexit();
 		if (!$this->allowTransition($input, 'item_id')) {
 			$this->_messages[] = JText::_('COM_WORKFLOW_APPLICATION_ERROR_TRANSITION_NOT_PERMITTED');
 			$this->sendResponse();	
