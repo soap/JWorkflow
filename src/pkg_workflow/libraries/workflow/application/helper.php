@@ -459,20 +459,27 @@ class WFApplicationHelper {
     		$sSourceName = $oSourceState->get('title');
     		$sTargetName = $oTargetState->get('title');
     		$sTitle = JText::sprintf('COM_WORKFLOW_LOG_TRANSITION_CHANGED', $sSourceName, $sTargetName );
-    		 
+    		$date	= JFactory::getDate()->toSql();
     		$data = array(
-    				'id'		=> 	0,
+    				'id'		=> 	null,
     				'context'	=>	$context,
     				'item_id'	=> 	$oInstance->item_id,
     				'title'		=>	$sTitle,
     				'comment'	=>	$comment,
     				'from_state_id'	=>	$oSourceState->get('id'),
-    				'transition_id'	=>	$oTransition->get('id')
+    				'transition_id'	=>	$oTransition->get('id'),
+    				'created_by' => $oUser->id, 
+    				'created' => $date
     		);
-    		$oTransactionLog = JTable::getInstance('Transitionlog', 'WorkflowTable');
-    		$oTransactionLog->reset();
-    		$oTransactionLog->bind($data);
-    		$oTransactionLog->store();
+
+    		$oTransitionLog = JTable::getInstance('Transitionlog', 'WorkflowTable');
+    		$oTransitionLog->reset();
+    		$oTransitionLog->bind($data);
+    		if ($oTransitionLog->check()) {
+    			$oTransitionLog->store();
+    		}else{
+    			 
+    		}
     	
     	}
     	
@@ -592,12 +599,18 @@ class WFApplicationHelper {
         		'title'		=>	$sTitle,
         		'comment'	=>	$comment,
         		'from_state_id'	=>	$oSourceState->get('id'),
-        		'transition_id'	=>	$oTransition->get('id') 
+        		'transition_id'	=>	$oTransition->get('id'),
+        		'created_by' => $oUser->id 
         	);
-       	    $oTransactionLog = JTable::getInstance('Transitionlog', 'WorkflowTable');
-       	    $oTransactionLog->reset();
-       	    $oTransactionLog->bind($data);
-        	$oTransactionLog->store();
+       	    $oTransitionLog = JTable::getInstance('Transitionlog', 'WorkflowTable');
+       	    $oTransitionLog->reset();
+       	    $oTransitionLog->bind($data);
+       	    if ($oTransitionLog->check()) {
+       	    	$oTransitionLog->store();
+       	    }else{
+       	    	
+       	    }
+         	
         
         }
 
