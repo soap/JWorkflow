@@ -100,11 +100,11 @@ var WFArticles =
 	        						keyboard: true,
 	        						show: true
 	        					});*/
-	        					jQuery('input#transition-comment').val('');
-	        					jQuery.blockUI({message: jQuery('#transition-dialog'),  css: { width: '375px', top: '100px' } });
+	        					jQuery('#transition-comment').val('');
+	        					jQuery.blockUI({message: jQuery('#transition-dialog'),  css: { width: '475px', top: '100px' } });
 	        					jQuery('button#transition-yes').click(function(){
-	        						
-	        						WFArticles.doTransition(link, tdata, target, item_id, jQuery('input#transition-comment').val());
+	        						WFArticles.doTransition(link, tdata, target, item_id, jQuery('#transition-comment').val());
+	        						return false;
 	        					});
 	        					
 	        				});
@@ -126,6 +126,7 @@ var WFArticles =
 		
 		doTransition: function (transitionUrl, transitionData, target, item_id, comment)
 		{
+			jQuery('button#transition-yes').prop('diabled', true);
 			console.log('Try to make transition for com_content.article.'+item_id+' with comment '+comment);
 			jQuery.ajax(
 			{
@@ -155,10 +156,12 @@ var WFArticles =
 	        	error: function(resp, e, msg)
 	        	{
 	        		//Workflow.displayMsg(resp, msg);
+	        		jQuery('button#transition-yes').prop('diabled', false);
 	        		jQuery.unblockUI();
 	        	},
 	        	complete: function()
 	        	{
+	        		jQuery('button#transition-yes').prop('diabled', false);
 	        		jQuery.unblockUI();
 	        	}
 			});

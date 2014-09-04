@@ -245,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `#__wf_user_roles` (
 
 CREATE TABLE IF NOT EXISTS `#__wf_waiting_items` (
   `id` int(11) NOT NULL,
-  `item_type` varchar(200) NOT NULL COMMENT 'in com_xxx.entity format',
+  `context` varchar(200) NOT NULL COMMENT 'in com_xxx.entity format',
   `item_id` int(11) NOT NULL COMMENT 'PK of working item',
   `role_type` varchar(200) NOT NULL DEFAULT 'joomla.user' COMMENT 'joomla.user, joomla.group, workflow.role',
   `role_id` int(11) NOT NULL,

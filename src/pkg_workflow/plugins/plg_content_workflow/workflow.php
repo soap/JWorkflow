@@ -223,6 +223,14 @@ class plgContentWorkflow extends JPlugin
 		//delete workflow instance record
 		$instance->delete();
 		
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->delete('#__wf_transition_logs')
+			->where('contex='.$db->quote($context))
+			->where('item_id='.(int)$table->id);
+		$db->setQuery($query);
+		$db->execute();
+		
 		return true;
 		
     }

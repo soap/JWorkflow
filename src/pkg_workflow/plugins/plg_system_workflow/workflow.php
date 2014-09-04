@@ -75,10 +75,8 @@ class plgSystemWorkflow extends JPlugin
 								<h4 class="modal-title">You are about to make a transition</h4>
 							</div>
 							<div class="modal-body">
-								<p>Please provide your comment below.</p>
-								<input type="text" name="comment" id="transition-comment" value="" />
+								<textarea name="comment" id="transition-comment" rows="2" cols="15" placeholder="Provide your comment here.."></textarea>
 							</div>
-			
 							<div class="modal-footer">
 								<button type="button" class="btn btn-primary" id="transition-yes">Continue</button>
 								<button type="button" class="btn btn-default" onclick="jQuery.unblockUI();">Cancel</button>

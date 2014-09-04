@@ -464,13 +464,14 @@ class WFApplicationHelper {
     				'id'			=> 	null,
     				'context'		=>	$context,
     				'item_id'		=> 	$oInstance->item_id,
+    				'comment'		=> 	$comment,
     				'title'			=>	$sTitle,
-    				'comment'		=>	$comment,
     				'from_state_id'	=>	$oSourceState->get('id'),
     				'transition_id'	=>	$oTransition->get('id'),
-    				'created_by' 	=> $oUser->id, 
-    				'created' 		=> $date
+    				'created_by' 	=>  $oUser->id, 
+    				'created' 		=>  $date
     		);
+    		
 			JLog::add($context.'.'.$oInstance->item_id .', '.$oUser->get('name').', '.$sTitle. ', '.$comment, JLog::DEBUG, 'jworkflow');
     		$oTransitionLog = JTable::getInstance('Transitionlog', 'WorkflowTable');
     		$oTransitionLog->reset();
