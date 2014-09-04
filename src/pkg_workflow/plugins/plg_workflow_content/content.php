@@ -25,21 +25,21 @@ class plgWorkflowContent extends JPlugin
 		
 		// Check if we are processing a valid form
 		$name = $form->getName();
-		if ($name != 'com_workflow.trigger') {
+		if ($name != 'com_workflow.triggerinstance') {
 			return true;	
 		} 
 		
-		if (empty($data->plugin_id) || empty($data->id)) {
+		if (empty($data->trigger_id) || empty($data->id)) {
 			return true;
 		} 
-		$plugin = $this->getPlugin($data->plugin_id);
+		$plugin = $this->getPlugin($data->trigger_id);
 		if ($plugin) {
-			$path = WFPATH_TRIGGERS . '/' . $plugin->group . '/' .$plugin->name;
+			$path = WFPATH_TRIGGERS . '/' . $plugin->folder . '/' .$plugin->element;
 			JForm::addFormPath($path . '/forms');
 			JFormHelper::addFieldPath($path . '/fields');
 			
 			// load transition gaurd language 
-			$this->loadLanguage('plg_' . $plugin->group . '_'.$plugin->name, $path);
+			$this->loadLanguage('trg_' . $plugin->folder . '_'.$plugin->element, $path);
 			
 			// Load the config form definition, do not reset existing one
 			if (!$form->loadFile('triggerconfig', false)) {
@@ -58,17 +58,17 @@ class plgWorkflowContent extends JPlugin
 		if (is_array($data)) $data = JArrayHelper::toObject($data);
 
 		if (isset($data->trigger_config) && empty($data->trigger_config)) {
-			if (!empty($data->plugin_id)) {
-				$plugin = $this->getPlugin($data->plugin_id);
+			if (!empty($data->trigger_id)) {
+				$plugin = $this->getPlugin($data->trigger_id);
 				if ($plugin) {
-					$path = WFPATH_TRIGGERS . '/' . $plugin->group . '/' .$plugin->name;
+					$path = WFPATH_TRIGGERS . '/' . $plugin->folder . '/' .$plugin->element;
 					JForm::addFormPath($path . '/forms');
 					JFormHelper::addFieldPath($path . '/fields');
 			
 					// load transition gaurd language 
-					$this->loadLanguage('plg_' . $plugin->group . '_'.$plugin->name, $path);
+					$this->loadLanguage('trg_' . $plugin->folder . '_'.$plugin->element, $path);
 						
-					$form = new JForm('com_workflow.trigger');
+					$form = new JForm('com_workflow.triggerinstance');
 					// Load the config form definition, do not reset existing one
 					if (!$form->loadFile('triggerconfig', false)) {
 						$this->_subject->setError('COM_WORKFLOW_ERROR_FORM_NOT_LOAD');
@@ -109,7 +109,7 @@ class plgWorkflowContent extends JPlugin
 	 */
 	public function onContentAfterSave($context, $data) 
 	{
-		if (isset($data->plugin_id) && $data->plugin_id && isset($data->transition_id) && $data->transition_id) {			
+		if (isset($data->trigger_id) && $data->trigger_id && isset($data->transition_id) && $data->transition_id) {			
 			if (isset($data->trigger_config)) {
 				if (!is_array($data->trigger_config)) {
 					$data->trigger_config = array($data->trigger_config);
