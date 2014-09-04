@@ -17,7 +17,7 @@ class trgGuardOwner extends trgAbstractTrigger
     /**
      * Validate if the transition is blocked or not 
      */ 
-    public function allowTransition($oDocument, $oUser) 
+    public function allowTransition($oInstance, $oDocument, $oUser) 
     {
     	if (!$this->isLoaded()) return true;
 
