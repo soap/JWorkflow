@@ -56,7 +56,7 @@ class trgAbstractTrigger {
 		}		
 		
 		if (empty($this->_name)) {
-			$this->_name = str_replace('plg'.$this->_type, '', strtolower(get_class($this)));
+			$this->_name = str_replace('trg'.$this->_type, '', strtolower(get_class($this)));
 		}
         
    		$this->loadLanguage();
@@ -130,7 +130,7 @@ class trgAbstractTrigger {
      *  
      * return true for transition allowed on doc, false for transition not allowed on doc.
      */
-    public function allowTransition($oDocument, $oUser) {
+    public function allowTransition($oInstance, $oDocument, $oUser) {
         return true;  // abstract base class
     }
     
@@ -140,7 +140,7 @@ class trgAbstractTrigger {
      * 
      */
     
-    public function precheckTransition($oDocument, $oUser) {
+    public function precheckTransition($oInstance, $oDocument, $oUser) {
         return true;
     }
     
@@ -179,7 +179,7 @@ class trgAbstractTrigger {
    		
    		$lang = JFactory::getLanguage();
    		if (!defined('WFPATH_TRIGGERS')) {
-   			$_path = JPATH_ADMINISTRATOR.'/components/com_workflow/plugins';
+   			$_path = JPATH_ADMINISTRATOR.'/components/com_workflow/triggers';
    			define('WFPATH_TRIGGERS', $_path);
    		}else{
    			$_path = WFPATH_TRIGGERS;

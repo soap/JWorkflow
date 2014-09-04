@@ -119,7 +119,7 @@ class WFApplicationHelper {
             	$blocked = false;
             	foreach ($aGuardTriggers as $oTrigger) {
             		$explain = '';
-                	if (!$oTrigger->allowTransition($oInstance, $oUser)) 
+                	if (!$oTrigger->allowTransition($oInstance, $oDocument, $oUser)) 
                 	{
                     	//if only one guard not allow, guards this transition
                     	$blocked = true;
@@ -264,7 +264,7 @@ class WFApplicationHelper {
         
         /* -------------------------------------*/
         $aTriggers = array(); 
-        $aGuards= self::getGuardsByTransition($oTransition->id);
+        $aGuards= self::getGuardsByTransition($oTransition->id); 
         foreach ($aGuards as $oGuard) {
             $oTrigger = $oTriggerRegistry->getWorkflowTrigger($oGuard->get('namespace'));
 
@@ -295,7 +295,7 @@ class WFApplicationHelper {
        	$guards = array();
        	if (is_array($aObjects)){   
             foreach ($aObjects as $object){
-                $guard = JTable::getInstance('Trigger', 'WorkflowTable');
+                $guard = JTable::getInstance('Triggerinstance', 'WorkflowTable');
                 $guard->load($object->id);
                 $guards[] = clone $guard;
             }
@@ -328,7 +328,7 @@ class WFApplicationHelper {
      * Gets action triggers for specified transition object
      */
     protected static function getActionTriggersForTransition($oTransition) {
-        $aTriggers =  WFApplicationHelper::getTriggersForTransition($oTransition);
+        $aTriggers =  self::getTriggersForTransition($oTransition);
         if (JError::isError($aTriggers)) {
             return $aTriggers;
         }
@@ -393,7 +393,7 @@ class WFApplicationHelper {
     	}
     	
     	// walk the action triggers.
-    	$aActionTriggers = WFApplicationHelper::getActionTriggersForTransition($oTransition);
+    	$aActionTriggers = self::getActionTriggersForTransition($oTransition);
     	if (JError::isError($aActionTriggers)) {
     		return $aActionTriggers; // error out?
     	}
@@ -405,7 +405,7 @@ class WFApplicationHelper {
     		}
     	}
     	
-    	$oSourceState = WFApplicationHelper::getWorkflowStateForInstance($oInstance);
+    	$oSourceState = self::getWorkflowStateForInstance($oInstance);
     	$iStateId = $oTransition->getTargetStateId();
     	
     	$oTargetState = JTable::getInstance('State', 'WorkflowTable');
@@ -814,7 +814,7 @@ class WFTriggerRegistry {
 
     public static function getWorkflowTrigger($sNamespace) {
     	
-        if (array_key_exists( $sNamespace, $this->triggers)){
+        if (array_key_exists( $sNamespace, self::$triggers)){
             $aInfo = self::$triggers[$sNamespace];
         }else{
 			return null;
