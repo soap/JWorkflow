@@ -34,17 +34,19 @@ JHtml::_('behavior.keepalive');
 
 <form action="<?php echo JRoute::_('index.php?option=com_workflow&layout=edit&id='.(int) $this->item->id); ?>"
 	method="post" name="adminForm" id="triggerinstance-form" class="form-validate">
+	
 	<div class="form-horizontal">
 		<div class="row-fluid">
 			<div class="span9">
 				<div class="row-fluid form-horizontal-desktop">
-					<div class="span10">
+					<div class="span6">
+						<?php echo $this->form->renderField('title');?>
 						<?php echo $this->form->renderField('transition_id');?>
 						<?php echo $this->form->renderField('trigger_id'); ?>
 						<?php echo $this->form->renderField('namespace'); ?>
 						<?php echo $this->form->renderField('element'); ?>
 					</div>
-					<div class="span2">
+					<div class="span6">
 						<?php echo $this->loadTemplate('config'); ?>
 					</div>
 				</div>

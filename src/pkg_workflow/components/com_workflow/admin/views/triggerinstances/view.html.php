@@ -76,7 +76,7 @@ class WorkflowViewTriggerinstances extends JViewLegacy
 		$state	= $this->get('State');
 		$canDo	= WorkflowHelper::getActions();
 
-		JToolBarHelper::title(JText::_('COM_WORKFLOW_TRIGGER_INTSTANCES_TITLE'));
+		JToolBarHelper::title(JText::_('COM_WORKFLOW_TRIGGER_INSTANCES_TITLE'));
 
 		if ($canDo->get('core.create') && $state->get('filter.transition_id')) {
 			JToolBarHelper::addNew('triggerinstance.add', 'JTOOLBAR_NEW');

@@ -160,7 +160,7 @@ class WorkflowModelTriggerinstances extends JModelList
 	public function getTransition() 
 	{
 		$transition = (int) $this->getState('filter.transition_id');
-
+		
 		if (!$transition) return false;
 
 		$db = JFactory::getDbo();

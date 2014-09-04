@@ -25,22 +25,22 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				<th width="1%">
 					<input type="checkbox" name="toggle" value="" onclick="checkAll(this)" />
 				</th>
-				<th>
+				<th class="center">
 					<?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'a.namespace', $listDirn, $listOrder); ?>
 				</th>
-				<th width="10%">
+				<th width="10%" class="center">
 					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_TRIGGER_TYPE', 'p.group', $listDirn, $listOrder); ?>					
 				</th>
-				<th width="20%">
+				<th width="20%" class="center">
 					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_TRANSITION', 'a.transition_id', $listDirn, $listOrder); ?>
 				</th>				
 				<th width="5%">
 					<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'a.published', $listDirn, $listOrder); ?>
 				</th>
-				<th width="10%">
+				<th width="10%" class="center">
 					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_CREATED_BY', 'a.created_by', $listDirn, $listOrder); ?>
 				</th>
-				<th width="5%">
+				<th width="10%" class="center">
 					<?php echo JHtml::_('grid.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>
 				</th>
 				<th width="1%" class="nowrap">
@@ -70,10 +70,10 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				</td>
 				<td>
 					<?php if ($item->checked_out) : ?>
-						<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'triggers.', $canCheckin); ?>
+						<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'triggerinstances.', $canCheckin); ?>
 					<?php endif; ?>
 					<?php if ($canCreate || $canEdit) : ?>
-					<a href="<?php echo JRoute::_('index.php?option=com_workflow&task=trigger.edit&id='.$item->id);?>">
+					<a href="<?php echo JRoute::_('index.php?option=com_workflow&task=triggerinstance.edit&id='.$item->id);?>">
 						<?php echo $this->escape($item->title); ?></a>
 					<?php else : ?>
 						<?php echo $this->escape($item->title); ?>

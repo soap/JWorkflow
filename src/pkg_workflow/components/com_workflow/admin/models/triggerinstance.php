@@ -159,7 +159,7 @@ class WorkflowModelTriggerinstance extends JModelAdmin
 				$dispatcher = JDispatcher::getInstance();
 
 				// Trigger the form preparation event.
-				$results = $dispatcher->trigger('onContentPrepareData', array('com_workflow.trigger', $data));
+				$results = $dispatcher->trigger('onContentPrepareData', array('com_workflow.triggerinstance', $data));
 
 				// Check for errors encountered while preparing the form.
 				if (count($results) && in_array(false, $results, true))
