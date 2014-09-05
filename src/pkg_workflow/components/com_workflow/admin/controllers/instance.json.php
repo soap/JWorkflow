@@ -56,12 +56,16 @@ class WorkflowControllerInstance extends WFControllerFormJson
 		if ($items = $model->getWorkflowTransitions($context, $itemId)) {
 			
 			$this->_success = true;
-			$this->_messages[] =	array();
+			$this->_messages[] = array();
 			$this->_data = $items;
 			$this->sendResponse();
+			
+		}else{
+			$this->_success = false;
+			$this->_messages[] = $model->getError();	
+			$this->sendResponse();
 		}
-		
-		$this->sendResponse();
+				
 	}
 
 	/**
@@ -131,6 +135,8 @@ class WorkflowControllerInstance extends WFControllerFormJson
 		$this->sendResponse($data);
 	
 	}
+	
+	
 	protected function allowTransition($data = array(), $key = 'id')
 	{
 		$id     = (int) isset($data[$key]) ? $data[$key] : 0;
