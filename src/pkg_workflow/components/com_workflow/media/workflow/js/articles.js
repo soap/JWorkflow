@@ -71,8 +71,8 @@ var WFArticles =
     		
     		jQuery.ajax(
 	        {
-	        	url: baseUrl + '?option=com_workflow',
-	        	data: 'task=instance.transitions&context=com_content.article&id=' + item_id + '&tmpl=component&format=json',
+	        	url: baseUrl + '?option=com_workflow&task=instance.transitions&',
+	        	data: 'context=com_content.article&id=' + item_id + '&tmpl=component&format=json',
 	        	type: 'POST',
 	        	cache: false,
 	        	dataType: 'json',
@@ -83,9 +83,19 @@ var WFArticles =
 	        		if (resp.success == true) {
 	        			if (resp.data != 'undefined') {
 	        				var ix = 0;
+	        				var reason = '';
+	        				var liClass = '';
 	        				for (ix = 0; ix < resp.data.length; ix++) {
 	        					//console.log(resp.data[ix].id);
-	        					jQuery('ul.dropdown-menu', target).append('<li><a href="#" class="wf-transition" item_id="'+item_id+'" transition="'+resp.data[ix].id+'"><span class="icon"> '+ resp.data[ix].title +'</span></a></li>');
+	        					if (resp.data[ix].blocked == true) {
+	        						reason = resp.data[ix].explain;
+	        						liClass = ' class="disabled"';
+	        						
+	        					}else{
+	        						reason = '';
+	        						liClass = '';
+	        					}
+	        					jQuery('ul.dropdown-menu', target).append('<li' + liClass +'><a href="#" class="wf-transition" item_id="'+item_id+'" transition="'+resp.data[ix].id+'" blocked="'+reason+'"><span class="icon"> '+ resp.data[ix].title +'</span></a></li>');
 	        				}
 	        				
 	        				jQuery('a.wf-transition', target).click(function() {
