@@ -42,7 +42,7 @@ class WorkflowModelInstance extends JModelItem
 		$instance = $this->getItem($context, $id);
 
 		$oUser = JFactory::getUser();
-		$transitions = WFApplicationHelper::getTransitionsForInstanceUser($instance, $oUser);
+		$transitions = WFApplicationHelper::getTransitionsForInstanceUser($instance, $oUser, true);
 		
 		return $transitions;
 
