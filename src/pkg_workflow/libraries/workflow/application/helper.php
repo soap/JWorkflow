@@ -101,10 +101,12 @@ class WFApplicationHelper {
     {
         $oState = self::getWorkflowStateForInstance($oInstance);
         if (is_null($oState) || JError::isError($oState)) {
+        	
             return $oState;
         }
         $aTransitions = self::getTransitionsFrom($oState);    
-
+        $oDocument = self::getDocument($oInstance);
+        
         $aEnabledTransitions = array();
         
         foreach ($aTransitions as $oTransition) 
@@ -286,8 +288,13 @@ class WFApplicationHelper {
     	$query = $db->getQuery(true);
     	$query->select('id, namespace')
     		->from('#__wf_trigger_instances')
-    		->where('transition_id = '.$transitionId)
-    		->where('published = 1'); //unpublished trigger, no effect
+    		->where('transition_id = '.$transitionId);
+    	
+    	$app = JFactory::getApplication();
+    	$option = $app->input->getCmd('option');
+    	if ($app->isAdmin() && $option != 'com_workflow'){
+    		$query->where('published = 1');
+    	}
      
        	$db->setQuery($query);
        	$aObjects = $db->loadObjectList();
@@ -674,15 +681,18 @@ class WFApplicationHelper {
     	$oBinding->load($oInstance->binding_id);
     	
     	$oResult = false;
-    	if (!empty($oBinding->params)) {
+    	if ( isset($oBinding->params) && !empty($oBinding->params)) {
     		$oBinding->params = new JRegistry($oBinding->params);
     		$path = $oBinding->params->get('table_path');
     		$prefix = $oBinding->params->get('table_prefix');
     		$name = $oBinding->params->get('table_name');
+    		if (!empty($path)) {
+    			$path = JPath::clean(JPATH_ADMINISTRATOR.'/'.$path);
+    			JTable::addIncludePath($path);
+    		}
     		
-    		$path = JPath::clean(JPATH_ADMINISTRATOR.'/'.$path);
-    		JTable::addIncludePath($path);
     		$oResult = JTable::getInstance($name, $prefix);
+    		$oResult->load($oInstance->item_id);
     	}
 
     	return $oResult;
@@ -774,8 +784,13 @@ class WFTriggerRegistry {
         $query = $db->getQuery(true);
         
     	$query->select('a.namespace, a.folder, a.element, a.name')
-    		->from('#__wf_triggers AS a')
-    		->where('published = 1');
+    		->from('#__wf_triggers AS a');
+    	
+    	$app = JFactory::getApplication();
+    	$option = $app->input->getCmd('option');
+    	if ($app->isAdmin() && $option != 'com_workflow'){
+    		$query->where('published = 1');
+    	}
     		
     	if (!empty($transitionId)) {
     		$sub_query = $db->getQuery(true);
