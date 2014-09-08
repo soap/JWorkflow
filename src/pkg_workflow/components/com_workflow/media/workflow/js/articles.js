@@ -85,31 +85,40 @@ var WFArticles =
 	        				var ix = 0;
 	        				var reason = '';
 	        				var liClass = '';
+	        				var tooltip = '';
 	        				for (ix = 0; ix < resp.data.length; ix++) {
 	        					//console.log(resp.data[ix].id);
 	        					if (resp.data[ix].blocked == true) {
 	        						reason = resp.data[ix].explain;
 	        						liClass = ' class="disabled"';
-	        						
+	        						tooltips =  ' data-toggle="tooltip" data-placement="top" title="'+reason+'"'; 
 	        					}else{
 	        						reason = '';
 	        						liClass = '';
+	        						tooltips = '';
 	        					}
-	        					jQuery('ul.dropdown-menu', target).append('<li' + liClass +'><a href="#" class="wf-transition" item_id="'+item_id+'" transition="'+resp.data[ix].id+'" blocked="'+reason+'"><span class="icon"> '+ resp.data[ix].title +'</span></a></li>');
+	        					jQuery('ul.dropdown-menu', target).append('<li' + liClass +'><a href="#" class="wf-transition" item_id="'+item_id+'" transition="'+resp.data[ix].id+'" blocked="'+reason+'"><span class="icon"' +tooltips + '> '+ resp.data[ix].title +'</span></a></li>');
 	        				}
 	        				
 	        				jQuery('a.wf-transition', target).click(function() {
+	        					var blocked = jQuery(this).attr('blocked');
+	        					if ( blocked !=='') {
+	        						jQuery(function(){
+		        				        new PNotify({
+		        				            title: 'This transition is not allowed for you',
+		        				            text: blocked, 
+		        				            type: 'success',
+		        				            width: '450px'
+		        				        });
+		        				    });
+	        						return false;
+	        					}
 	        					var item_id = jQuery(this).attr('item_id');
 	        					var transition_id = jQuery(this).attr('transition');
 	        					var link = baseUrl + '?option=com_workflow&tmpl=component&format=json';
 	        		
 	        					var tdata = 'transition_id='+transition_id+'&context=com_content.article';
-	        					/*
-	        					jQuery('#transition-dialog').modal({
-	        						backdrop: 'static',
-	        						keyboard: true,
-	        						show: true
-	        					});*/
+
 	        					jQuery('#transition-comment').val('');
 	        					jQuery.blockUI({message: jQuery('#transition-dialog'),  css: { width: '475px', top: '100px' } });
 	        					jQuery('button#transition-yes').click(function(){
