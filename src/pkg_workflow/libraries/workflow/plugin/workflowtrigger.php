@@ -151,7 +151,7 @@ class trgAbstractTrigger {
     
     Any other return is simply discarded.
      */
-    public function afterTransition($oDocument, $oUser) {
+    public function afterTransition($oInstance, $oDocument, $oUser) {
         return true;
     }
     
