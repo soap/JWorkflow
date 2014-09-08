@@ -2,7 +2,7 @@
 <form>
 	<fields name="trigger_config">
 		<fieldset name="trigger_config">
-			<field name="group"
+			<field name="groups"
 				type="usergroup"
 				label="TRG_GUARD_USERGROUP_GROUP_LABEL"
 				description="TRG_GUARD_USERGROUP_GROUP_DESC"
@@ -10,7 +10,14 @@
 				size="10" 
 				required="true"
 			/>
-			
+			<field name="inherited_group"
+				type="list"
+				label="TRG_GUARD_USERGROUP_INCLUDE_INHERITED_GROUP_LABEL"
+				description="TRG_GUARD_USERGROUP_INCLUDE_INHERITED_GROUP_DESC"
+				default="0">
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
 			<field name="allowowner"
 				type="list"
 				label="TRG_GUARD_USERGROUP_ALLOWOWNER_LABEL"

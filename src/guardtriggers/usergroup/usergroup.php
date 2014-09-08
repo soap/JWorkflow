@@ -17,15 +17,19 @@ class trgGuardUsergroup extends trgAbstractTrigger
     /**
      * Validate if the transition is blocked or not 
      */ 
-    public function allowTransition($oDocument, $oUser) 
+    public function allowTransition($oInstance, $oDocument, $oUser) 
     {
     	if (!$this->isLoaded()) return true;
     	
-    	$userGroups = $oUser->getAuthorisedGroups();
-    	$groups = $this->params->get('group');
+    	if ((int)$this->params->get('inherited_groups', 0)) {
+    		$userGroups = $oUser->getAuthorisedGroups();
+    	}else{
+    		$userGroups = JAccess::getGroupsByUser($oUser->id, false);
+    	}
+    	$groups = $this->params->get('groups', array());
     	JArrayHelper::toInteger($groups);
-    	$allowOwner = (int)$this->params->get('allowowner');
-		$fieldName = (string)$this->params->get('ownerfiled');
+    	$allowOwner = (int)$this->params->get('allowowner', 0);
+		$fieldName = (string)$this->params->get('ownerfiled', 'created_by');
 		
     	if ($allowOwner === 1 && isset($oDocument->$fieldName)) {
     		if ($oUser->id == $oDocument->$fieldName) { 
@@ -34,10 +38,11 @@ class trgGuardUsergroup extends trgAbstractTrigger
     			$this->_messages['owner_blocked'] = JText::_('TRG_GUARD_USERGROUP_MSG_NOT_OWNER'); 
     		}
     	}
-
+		JLog::add('User groups: '.join(',',$userGroups).'; configuration groups: '.join(',', $groups), JLog::DEBUG, 'jworkflow');
     	if (!is_array($groups)) {
     		$groups = array($groups);
     	}
+    	
 		if (count(array_intersect($groups, $userGroups)) > 0) {
 			return true;
 		}else{
@@ -45,12 +50,13 @@ class trgGuardUsergroup extends trgAbstractTrigger
 			$this->_messages['group_blocked'] = JText::sprintf('TRG_GUARD_USERGROUP_MSG_NOT_IN_ALLOWED_GROUP', implode(',', $groupNames));
 			return false;	
 		}
+		
     	return true;	
     }
     
     public function getConfigSummary()
     {
-    	$groups = $this->params->get('group');
+    	$groups = $this->params->get('groups', array());
     	JArrayHelper::toInteger($groups);
     	$groupNames = $this->getGroupName($groups);
     	
@@ -64,6 +70,7 @@ class trgGuardUsergroup extends trgAbstractTrigger
     
     private function getGroupName($groups)
     {
+    	if (empty($groups)) return array();
     	$dbo = JFactory::getDbo();
     	$query = $dbo->getQuery(true);
     	

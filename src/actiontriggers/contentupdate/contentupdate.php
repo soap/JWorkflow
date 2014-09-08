@@ -13,7 +13,7 @@ class trgActionContentupdate extends trgAbstractTrigger
 		parent::__construct($params);
     }
     
-    public function afterTransition($oDocument, $oUser)
+    public function afterTransition($oInstance, $oDocument, $oUser)
     {
     	$updateItems = explode("\r\n", trim($this->params->get('update_items')));
     	$count = 0;
