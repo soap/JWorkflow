@@ -3,6 +3,12 @@ JWorkFlow
 
 Document based workflow for Joomla CMS 3.x.
 
+Workflows
+---------
+A workflow is a pre-defined set of tasks that must be performed on a document
+during the document life cycle. For example, an article is created, reviewed, approved, then
+publshed.
+
 States and Transitions
 ----------------------
 Workflows consist of states and transitions. A state may be defined as a stage in a
