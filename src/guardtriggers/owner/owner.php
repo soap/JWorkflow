@@ -20,23 +20,47 @@ class trgGuardOwner extends trgAbstractTrigger
     public function allowTransition($oInstance, $oDocument, $oUser) 
     {
     	if (!$this->isLoaded()) return true;
-
+    	
+    	if (!is_object($oDocument)) {
+    		return false;
+    	}
+    	
     	$fields = explode("\r\n", trim($this->params->get('owner_fields')));
+    	
     	$allowSuperAdmin = $this->params->get('allow_superadmin', false);
-    	$allowed = (bool) $this->params->get('allow_mode', true);
-    	
+    	$allowed = (bool) $this->params->get('allow_mode', 1);
+		$matched = false;
+	
     	if ($allowSuperAdmin && $oUser->get('isRoot')) return true;
-    	
+
    		$uid = $oUser->get('id');
    		foreach($fields as $field) {
    			if (isset($oDocument->$field)) {
+   				JLog::add('Field '.$field.' exists, try to validate if it matches');
    				if ($oDocument->$field == $uid){
-   					return $allowed;
+   					$matched = true;
    				}  				
    			}	
    		}
     	    	
-    	return false;
+   		if (defined('JDEBUG') && JDEBUG)
+   		{
+   			JLog::add(
+   				sprintf(
+   					'Guard %s validates transition on instance %s.%d on fields; %s, result is %s %d',
+   					$this->_name,
+   					$oInstance->context,
+   					(int)$oInstance->item_id,
+   					join(',',$fields),
+   					($matched ? 'true' : 'false'), $oDocument->owner_id
+   				),
+   				JLog::INFO,
+   				'jworkflow'
+   			);
+   		}
+   		
+   		if ($matched) return  $allowed;   		
+    	return !$allowed;
     }
     
     public function getConfigSummary()
