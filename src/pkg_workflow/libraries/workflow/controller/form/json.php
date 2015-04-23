@@ -333,7 +333,7 @@ class WFControllerFormJson extends JControllerForm
      *
      */
     public function reload()
-    {	
+    {
         $rdata = array();
         $rdata['success']  = "true";
         $rdata['messages'] = array();
