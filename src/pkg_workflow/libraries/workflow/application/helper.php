@@ -406,7 +406,7 @@ class WFApplicationHelper {
     	}
     	
     	foreach ($aActionTriggers as $oTrigger) {
-    		$res = $oTrigger->precheckTransition($oInstance, $oUser);
+    		$res = $oTrigger->precheckTransition($oInstance, $oDocument, $oUser);
     		if (JError::isError($res)) {
     			return $res;
     		}
@@ -744,6 +744,27 @@ class WFApplicationHelper {
     	return $db->loadObjectList();
     }
     
+    /**
+     * Check if workflow if exists for provided context
+     * @param unknown $context
+     */
+    public static function workflowExists($context)
+    {
+    	$db = JFactory::getDbo();
+    	$query = $db->getQuery(true);
+    	$subquery = $db->getQuery(true);
+    	
+    	$query->select('count(id)')->from('#__wf_workflows AS a')->where('a.published=1');
+    	$subquery->select('workflow_id')->from('#__wf_bindings AS b')->where('b.context='.$db->quote($context));
+    	
+    	$query->where('a.id IN ('.$subquery.')');
+    	$db->setQuery($query);
+    		
+    	if ($db->loadResult() == 0) return false;
+    		
+    	return true;
+    }
+    
     public function getVersion()
     {
     	return 'Workflow 1.5.0 [library 1.5.0, component 1.5.0]';
@@ -854,4 +875,5 @@ class WFTriggerRegistry {
         }
         return $triggerlist;
     }
+   
 }
