@@ -6,6 +6,7 @@
 
 // no direct access
 defined('_JEXEC') or die;
+jimport('workflow.application.helper');
 
 /**
  * Workflow System Plugin
@@ -25,7 +26,7 @@ class plgSystemWorkflow extends JPlugin
 		$app = JFactory::getApplication();
 		$component = $app->input->getCmd('option', null);
 		$view = $app->input->getCmd('view', null);
-		if ( ($component !== 'com_content')) {
+		if ( ($component !== 'com_content') || !WFApplicationHelper::workflowExists('com_content.article')) {
 			return true;
 		}
 		
@@ -46,7 +47,7 @@ class plgSystemWorkflow extends JPlugin
 		$app = JFactory::getApplication();
 		$component = $app->input->getCmd('option', null);
 		$view = $app->input->getCmd('view', null);
-		if ( ($component !== 'com_content')) {
+		if ( ($component !== 'com_content') || !WFApplicationHelper::workflowExists('com_content.article')) {
 			return true;
 		}
 		
