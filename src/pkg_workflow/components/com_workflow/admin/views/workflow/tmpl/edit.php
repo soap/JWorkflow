@@ -39,16 +39,19 @@ JHtml::_('formbehavior.chosen', 'select');
 	<div class="form-horizontal">
 		<?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'details')); ?>
 		
-		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details', empty($this->item->id) ? JText::_('COM_WORKFLOW_NEW_WORKFLOW', true) : JText::_('COM_WORKFLOW_EDIT_WORKFLOW', true)); ?>
+		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details', JText::_('COM_WORKFLOW_DETAILS', true) ); ?>
 		<div class="row-fluid">
 			<div class="span9">
 				<div class="row-fluid form-horizontal-desktop">
-					<div class="span10">
+					<div class="span12">
 						<?php echo $this->form->renderField('category_id'); ?>
 						<?php echo $this->form->renderField('ordering'); ?>
 					</div>
-					<div class="span2">
-					</div>
+				</div>
+				<div class="form-vertical">
+					<fieldset class="adminform">
+						<?php echo $this->form->getInput('description'); ?>
+					</fieldset>
 				</div>
 			</div>
 			<div class="span3">
@@ -56,17 +59,7 @@ JHtml::_('formbehavior.chosen', 'select');
 			</div>
 		</div>
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
-		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'description', JText::_('COM_WORKFLOW_DESCRIPTION', true)) ?>
-		<div class="row-fluid form-horizontal-desktop">
-			<div class="form-vertical">
-				<fieldset class="adminform">
-					<?php echo $this->form->getInput('description'); ?>
-				</fieldset>
-			</div>
-		</div>
-		<?php echo JHtml::_('bootstrap.endTab'); ?>
-		
-		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'misc', JText::_('JGLOBAL_FIELDSET_MISCELLANEOUS', true)); ?>
+		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'misc', JText::_('COM_JONGMAN_FIELDSET_MISCELLANEOUS', true)); ?>
 		<div class="row-fluid form-horizontal-desktop">
 				<div class="form-vertical">
 					<?php echo $this->form->renderField('misc'); ?>

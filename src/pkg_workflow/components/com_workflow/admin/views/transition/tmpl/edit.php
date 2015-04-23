@@ -53,7 +53,7 @@ JHtml::_('script', 'com_workflow/workflow/form.js', false, true, false, false, f
 							<div class="control-label">
 								<?php echo $this->form->getLabel('target_state_id')?>
 							</div>		
-							<div class="controls">
+							<div class="controls" id="jform_target_state_id_element">
 								<div id="jform_target_state_id_reload">
 									<?php echo $this->form->getInput('target_state_id'); ?>
 								</div>
