@@ -3,5 +3,5 @@ defined('_JEXEC') or die;
 
 class WFDatabaseHelper 
 {
-	
+
 }
