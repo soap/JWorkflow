@@ -123,9 +123,11 @@
 				label="COM_WORKFLOW_FIELD_TABLE_PATH_LABEL" 
 				description="COM_WORKFLOW_FIELD_TABLE_PATH_DESC"/>
 			<field name="table_prefix" type="text"
+				required="true"
 				label="COM_WORKFLOW_FIELD_TABLE_PREFIX_LABEL" 
 				description="COM_WORKFLOW_FIELD_TABLE_PREFIX_DESC" />
 			<field name="table_name" type="text"
+				required="true"
 				label="COM_WORKFLOW_FIELD_TABLE_NAME_LABEL" 
 				description="COM_WORKFLOW_FIELD_TABLE_NAME_DESC"/>
 		</fieldset>
