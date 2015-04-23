@@ -19,7 +19,7 @@
 			default="0"
 			class="inputbox"
 			required="true">
-			<option value="0">JOPTION_NO_CATEGORY</option>
+			<option value="0">COM_WORKFLOW_OPTION_NO_CATEGORY</option>
 		</field>
 
 		<field name="title"
