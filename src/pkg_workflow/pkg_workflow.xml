@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<extension type="package" version="3.0" method="upgrade">
+    <name>Workflow - Activity based Workflow for Joomla!</name>
+    <packagename>workflow</packagename>
+    <version>1.5.0</version>
+    <url>http://www.joomlant.org</url>
+    <creationDate>March 2014</creationDate>
+    <copyright>(C) 2009 - 2015 Prasit Gebsaap. All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <authorEmail>support@joomlant.org</authorEmail>
+    <authorUrl>www.joomlant.org</authorUrl>
+    <author>Prasit Gebsaap</author>
+    <packager>JONGman</packager>
+    <packagerurl>http://www.joomlant.org</packagerurl>
+    <description></description>
+    <scriptfile>pkg_workflow.script.php</scriptfile>
+    <files>
+        <!-- It is important that the library and com_workflow are installed first -->
+        <file type="library" id="workflow">libraries/jongman</file>
+        <file type="component" id="com_workflow">components/com_workflow</file>
+    </files>
+</extension>
