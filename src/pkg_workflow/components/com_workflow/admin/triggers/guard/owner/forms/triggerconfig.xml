@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<fields name="trigger_config">
+		<fieldset name="trigger_config">
+			<field name="allow_mode"
+				type="list"
+				label="TRG_GUARD_OWNER_ALLOW_MODE_LABEL"
+				description="TRG_GUARD_OWNER_ALLOW_MODE_DESC"
+				size="1" 
+				default="1">
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>				
+			<field name="owner_fields"
+				type="textarea"
+				defulalt="created_by"
+				label="TRG_GUARD_OWNER_FIELDS_LABEL"
+				description="TRG_GUARD_OWNER_FIELDS_DESC" />
+				
+			<field name="allow_superadmin"
+				type="list"
+				label="TRG_GUARD_OWNER_ALLOWSUPERADMIN_LABEL"
+				description="TRG_GUARD_OWNER_ALLOWSUPERADMIN_DESC"
+				size="1" 
+				default="0">
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>				
+		</fieldset>
+	</fields>
+</form>
