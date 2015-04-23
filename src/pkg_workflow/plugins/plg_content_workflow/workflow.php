@@ -236,7 +236,7 @@ class plgContentWorkflow extends JPlugin
     }
     
     /**
-     * always disable state edit in com_content edit
+     * Always disable state edit in com_content edit if workflow exists
      * @param unknown $form
      * @param unknown $data
      * @return boolean
@@ -248,6 +248,8 @@ class plgContentWorkflow extends JPlugin
   			return true;  		
     	} 
     	
+    	if (!WFApplicationHelper::workflowExists($name)) return true;
+    	
     	//force state disabled and workflow process state
     	$form->setFieldAttribute('state', 'disabled', 'true');
     	
@@ -257,6 +259,8 @@ class plgContentWorkflow extends JPlugin
     public function onContentPrepareData($context, $data)
     {
     	if ($context != 'com_content.article') return true;
+    	
+    	if (!WFApplicationHelper::workflowExists($context)) return true;
     	
      	if (is_object($data) && empty($data->id)) {
      		$data->state = 0;	
