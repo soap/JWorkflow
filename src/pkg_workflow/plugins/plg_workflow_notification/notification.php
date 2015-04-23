@@ -19,7 +19,7 @@ class plgWorkflowNotification extends JPlugin
 	 * @return  boolean  True if successful, false if not and a plugin error is set.
 	 * @since   1.0
 	 */
-	public function onWorkflowAfterTransition($context, $oDocument, $oUser, $comment, $oTransition, $oSourceState, $oTargetState)
+	public function onWorkflowAfterTransition($context, $oInstance, $oUser, $comment, $oTransition, $oSourceState, $oTargetState)
 	{
 		// Adjust error condition as required.
 		$state = strtolower($oTargetState->title);
