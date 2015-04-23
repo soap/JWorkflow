@@ -2,13 +2,13 @@
  * 
  */
 
-var WFArticles = 
+var WFWorkflow = 
 {
 		/**
 	     * @param    string    fi    The form ID (Optional)
 	     * @param    string    fn    The form name (Optional)
 	     */
-		removeButtons: function(fi)
+		removeButtons: function(fi, wfcontext)
 		{
 			
 	        if (typeof fi == 'undefined') {
@@ -33,20 +33,19 @@ var WFArticles =
 	        			.addClass('disabled')
 	        			.prop('title', 'This behavior was disabled by JWorkflow');
 	        		
-	        		WFArticles.loadWorkflowState(u, target, id);
+	        		WFWorkflow.loadWorkflowState(u, wfcontext, target, id);
 	        	}
 	        );
 		},
 		
-		loadWorkflowState : function(baseUrl, target, item_id) 
+		loadWorkflowState : function(baseUrl, wfcontext, target, item_id) 
 		{
 
     		jQuery('ul.dropdown-menu', target).html('<li class="divider"></li>');
-    		//console.log(jQuery('ul.dropdown-menu', target).html());
     		jQuery.ajax(
     		{
     			url: baseUrl + '?option=com_workflow',
-    			data: 'task=instance.state&context=com_content.article&id=' + item_id + '&tmpl=component&format=json',
+    			data: 'task=instance.state&context='+wfcontext+'&id=' + item_id + '&tmpl=component&format=json',
     			type: 'POST',
     			cache: false,
     			dataType: 'json',
@@ -72,15 +71,16 @@ var WFArticles =
     		jQuery.ajax(
 	        {
 	        	url: baseUrl + '?option=com_workflow&task=instance.transitions&',
-	        	data: 'context=com_content.article&id=' + item_id + '&tmpl=component&format=json',
+	        	data: 'context='+wfcontext+'&id=' + item_id + '&tmpl=component&format=json',
 	        	type: 'POST',
 	        	cache: false,
 	        	dataType: 'json',
 	        	success: function(resp)
 	        	{
-	        		//console.log('query for transitions success for item id = '+id);
+	        		//console.log('query for transitions of this state success for item id = '+item_id);
 	        		//console.log(resp.data[0].title);
 	        		if (resp.success == true) {
+	        			//console.log('query transitons success');
 	        			if (resp.data != 'undefined') {
 	        				var ix = 0;
 	        				var reason = '';
@@ -97,6 +97,7 @@ var WFArticles =
 	        						liClass = '';
 	        						tooltips = '';
 	        					}
+	        					//console.log(jQuery('ul.dropdown-menu', target).html())
 	        					jQuery('ul.dropdown-menu', target).append('<li' + liClass +'><a href="#" class="wf-transition" item_id="'+item_id+'" transition="'+resp.data[ix].id+'" blocked="'+reason+'"><span class="icon"' +tooltips + '> '+ resp.data[ix].title +'</span></a></li>');
 	        				}
 	        				
@@ -117,12 +118,12 @@ var WFArticles =
 	        					var transition_id = jQuery(this).attr('transition');
 	        					var link = baseUrl + '?option=com_workflow&tmpl=component&format=json';
 	        		
-	        					var tdata = 'transition_id='+transition_id+'&context=com_content.article';
+	        					var tdata = 'transition_id='+transition_id+'&context='+wfcontext;
 
 	        					jQuery('#transition-comment').val('');
 	        					jQuery.blockUI({message: jQuery('#transition-dialog'),  css: { width: '475px', top: '100px' } });
 	        					jQuery('button#transition-yes').click(function(){
-	        						WFArticles.doTransition(link, tdata, target, item_id, jQuery('#transition-comment').val());
+	        						WFWorkflow.doTransition(link, wfcontext, tdata, target, item_id, jQuery('#transition-comment').val());
 	        						return false;
 	        					});
 	        					
@@ -143,10 +144,10 @@ var WFArticles =
 		},
 		
 		
-		doTransition: function (transitionUrl, transitionData, target, item_id, comment)
+		doTransition: function (transitionUrl, wfcontext, transitionData, target, item_id, comment)
 		{
 			jQuery('button#transition-yes').prop('diabled', true);
-			console.log('Try to make transition for com_content.article.'+item_id+' with comment '+comment);
+			console.log('Try to make transition for .' + wfcontext + ', id='+item_id+' with comment '+comment);
 			jQuery.ajax(
 			{
 	        	url: transitionUrl+'&task=instance.transition',
@@ -168,7 +169,7 @@ var WFArticles =
 	        				        });
 	        				    });
 	        				var u = transitionUrl.split('?');
-	        				WFArticles.loadWorkflowState(u[0], target, item_id);
+	        				WFWorkflow.loadWorkflowState(u[0], wfcontext, target, item_id);
 	        			}
 	        		}
 	        	},
