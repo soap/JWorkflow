@@ -116,7 +116,7 @@ class WorkflowModelInstance extends JModelItem
 	
 		if ((int)$data['transition_id'] > 0) {
 	
-			$transition = JTable::getInstance('Transition', 'WorflwoTable');
+			$transition = JTable::getInstance('Transition', 'WorkflowTable');
 			$transition->load((int)$data['transition_id']);
 			if (!empty($transition->params)) $transition->params = new JRegistry($transition->params);
 			if (isset($transition->params)) {	
