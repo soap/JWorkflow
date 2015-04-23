@@ -8,7 +8,7 @@
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>soap@joomlant.org</authorEmail>
 	<authorUrl>www.joomlant.org</authorUrl>
-	<version>1.0.1</version>
+	<version>1.1.1</version>
 	<description>TRG_GUARD_OWNER_XML_DESCRIPTION</description>
 	<files>
 		<filename trigger="owner">owner.php</filename>
