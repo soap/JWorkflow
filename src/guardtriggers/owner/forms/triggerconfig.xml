@@ -4,8 +4,8 @@
 		<fieldset name="trigger_config">
 			<field name="allow_mode"
 				type="list"
-				label="TRG_GUARD_OWNER_ALLOW_LABEL"
-				description="TRG_GUARD_OWNER_ALLOW_DESC"
+				label="TRG_GUARD_OWNER_ALLOW_MODE_LABEL"
+				description="TRG_GUARD_OWNER_ALLOW_MODE_DESC"
 				size="1" 
 				default="1">
 				<option value="0">JNO</option>
