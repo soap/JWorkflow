@@ -39,23 +39,6 @@ JHtml::_('behavior.framework');
 		}
 	};
 
-	Joomla.submitbutton4 = function()
-	{
-		var form = document.getElementById('adminForm');
-
-		// do field validation
-		if (form.install_url.value == "" || form.install_url.value == "http://"){
-			alert("<?php echo JText::_('COM_WORKFLOW_MSG_INSTALL_ENTER_A_URL', true); ?>");
-		}
-		else
-		{
-			jQuery('#loading').css('display', 'block');
-
-			form.installtype.value = 'url';
-			form.submit();
-		}
-	};
-
 	// Add spindle-wheel for installations:
 	jQuery(document).ready(function($) {
 		var outerDiv = $('#workflow-install');
@@ -94,7 +77,7 @@ JHtml::_('behavior.framework');
 
 	<?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'upload')); ?>
 
-			<?php JEventDispatcher::getInstance()->trigger('onInstallerViewBeforeFirstTab', array()); ?>
+			<?php //JEventDispatcher::getInstance()->trigger('onInstallerViewBeforeFirstTab', array()); ?>
 
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'upload', JText::_('COM_WORKFLOW_UPLOAD_PACKAGE_FILE', true)); ?>
 			<fieldset class="uploadform">
