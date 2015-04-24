@@ -1,6 +1,6 @@
 <?php
 /**
- * @package      JONGman
+ * @package      Workflow
  *
  * @author       Prasit Gebsaap
  * @copyright    Copyright (C) 2009-2013 Prasit Gebsaap. All rights reserved.
@@ -10,7 +10,7 @@
 defined('_JEXEC') or die();
 
 
-class pkg_jongmanInstallerScript
+class pkg_workflowInstallerScript
 {
     /**
      * Called before any type of action
@@ -23,8 +23,8 @@ class pkg_jongmanInstallerScript
     public function preflight($route, JAdapterInstance $adapter)
     {
         // Joomla version check
-        if (!version_compare(JVERSION, '2.5.5', 'ge')) {
-            $adapter->get('parent')->abort('Unsupported version! JONGman requires Joomla 2.5.5 or newer.');
+        if (!version_compare(JVERSION, '3.0.0', 'ge')) {
+            $adapter->get('parent')->abort('Unsupported version! Workflow requires Joomla 2.5.5 or newer.');
             return false;
         }
 
@@ -32,7 +32,7 @@ class pkg_jongmanInstallerScript
         if (file_exists(dirname(__FILE__) . '/memcheck.php')) {
             require_once dirname(__FILE__) . '/memcheck.php';
 
-            $mem   = new pkg_jongmanMemory();
+            $mem   = new pkg_WorkflowMemory();
             $check = $mem->check();
 
             if ($check !== true) {
@@ -45,7 +45,7 @@ class pkg_jongmanInstallerScript
         }
 
         if (JDEBUG) {
-            JProfiler::getInstance('Application')->mark('before' . ucfirst($route) . 'Jongman');
+            JProfiler::getInstance('Application')->mark('before' . ucfirst($route) . 'Workflow');
         }
 
         return true;
@@ -63,7 +63,7 @@ class pkg_jongmanInstallerScript
     public function postflight($route, JAdapterInstance $adapter)
     {
         if (JDEBUG) {
-            JProfiler::getInstance('Application')->mark('after' . ucfirst($route) . 'Jongman');
+            JProfiler::getInstance('Application')->mark('after' . ucfirst($route) . 'Workflow');
 
             $buffer = JProfiler::getInstance('Application')->getBuffer();
             $app    = JFactory::getApplication();

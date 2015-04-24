@@ -10,13 +10,13 @@
     <authorEmail>support@joomlant.org</authorEmail>
     <authorUrl>www.joomlant.org</authorUrl>
     <author>Prasit Gebsaap</author>
-    <packager>JONGman</packager>
+    <packager>Workflow</packager>
     <packagerurl>http://www.joomlant.org</packagerurl>
     <description></description>
     <scriptfile>pkg_workflow.script.php</scriptfile>
     <files>
         <!-- It is important that the library and com_workflow are installed first -->
-        <file type="library" id="workflow">libraries/jongman</file>
+        <file type="library" id="workflow">libraries/workflow</file>
         <file type="component" id="com_workflow">components/com_workflow</file>
     </files>
 </extension>

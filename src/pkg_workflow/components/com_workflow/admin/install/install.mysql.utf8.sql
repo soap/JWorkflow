@@ -14,7 +14,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE IF NOT EXISTS `#__wf_trigger_instances` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `plugin_id` int(11) NOT NULL,
+  `trigger_id` int(11) NOT NULL,
   `transition_id` int(11) NOT NULL DEFAULT '0',
   `title` varchar(250) NOT NULL,
   `namespace` varchar(255) NOT NULL,
