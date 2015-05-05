@@ -371,6 +371,41 @@ class WFApplicationHelper {
         return $aTriggers;
     }
     
+    public static function makeTransition($context, $item_id, $transitionId, $comment)
+    {
+    	$oTransition = self::getTransition($transitionId);
+    	$oInstance = self::getWorkflowInstance($context, $item_id);
+    
+    	$fromState = $instance->workflow_state_id;
+    	$user = JFactory::getUser();
+    	
+    	if (!WFApplicationHelper::performTransitionOnInstance($oTransition, $oInstance, $user, $context, $comment))
+    	{
+    		$this->setError(JText::_('COM_WORKFLOW_APPLICATION_ERROR_TRANSITION_FAILED'));
+    		return false;
+    	}
+    	
+    	return true;
+    }
+    
+    /**
+     * 
+     * @param string $context
+     * @param integer $item_id
+     * @return mixed
+     */
+    protected static function getWorkflowInstance($context, $item_id)
+    {
+    	$instance = JTable::getInstance('Instance', 'WorkflowTable');
+    	$instance->load(array('context'=> $context, 'item_id'=>$item_id));
+    	if ($instance === false) {
+    		return false;	
+    	}
+    	
+    	return $instance;
+    }
+    
+    
     /**
      * 
      * @param unknown $oTransition
@@ -396,7 +431,7 @@ class WFApplicationHelper {
     	}
     	
     	if ($oDocument = self::getDocument($oInstance) == false) {
-    		
+    		return false;	
     	}
     	
     	// walk the action triggers.
@@ -763,6 +798,30 @@ class WFApplicationHelper {
     	if ($db->loadResult() == 0) return false;
     		
     	return true;
+    }
+    
+    
+    public static function getStateByContext($context, $id=null)
+    {
+    	if ($id === null) {
+    		
+    	}
+    	
+    	$dbo = JFactory::getDbo();
+    	$query = $dbo->getQuery(true);
+    	$subquery = $dbo->getQuery(true);
+    	
+    	$query->select('*')->from('#__wf_states AS ws');
+    	
+    	$subquery->select('workflow_state_id')
+    		->from('#__wf_instances AS wi')
+    		->where('context='.$dbo->quote($context))
+    		->where('item_id='.(int)$id);
+    	
+    	$query->where('id=('.$subquery.')');
+    	$dbo->setQuery($query);
+    	
+    	return $dbo->loadObject();
     }
     
     public function getVersion()
