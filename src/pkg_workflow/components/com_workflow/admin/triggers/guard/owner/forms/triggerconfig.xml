@@ -13,7 +13,7 @@
 			</field>				
 			<field name="owner_fields"
 				type="textarea"
-				defulalt="created_by"
+				default="created_by"
 				label="TRG_GUARD_OWNER_FIELDS_LABEL"
 				description="TRG_GUARD_OWNER_FIELDS_DESC" />
 				
