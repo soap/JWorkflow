@@ -50,9 +50,13 @@ abstract class WFToolbar
         self::$html[] = self::renderButton($text, $task, $list, $options);
     }
 
-    public static function workflowButton($text, $task = '', $transition = '', $options = array())
+    public static function workflowButton($text, $task = '', $transition, $options = array())
     {
-        self::$html[] = self::renderWorkflowButton($text, $task, $transition, $options);
+    	if ($transition->blocked) {
+    		$options['disabled'] = true;
+    		$options['tip'] = $transition->explain;
+    	}
+        self::$html[] = self::renderWorkflowButton($text, $task, $transition->id, $options);
     }
 
     public static function filterButton($isset = false, $target = '#filters')
@@ -345,6 +349,8 @@ abstract class WFToolbar
     
     protected static function getJavaScript()
     {
+    	// JHtml key is (prefix).(class).function
+    	JHtml::_('scripts.transition');
         $script   = array();
 		
        	$script[] = 'function workflowValidate(transition_id, task)';

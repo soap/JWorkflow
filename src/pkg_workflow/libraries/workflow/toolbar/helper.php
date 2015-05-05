@@ -8,26 +8,37 @@ class WFToolbarHelper
 	/**
 	 * 
 	 * Get available workflow toolbar buttons ...
+	 * @param object $oBinding
 	 * @param object $oDoc
 	 * @param string task  provide this to operate with existing <form></form>
 	 * @param string url   provide this to use full link click, form is not needed
 	 * @param boolean enableGuard enable guards to block transition or not, 
 	 * 				if enabled both block and unblock transitions will be returned
 	 */
-	public static function getToolbarButtons($oDoc, $task, $url=null, $includeBlocked = false) 
+	public static function getToolbarButtons($oBinding, $oDoc, $task, $url=null, $includeBlocked = false) 
 	{
 		JHtml::_('wfhtml.scripts.transition');
 		JHtml::_('wfhtml.styles.workflow');
 		
+		// this block shall be removed
 		if (empty($oDoc->workflow_id) && empty($oDoc->workflow_state_id)) {
-			return array();
+			
+			// return array();
 		}
 
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
+		$query->select('workflow_id, workflow_state_id')
+			->from('#__wf_instances')
+			->where('context='.$db->quote($oBinding->context))
+			->where('item_id='.(int)$oBinding->item_id);
+		$db->setQuery($query);
+		$workflowInstance = $db->loadObject();
+
+		$query->clear();
 		$query->select('id')->from('#__wf_workflows')
-			->where('published = 1')
-			->where('id = '.$oDoc->workflow_id);
+			->where('published=1')
+			->where('id='.$workflowInstance->workflow_id);
 		
 		$db->setQuery($query);
 		$r = $db->loadResult();
