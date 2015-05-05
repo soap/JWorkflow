@@ -95,7 +95,7 @@ class WorkflowControllerInstance extends WFControllerFormJson
 		}
 		
 		$this->_success = true;
-		$this->_data['title'] = 'Seccessfully notification';
+		$this->_data['title'] = 'Successfully notification';
 		$this->_data['text'] = $model->getTransitionLogMessage($context, $itemId, $transitionId );
 		$this->sendResponse();
 	}

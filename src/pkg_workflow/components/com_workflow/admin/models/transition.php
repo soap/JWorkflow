@@ -196,7 +196,8 @@ class WorkflowModelTransition extends JModelAdmin
 		}
 	}
 	
-	function save($data) {
+	function save($data) 
+	{
         $table  = $this->getTable();
         $key    = $table->getKeyName();
         $pk     = (!empty($data[$key])) ? $data[$key] : (int) $this->getState($this->getName() . '.id');
@@ -285,7 +286,8 @@ class WorkflowModelTransition extends JModelAdmin
 		
 	}
 	
-	function saveFromStates($pk, $data) {
+	function saveFromStates($pk, $data) 
+	{
 		
 		if (!$pk) return true;
 		$query = $this->_db->getQuery(true);
@@ -317,7 +319,8 @@ class WorkflowModelTransition extends JModelAdmin
         return true;
 	}
 	
-	function loadFromStates($pk) {
+	function loadFromStates($pk) 
+	{
 		if (!$pk) return true;
 		
 		$query = $this->_db->getQuery(true);
