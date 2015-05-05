@@ -34,10 +34,12 @@ class trgGuardOwner extends trgAbstractTrigger
     	if ($allowSuperAdmin && $oUser->get('isRoot')) return true;
 
    		$uid = $oUser->get('id');
+   		$matchedField = '';
    		foreach($fields as $field) {
    			if (isset($oDocument->$field)) {
-   				JLog::add('Field '.$field.' exists, try to validate if it matches');
+   				JLog::add('Field '.$field.' exists, try to validate if it matches', JLog::DEBUG, 'jworkflow');
    				if ($oDocument->$field == $uid){
+   					$matchedField = $field;
    					$matched = true;
    				}  				
    			}	
@@ -52,7 +54,7 @@ class trgGuardOwner extends trgAbstractTrigger
    					$oInstance->context,
    					(int)$oInstance->item_id,
    					join(',',$fields),
-   					($matched ? 'true' : 'false'), $oDocument->owner_id
+   					($matched ? 'true' : 'false'), ($matched ? $oDocument->$matchedField : '')
    				),
    				JLog::INFO,
    				'jworkflow'

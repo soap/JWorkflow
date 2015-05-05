@@ -1,12 +1,19 @@
 var WFtransition = 
 {
 	/**
-	 * 
+	 * @fi form id
+	 * @fn forrm name
+	 * @id transition id
+	 * @task task
 	 */
-	validate: function(id, task) 
+	validate: function(/*fi, fn,*/ id, task) 
 	{
 	    var f = jQuery('#item-form');
+	    if (f.length == 0) {
+	    	var f = jQuery('#adminForm');
+	    }
 	    var u = f.attr('action');
+	    console.log(f.length);
 	    var q = u.split('?'); 
 	    var comment = jQuery('#comment', f);
 	    
