@@ -10,7 +10,7 @@ jimport('joomla.application.component.helper');
  * @@internal if change class WFhtmlScript it conflicts with PFhtmlScript
  *
  */
-abstract class WFhtmlScripts
+abstract class JHtmlScripts
 {
     /**
      * Array containing information for loaded files
@@ -32,6 +32,14 @@ abstract class WFhtmlScripts
             return;
         }
 
+        if (version_compare(JVERSION, '3', 'ge')) {
+        	JHtml::_('jquery.ui');
+        	JHtml::_('bootstrap.framework');
+        	JHtml::_('behavior.framework');
+        	self::$loaded[__METHOD__] = true;
+        	return;
+        }
+        
         $params = JComponentHelper::getParams('com_workflow');
 
         if (JFactory::getApplication()->isSite()) {
