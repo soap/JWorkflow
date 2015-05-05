@@ -31,8 +31,9 @@ JForm::addFieldPath(JPATH_PLATFORM . '/workflow/form/fields');
 JForm::addRulePath(JPATH_PLATFORM . '/workflow/form/rules');
 
 // Load com_workflow language file
-JFactory::getLanguage()->load('com_workflow', JPATH_SITE.'/components/com_workflow');
-JFactory::getLanguage()->load('com_workflow', JPATH_SITE.'/administrator/components/com_workflow');
+$lang = JFactory::getLanguage();
+$lang->load('com_workflow', JPATH_SITE.'/components/com_workflow');
+$lang->load('com_workflow', JPATH_SITE.'/administrator/components/com_workflow');
 
 JLog::addLogger(
 	array(
