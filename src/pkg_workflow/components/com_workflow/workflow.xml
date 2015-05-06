@@ -8,7 +8,7 @@
 	<license>GNU General Public License version 2 or later.</license>
 	<authorEmail>soap@joomlant.com</authorEmail>
 	<authorUrl>www.joomlant.com</authorUrl>
-	<version>1.5.0 RC5</version>
+	<version>1.5.0 RC6</version>
 	<description>COM_WORKFLOW_XML_DESCRIPTION</description>
 	<files folder="site">
         <filename>workflow.php</filename>

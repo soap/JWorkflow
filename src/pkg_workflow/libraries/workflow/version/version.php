@@ -30,13 +30,13 @@ final class WFVersion
     public $DEV_STATUS = 'RC';
 
     /** @var  string  Build number. */
-    public $BUILD = '1';
+    public $BUILD = '6';
 
     /** @var  string  Code name. */
-    public $CODENAME = 'Nada';
+    public $CODENAME = 'Memee';
 
     /** @var  string  Release date. */
-    public $RELDATE = '31-Aug-2014';
+    public $RELDATE = '06-May-2015';
 
     /** @var  string  Release time. */
     public $RELTIME = '20:00';
@@ -45,7 +45,7 @@ final class WFVersion
     public $RELTZ = 'CET';
 
     /** @var  string  Copyright Notice. */
-    public $COPYRIGHT = 'Copyright (C) 2007 - 2013 Prasit Gebsaap. All rights reserved.';
+    public $COPYRIGHT = 'Copyright (C) 2007 - 2015 Prasit Gebsaap. All rights reserved.';
 
     /** @var  string  Link text. */
     public $URL = '<a href="http://www.joomlant.org">joomlant.org</a> is Free Software released under the GNU General Public License.';

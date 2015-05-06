@@ -8,7 +8,7 @@
     <license>GNU General Public License version 2 or later.</license>
     <authorEmail>support@joomlannt.org</authorEmail>
     <authorUrl>www.joomlant.org</authorUrl>
-    <version>1.1.3</version>
+    <version>1.5.0</version>
     <description>Shared classes and tools for workflow engine related components. Do not remove!</description>
     <files>
         <!--folder>access</folder-->
