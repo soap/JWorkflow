@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.1" type="plugin" group="system">
+	<name>plg_system_workflow</name>
+	<author>Prasit Gebsaap</author>
+	<creationDate>August 2014</creationDate>
+	<copyright>Copyright (C) 2014 Prasit Gebsaap. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>soap@joomlant.org</authorEmail>
+	<authorUrl>www.joomlant.org</authorUrl>
+	<version>1.0.0</version>
+	<description>PLG_SYSTEM_WORKFLOW_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="workflow">workflow.php</filename>
+		<filename>index.html</filename>
+		<folder>language</folder>
+	</files>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="publish_button" type="list" 
+					label="PLG_SYSTEM_WORKFLOW_BUTTON_PUBLISH_LABEL" 
+					description="PLG_SYSTEM_WORKFLOW_BUTTON_PUBLISH_DESC">
+					<option value="none">PLG_SYSTEM_WORKFLOW_ACTION_NOTHING</option>
+					<option value="disable">PLG_SYSTEM_WORKFLOW_ACTION_DISABLE</option>
+					<option value="hide">PLG_SYSTEM_WORKFLOW_ACTION_HIDE</option>
+				</field>
+				<field name="unpublish_button" type="list" 
+					label="PLG_SYSTEM_WORKFLOW_BUTTON_UNPUBLISH_LABEL" 
+					description="PLG_SYSTEM_WORKFLOW_BUTTON_UNPUBLISH_DESC">
+					<option value="none">PLG_SYSTEM_WORKFLOW_ACTION_NOTHING</option>
+					<option value="disable">PLG_SYSTEM_WORKFLOW_ACTION_DISABLE</option>
+					<option value="hide">PLG_SYSTEM_WORKFLOW_ACTION_HIDE</option>
+				</field>
+				<field name="featured_button" type="list" 
+					label="PLG_SYSTEM_WORKFLOW_BUTTON_FEATURED_LABEL" 
+					description="PLG_SYSTEM_WORKFLOW_BUTTON_FEATURED_DESC">
+					<option value="none">PLG_SYSTEM_WORKFLOW_ACTION_NOTHING</option>
+					<option value="disable">PLG_SYSTEM_WORKFLOW_ACTION_DISABLE</option>
+					<option value="hide">PLG_SYSTEM_WORKFLOW_ACTION_HIDE</option>
+				</field>				
+				<field name="trash_button" type="list" 
+					label="PLG_SYSTEM_WORKFLOW_BUTTON_TRASH_LABEL" 
+					description="PLG_SYSTEM_WORKFLOW_BUTTON_TRASH_DESC">
+					<option value="none">PLG_SYSTEM_WORKFLOW_ACTION_NOTHING</option>
+					<option value="disable">PLG_SYSTEM_WORKFLOW_ACTION_DISABLE</option>
+					<option value="hide">PLG_SYSTEM_WORKFLOW_ACTION_HIDE</option>
+				</field>				
+				<field name="archive_button" type="list"
+					label="PLG_SYSTEM_WORKFLOW_BUTTON_ARCHIVE_LABEL" 
+					description="PLG_SYSTEM_WORKFLOW_BUTTON_ARCHIVE_DESC">
+					<option value="none">PLG_SYSTEM_WORKFLOW_ACTION_NOTHING</option>
+					<option value="disable">PLG_SYSTEM_WORKFLOW_ACTION_DISABLE</option>
+					<option value="hide">PLG_SYSTEM_WORKFLOW_ACTION_HIDE</option>
+				</field>				
+			</fieldset>
+		</fields>
+	</config>
+</extension>
