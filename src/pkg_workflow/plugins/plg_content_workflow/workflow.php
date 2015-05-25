@@ -13,12 +13,11 @@ class plgContentWorkflow extends JPlugin
 {
 
 	/**
-	 * 
 	 * Looking for workflow detail and update content item for saving
 	 * @param unknown_type $context
 	 * @param unknown_type $table
 	 * @param unknown_type $is_new
-	 * @deprecated version 1.5 look for onContentAfterSave
+	 * @deprecated version 1.5 look for onContentAfterSave (we now sepate workflow data from content)
 	 */
 	public function onContentBeforeSave($context, $table, $is_new)
     {	
@@ -115,10 +114,11 @@ class plgContentWorkflow extends JPlugin
     	if ($is_new) {
     		$db = JFactory::getDbo();
     		$query = $db->getQuery(true);
-    		$query->select('workflow_id, params')
-    		->from('#__wf_bindings')
-    		->where('context = '.$db->quote($context))
-    		->where('published = 1');
+    		$query->select('id, workflow_id, params')
+    			->from('#__wf_bindings')
+    			->where('context='.$db->quote($context))
+    			->where('published=1');
+    		
     		$db->setQuery($query);
     		$rows = $db->loadObjectList();
     		
@@ -127,13 +127,15 @@ class plgContentWorkflow extends JPlugin
 
     		if (count($rows) == 1) {
 				$workflow_id = $rows[0]->workflow_id;	
+				$binding_id = $rows[0]->id;
 			}else{
 				$maxScore = 0;
 				$workflow_id = 0;
-				foreach($rows as $i =>$workflow) {
+				$binding_id = 0;
+				foreach($rows as $i =>$binding) {
 					$currentScore = 0;
 					if (!empty($workflow->params)) {
-						$m = new JRegistry($workflow->params);
+						$m = new JRegistry($binding->params);
 						$string = $m->get('other_mappings', '');
 						if (!empty($string)) {
 							$rows[$i]->mappings = explode('\r\n', $string);	
@@ -155,7 +157,8 @@ class plgContentWorkflow extends JPlugin
 					
 					if ($currentScore > $maxScore) {
 						$maxScore = $currentScore;
-						$workflow_id = $workflow->workflow_id;
+						$workflow_id = $binding->workflow_id;
+						$binding_id = $binding->id;
 					}
 				}
 			}
@@ -197,6 +200,7 @@ class plgContentWorkflow extends JPlugin
 			$instance->item_id = $table->id;
 			$instance->workflow_id = $workflow_id; 
 			$instance->workflow_state_id = $start_state_id;
+			$instance->binding_id = $binding_id;
 			$instance->check();
 			$instance->store();
 			JFactory::getApplication()->enqueueMessage('The new item; '.$table->id.' of '.$context.' was inserted into '.$workflow_title.' workflow. Its state is '.$row->title );			
@@ -255,6 +259,13 @@ class plgContentWorkflow extends JPlugin
     	
     	return true;
     }
+    
+    /**
+     * Disable com_content item state if workflow was enabled
+     * @param unknown $context
+     * @param unknown $data
+     * @return boolean
+     */
     
     public function onContentPrepareData($context, $data)
     {

@@ -2,10 +2,10 @@
 <!-- $Id$ -->
 <extension type="plugin" group="content" version="2.5.0" method="upgrade">
 	<name>PLG_CONTENT_WORKFLOW</name>
-	<version>1.1.0</version>
+	<version>1.2.0</version>
 	<creationDate>August 2014</creationDate>
 	<author>Prasit Gebsaap</author>
-	<copyright>Copyright 2013-2014 by Prasit Gebsaap. All rights reserved.	</copyright>
+	<copyright>Copyright 2013-2015 by Prasit Gebsaap. All rights reserved.	</copyright>
 	<license>GNU General Public License version 2 or later.</license>
 	<authorEmail>soap@ji-net.com</authorEmail>
 	<authorUrl>www.joomlant.com</authorUrl>
