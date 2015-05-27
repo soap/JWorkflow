@@ -99,7 +99,13 @@ $saveOrder	= $listOrder == 'a.ordering';
 						<?php echo JHtml::_('grid.id', $i, $item->id); ?>
 					</td>
 					<td>
+						<?php if ($canCreate || $canEdit) : ?>
+						<a href="<?php echo JRoute::_('index.php?option=com_workflow&task=binding.edit&id='.$item->id);?>">
 						<?php echo $this->escape($item->context); ?>
+						</a>
+						<?php else:?>
+						<?php echo $this->escape($item->context); ?>	
+						<?php endif?>
 					</td>
 					<td>
 						<p class="smallsub">
