@@ -87,7 +87,7 @@
 			<available file="${source.dir}" type="dir" />
 			<then>
 				<echo msg="Building trigger from source tree ${source.dir}" />
-				<copy todir="${repo.folder}/${package.name}/triggers/${element.name}" haltonerror="false">
+				<copy todir="${repo.folder}/${package.name}/${element.name}" haltonerror="false">
 					<fileset dir="${source.dir}">
 						<include name="**/*"/>
 					</fileset>
