@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<fields name="trigger_config">
+		<fieldset name="trigger_config">	
+			<field name="action"
+				type="list" default="set"
+				label="TRG_ACTION_RESERVATIONATTRIBS_ATTRIBUTE_ACTION_LABEL"
+				description="TRG_ACTION_RESERVATIONATTRIBS_ATTRIBUTE_ACTION_DESC">
+				<option value="set">TRG_ACTION_RESERVATIONATTRIBS_ACTION_SET</option>
+				<option value="reset">TRG_ACTION_RESERVATIONATTRIBS_ACTION_RESET</option>
+			</field>		
+			<field name="attribute_name"
+				type="list"
+				label="TRG_ACTION_RESERVATIONATTRIBS_ATTRIBUTE_NAME_LABEL"
+				description="TRG_ACTION_RESERVATIONATTRIBS_ATTRIBUTE_NAME_DESC" 
+				class="inputbox">
+				<option value="approved_by">TRG_ACTION_RESERVATIONATTRIBS_OPTION_FIELD_APPROVER</option>
+				<option value="acked_by">TRG_ACTION_RESERVATIONATTRIBS_OPTION_FIELD_ACK_USER</option>
+			</field>
+		</fieldset>
+	</fields>
+</form>
