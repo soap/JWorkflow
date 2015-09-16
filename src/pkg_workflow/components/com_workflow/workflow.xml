@@ -8,7 +8,7 @@
 	<license>GNU General Public License version 2 or later.</license>
 	<authorEmail>soap@joomlant.com</authorEmail>
 	<authorUrl>www.joomlant.com</authorUrl>
-	<version>1.5.0 RC6</version>
+	<version>1.6.1 RC3</version>
 	<description>COM_WORKFLOW_XML_DESCRIPTION</description>
 	<files folder="site">
         <filename>workflow.php</filename>
@@ -39,6 +39,7 @@
     </update>    
 	<media destination="com_workflow" folder="media">
     	<folder>workflow</folder>
+    	<folder>select2</folder>
     	<filename>index.html</filename>
     </media>
 	<administration>
@@ -52,6 +53,7 @@
         	<folder>helpers</folder>
         	<folder>install</folder>			
         	<folder>language</folder>
+        	<folder>layouts</folder>
         	<folder>models</folder>
         	<folder>triggers</folder>
         	<folder>tables</folder>
@@ -60,6 +62,7 @@
 		<menu>COM_WORKFLOW</menu>
 		<submenu>
 			<menu view="workflows">COM_WORKFLOW_SUBMENU_WORKFLOWS</menu>
+			<menu view="bindings">COM_WORKFLOW_SUBMENU_BINDINGS</menu>
 			<menu view="states">COM_WORKFLOW_SUBMENU_STATES</menu>
 			<menu view="transitions">COM_WORKFLOW_SUBMENU_TRANSITIONS</menu>
 			<menu view="triggers">COM_WORKFLOW_SUBMENU_TRIGGERS</menu>
