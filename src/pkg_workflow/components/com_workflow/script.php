@@ -28,6 +28,16 @@ class com_workflowInstallerScript
      */
     public function postflight($route, JAdapterInstance $adapter)
     {
+    	$msgError = '';
+    	// END MESSAGE
+    	if ($msgError != '') {
+    		$msg = '<span style="font-weight: bold;color:#ff0000;">'.JText::_('COM_WORKFLOW_ERROR_INSTALL').'</span>: ' . $msgSuccess . $msgError;
+    		JFactory::getApplication()->enqueueMessage($msg, 'error');
+    	} else {
+    		$msg = '<span style="font-weight: bold;color:#00cc00;">'.JText::_('COM_WORKFLOW_SUCCESS_INSTALL').'</span>: ' . $msgSuccess;
+    			
+    		JFactory::getApplication()->enqueueMessage($msg, 'message');
+    	}
     	return true;
     }
 
