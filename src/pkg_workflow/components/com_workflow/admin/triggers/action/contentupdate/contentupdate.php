@@ -15,7 +15,14 @@ class trgActionContentupdate extends trgAbstractTrigger
     
     public function afterTransition($oInstance, $oDocument, $oUser)
     {
+    	JLog::add(__METHOD__.' get called', JLog::INFO, 'jworkflow');
     	$updateItems = explode("\r\n", trim($this->params->get('update_items')));
+    	
+    	if (!($oDocument instanceof JTable)) {
+    		JLog::add('Document is not instance of JTable, can not go further', JLog::ERROR, 'jworkflow');
+    		return true;
+    	}
+    	
     	$count = 0;
   		if (count($updateItems)) {
   			foreach($updateItems as $item) {
@@ -26,7 +33,7 @@ class trgActionContentupdate extends trgAbstractTrigger
   					switch (strtoupper($value)) {
   						case '{DATETIME}' :
   							$date = JFactory::getDate();
-  							$oDocument->$key = $date->toSQL();
+  							$oDocument->$key = $date->toSql();
   							$count += 1; 
   						break;
   						case '{USERID}' :

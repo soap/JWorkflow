@@ -79,6 +79,7 @@ CREATE TABLE IF NOT EXISTS `#__wf_triggers` (
 
 CREATE TABLE IF NOT EXISTS `#__wf_states` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `asset_id` int(255) NOT NULL default '0',
   `workflow_id` int(11) NOT NULL,
   `title` varchar(100) NOT NULL,
   `alias` varchar(100) NOT NULL,
@@ -126,6 +127,7 @@ CREATE TABLE IF NOT EXISTS `#__wf_transitions` (
   `title` varchar(100) NOT NULL,
   `alias` varchar(100) NOT NULL,
   `target_state_id` int(11) NOT NULL,
+  `params` text NULL,
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `created_by` int(11) NOT NULL DEFAULT '0',
   `modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -244,7 +246,7 @@ CREATE TABLE IF NOT EXISTS `#__wf_user_roles` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `#__wf_waiting_items` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `context` varchar(200) NOT NULL COMMENT 'in com_xxx.entity format',
   `item_id` int(11) NOT NULL COMMENT 'PK of working item',
   `role_type` varchar(200) NOT NULL DEFAULT 'joomla.user' COMMENT 'joomla.user, joomla.group, workflow.role',
@@ -270,3 +272,12 @@ CREATE TABLE IF NOT EXISTS `#__wf_instances` (
   KEY `context` (`context`,`item_id`),
   KEY `workflow_id` (`workflow_id`,`workflow_state_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `#__wf_transition_permissions` (
+  `transition_id` int(11) NOT NULL,
+  `permission_context` varchar(50) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  UNIQUE KEY `transition_id_unique` (`transition_id`,`permission_context`,`item_id`),
+  KEY `transition_id_idx` (`transition_id`,`permission_context`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='transition permission allowed for group, user or role';

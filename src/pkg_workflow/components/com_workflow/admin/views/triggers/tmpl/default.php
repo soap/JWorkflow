@@ -24,8 +24,8 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 		<table class="table table-striped">
 		<thead>
 			<tr>
-				<th width="1%" classs="hidden-phone">
-					<input type="checkbox" name="toggle" value="" onclick="checkAll(this)" />
+				<th width="1%" class="hidden-phone">
+					<?php echo JHtml::_('grid.checkall'); ?>
 				</th>
 				<th width="10%" class="center">
 					<?php echo JHtml::_('grid.sort', 'COM_WORKFLOW_HEADING_NAME', 'a.name', $listDirn, $listOrder); ?>
@@ -79,9 +79,9 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<?php endif; ?>
 					<?php if ($canCreate || $canEdit) : ?>
 					<a href="<?php echo JRoute::_('index.php?option=com_workflow&task=trigger.edit&id='.$item->id);?>">
-						<?php echo $this->escape($item->name); ?></a>
+						<?php echo $this->escape(JText::_($item->name)); ?></a>
 					<?php else : ?>
-						<?php echo $this->escape($item->name); ?>
+						<?php echo $this->escape(JText::_($item->name)); ?>
 					<?php endif; ?>
 				</td>
 				<td class="center">

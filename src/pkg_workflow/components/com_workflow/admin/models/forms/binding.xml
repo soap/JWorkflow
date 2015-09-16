@@ -21,8 +21,8 @@
 
 		<field name="context"
 			type="text"
-			label="COM_WORKFLOW_CONTEXT_LABEL"
-			description="COM_WORKFLOW_CONTEXT_DESC"
+			label="COM_WORKFLOW_FIELD_CONTEXT_LABEL"
+			description="COM_WORKFLOW_FIELD_CONTEXT_DESC"
 			class="inputbox"
 			size="45"
 			required="true" />
@@ -122,14 +122,26 @@
 			<field name="table_path" type="text"
 				label="COM_WORKFLOW_FIELD_TABLE_PATH_LABEL" 
 				description="COM_WORKFLOW_FIELD_TABLE_PATH_DESC"/>
+				
 			<field name="table_prefix" type="text"
 				required="true"
 				label="COM_WORKFLOW_FIELD_TABLE_PREFIX_LABEL" 
 				description="COM_WORKFLOW_FIELD_TABLE_PREFIX_DESC" />
+				
 			<field name="table_name" type="text"
 				required="true"
 				label="COM_WORKFLOW_FIELD_TABLE_NAME_LABEL" 
 				description="COM_WORKFLOW_FIELD_TABLE_NAME_DESC"/>
+				
+			<field name="author_field" type="text"
+				default="created_by"
+				label="COM_WORKFLOW_FIELD_AUTHOR_FIELD_LABEL" 
+				description="COM_WORKFLOW_FIELD_AUTHOR_FIELD_DESC"/>
+				
+			<field name="owner_field" type="text"
+				default="created_by"
+				label="COM_WORKFLOW_FIELD_OWNER_FIELD_LABEL" 
+				description="COM_WORKFLOW_FIELD_OWNERR_FIELD_DESC"/>
 		</fieldset>
 
 		<fieldset name="advanced" label="COM_WORKLOW_ADVANCED_PARAMS_FIELDSET_LABEL">

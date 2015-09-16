@@ -193,4 +193,44 @@ class WorkflowModelWorkflow extends JModelAdmin
  			$this->metakey = implode(', ', $newKeys);
 		}
 	}
+	
+	public function setActive($data)
+	{
+		if (!isset($data['id'])) {
+			return false;
+		}
+		
+		$app = JFactory::getApplication();
+		$id  = (int) $data['id'];
+		
+		if ($id) {
+			// Load the project and verify the access
+			$user  = JFactory::getUser();
+			$table = $this->getTable();
+		
+			if ($table->load($id) === false) {
+				if ($table->getError()) {
+					$this->setError($table->getError());
+				}
+		
+				return false;
+			}
+		
+			if (!$user->authorise('core.admin')) {
+				if (!in_array($table->access, $user->getAuthorisedViewLevels())) {
+					$this->setError(JText::_('COM_WORKFLOW_ERROR_WORKFLOW_ACCESS_DENIED'));
+					return false;
+				}
+			}
+		
+			$app->setUserState('com_workflow.workflow.active.id', $id);
+			$app->setUserState('com_workflow.workflow.active.title', $table->title);
+		}
+		else {
+			$app->setUserState('com_workflow.workflow.active.id', 0);
+			$app->setUserState('com_workflow.workflow.active.title', '');
+		}
+		
+		return true;		
+	}
 }

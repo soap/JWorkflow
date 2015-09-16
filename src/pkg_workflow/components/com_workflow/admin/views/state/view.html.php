@@ -42,6 +42,7 @@ class WorkflowViewState extends JViewLegacy
 		$this->item		= $this->get('Item');
 		$this->form		= $this->get('Form');
 		$this->state	= $this->get('State');
+		$this->canDo	= WorkflowHelper::getActions();
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {

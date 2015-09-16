@@ -22,15 +22,15 @@ class trgActionJoomlacontent extends trgAbstractTrigger
     	JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR.'components/com_content/models', 'Content');
     	$model = JModelLegacy::getInstance('Article', 'Content', $config);
     	if ($publishing !== 'unchange' && in_array($publishing, array('0', '1', '2', '-2') )) {
-    		$model->publish(array($oDocument->id), $publishing);	
+    		$model->publish(array($oInstance->item_id), $publishing);	
     	}
     	
     	if ($publishing == '1' && $featured == '1') {
-    		$model->featured(array($oDocument->id), 1);	
+    		$model->featured(array($oInstance->item_id), 1);	
     	}
     	
     	if ( in_array($publishing, array('0', '2', '-2')) ) {
-    		$model->featured($array($oDocument->id), 0);
+    		$model->featured($array($Instance->item_id), 0);
     	}
   		
     	return true;	

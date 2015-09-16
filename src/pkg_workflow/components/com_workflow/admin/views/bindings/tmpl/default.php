@@ -15,7 +15,7 @@ $saveOrder	= $listOrder == 'a.ordering';
 	<div id="j-main-container" class="span10">
 		<?php
 			// Search tools bar
-			echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+			echo JLayoutHelper::render('searchtools.default', array('view' => $this), JPATH_COMPONENT_ADMINISTRATOR.'/layouts');
 		?>
 		<?php if (empty($this->items)) : ?>
 		<div class="alert alert-no-items">

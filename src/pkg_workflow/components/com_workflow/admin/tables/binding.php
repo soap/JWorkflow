@@ -92,16 +92,6 @@ class WorkflowTableBinding extends JTable
 			$this->modified	= $date;
 			$this->modified_by	= $userId;
 		}
-		
-		if (($this->context == 'com_content.article')  && !JPluginHelper::isEnabled('system', 'workflow')){
-			$plugin = JTable::getInstance('Extension');
-			$plugin->load(array('type'=>'plugin', 'folder'=>'system', 'element'=>'workflow'));
-			$plugin->enabled = 1;
-			$plugin->store();
-			
-			$app = JFactory::getApplication();
-			$app->enqueueMessage(JText::_('COM_WORKFLOW_PLUGIN_SYSTEM_WORKFLOW_ENABLED'));
-		}
 
 		// Attempt to store the data.
 		return parent::store($updateNulls);

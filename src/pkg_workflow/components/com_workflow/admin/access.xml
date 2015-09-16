@@ -6,14 +6,23 @@
 		<action name="core.manage" title="JACTION_MANAGE" description="JACTION_MANAGE_COMPONENT_DESC" />
 		<action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
 		<action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC" />
+		<action name="core.delete.own" title="COM_WORKFLOW_ACTION_DELETE_OWN" description="COM_WORKFLOW_ACCESS_STATE_DELETEOWN_DESC" />		
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
 		<action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDIT_STATE_COMPONENT_DESC" />
+		<action name="core.edit.own" title="COM_WORKFLOW_ACTION_EDIT_OWN" description="JACTION_EDIT_COMPONENT_DESC" />
 	</section>
 	<section name="category">
 		<action name="core.create" title="JACTION_CREATE" description="COM_CATEGORIES_PROJECT_ACCESS_CREATE_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="COM_CATEGORIES_PROJECT_ACCESS_EDIT_DESC" />
 		<action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_PROJECT_ACCESS_EDITSTATE_DESC" />
-		<action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_PROJECT_ACCESS_EDITOWN_DESC" />
+		<action name="core.edit.own" title="JACTION_EDIT_OWN" description="COM_CATEGORIES_PROJECT_ACCESS_EDITOWN_DESC" />
         <action name="core.delete" title="JACTION_DELETE" description="COM_CATEGORIES_PROJECT_ACCESS_DELETE_DESC" />
+	</section>	
+	<section name="state">
+		<action name="core.edit" title="JACTION_EDIT" description="COM_WORKFLOW_ACCESS_STATE_EDIT_DESC" />
+		<action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_WORKFLOW_ACCESS_STATE_EDITSTATE_DESC" />
+		<action name="core.edit.own" title="COM_WORKFLOW_ACTION_EDIT_OWN" description="COM_WORKFLOW_ACCESS_STATE_EDITOWN_DESC" />
+        <action name="core.delete" title="JACTION_DELETE" description="COM_WORKFLOW_ACCESS_DELETE_DESC" />
+        <action name="core.delete.own" title="COM_WORKFLOW_ACTION_DELETE_OWN" description="COM_WORKFLOW_ACCESS_STATE_DELETEOWN_DESC" />
 	</section>	
 </access>

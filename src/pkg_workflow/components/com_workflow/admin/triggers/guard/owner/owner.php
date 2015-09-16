@@ -8,6 +8,9 @@ class trgGuardOwner extends trgAbstractTrigger
 {
 	protected $_type = 'guard';
    	protected $_namespace = 'Workflow.Transition.Guard.Owner';
+   	
+   	protected $_message = '';
+   	protected $_owners = array();
    
     public function __construct($params = array()) 
     {
@@ -22,6 +25,7 @@ class trgGuardOwner extends trgAbstractTrigger
     	if (!$this->isLoaded()) return true;
     	
     	if (!is_object($oDocument)) {
+    		$this->_message = 'Cannot initiate document object of '.$oInstance->context.'.'.$oInstance->item_id.', binding id :'.$oInstance->binding_id;
     		return false;
     	}
     	
@@ -37,6 +41,8 @@ class trgGuardOwner extends trgAbstractTrigger
    		$matchedField = '';
    		foreach($fields as $field) {
    			if (isset($oDocument->$field)) {
+   				$owner_id = $oDocument->$field;
+   				$this->addOwner($owner_id);
    				JLog::add('Field '.$field.' exists, try to validate if it matches', JLog::DEBUG, 'jworkflow');
    				if ($oDocument->$field == $uid){
    					$matchedField = $field;
@@ -85,6 +91,32 @@ class trgGuardOwner extends trgAbstractTrigger
     
     public function getExplain()
     {
-    	return JText::_('TRG_GUARD_OWNER_ITEM_NOT_BELOGNGS');
+    	$names = $this->getOwnerNames();
+    	if (empty($names)) {
+    		return $this->_message;
+    	}else{
+    		$text = implode(',', $names);
+    	}
+    	
+    	return JText::sprintf('TRG_GUARD_OWNER_ITEM_NOT_BELOGNGS', $text);
+    }
+    
+    private function addOwner($uid) 
+    {
+    	$user = JFactory::getUser($uid);
+    	if (!array_key_exists($user->username, $this->_owners)) {
+    		$this->_owners[$user->username] = $user;
+    	}	
+    }
+    
+    private function getOwnerNames()
+    {
+    	$names = array();
+    	if (count($this->_owners)==0) return $names;
+    	foreach($this->_owners as $owner) {
+    		$names[] = $owner->name;	
+    	}
+    	
+    	return $names;
     }
 }

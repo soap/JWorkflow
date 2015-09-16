@@ -42,6 +42,7 @@ class WorkflowHelper
 	 */
 	public static function addSubmenu($vName)
 	{
+		$layout = $app = JFactory::getApplication()->input->getCmd('layout', null);
 		JHtmlSidebar::addEntry(
 			JText::_('COM_WORKFLOW_SUBMENU_DASHBOARD'),
 			'index.php?option=com_workflow&view=dashboard',
@@ -53,11 +54,11 @@ class WorkflowHelper
 			'index.php?option=com_categories&extension=com_workflow',
 			$vName == 'categories'
 		);
-
+		
 		JHtmlSidebar::addEntry(
 			JText::_('COM_WORKFLOW_SUBMENU_WORKFLOWS'),
 			'index.php?option=com_workflow&view=workflows',
-			$vName == 'workflows'
+			$vName == 'workflows' || ($vName=='transitions' && $layout == 'fromstate')
 		);
 		
 		JHtmlSidebar::addEntry(
@@ -75,8 +76,9 @@ class WorkflowHelper
 		JHtmlSidebar::addEntry(
 			JText::_('COM_WORKFLOW_SUBMENU_TRANSITIONS'),
 			'index.php?option=com_workflow&view=transitions',
-			$vName == 'transitions'
+			$vName == 'transitions' && $layout != 'fromstate'
 		);
+		
 		
 		if ($vName == 'triggerinstances') {
 			JHtmlSidebar::addEntry(

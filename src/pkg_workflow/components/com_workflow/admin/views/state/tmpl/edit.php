@@ -69,14 +69,18 @@ JHtml::_('behavior.keepalive');
 			</div>
 		</div>
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
-
 		<?php echo JLayoutHelper::render('joomla.edit.params', $this); ?>
-
+		
 		<?php if (isset($assoc)) : ?>
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'associations', JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS', true)); ?>
 			<?php echo JHtml::_('bootstrap.endTab'); ?>
 		<?php endif; ?>
-
+		<?php if($this->canDo->get('core.admin')) :?>
+			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'rules', JText::_('COM_WORKFLOW_ACTION_CONTROL_FIELDSET_LABEL', true)); ?>
+			<p class="tab-description"><?php echo JText::_('COM_WORKFLOW_ACTION_CONTROL_FIELDSET_DESC')?> </p>
+			<?php echo $this->form->getField('rules')->input; ?>
+			<?php echo JHtml::_('bootstrap.endTab'); ?>
+		<?php endif?>
 		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 	</div>
 	<input type="hidden" name="task" value="" />

@@ -17,15 +17,6 @@
 			<option value="">JOPTION_SELECT_PUBLISHED</option>
 		</field>
 		<field
-			name="workflow_id"
-			type="workflow"
-			label="COM_WORKFLOW_OPTION_FILTER_WORKFLOW"
-			description="COM_WORKFLOW_OPTION_FILTER_WORKFLOW_DESC"
-			onchange="this.form.submit();"
-			>
-			<option value="">COM_WORKFLOW_OPTION_SELECT_WORKFLOW</option>
-		</field>
-		<field
 			name="access"
 			type="accesslevel"
 			label="JOPTION_FILTER_ACCESS"

@@ -71,10 +71,9 @@ class WorkflowModelTransitions extends JModelList
 		$value = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $value);
 
-		$value = $app->getUserStateFromRequest($this->context.'.filter.workflow_id', 'filter_workflow_id');
-		$this->setState('filter.workflow_id', $value);
-		// Set as active workflow
-		$app->setUserState('com_workflow.filter.workflow_id', $value);
+		// Filter - Workflow
+		$workflow = WFApplicationHelper::getActiveWorkflowId('filter_workflow_id');
+		$this->setState('filter.workflow_id', $workflow);
 
 		// Set list state ordering defaults.
 		parent::populateState($ordering, $direction);
@@ -163,7 +162,15 @@ class WorkflowModelTransitions extends JModelList
 
 		// Filter by a single or group of categories.
 		$workflowId = $this->getState('filter.workflow_id');
-		if (is_numeric($workflowId)) {
+		if (JFactory::getApplication()->input->getCmd('layout')=='fromstate') {
+			//We need workflow id if we are in fromstate layout
+			if ($workflowId <= 0) {
+				$workflowId = $this->getDefaultWorkflowId();
+				WFApplicationHelper::setActiveWorkflow($workflowId);
+				$this->setState('filter.workflow_id', $workflowId);				
+			}
+		}
+		if (is_numeric($workflowId) && $workflowId != 0) {
 			$query->where('a.workflow_id = '.(int) $workflowId);
 		}
 		else if (is_array($workflowId)) {
@@ -198,8 +205,8 @@ class WorkflowModelTransitions extends JModelList
 		return $items;
 	}
 	
-	protected function getFromStateTitles($pk) {
-		
+	protected function getFromStateTitles($pk) 
+	{
 		if (empty($pk)) return array();
 		
 		$query = $this->_db->getQuery(true);
@@ -213,5 +220,62 @@ class WorkflowModelTransitions extends JModelList
 		
 		return implode(',', $list);
 		
+	}
+	
+	public function getFromStates($workflowId = null)
+	{
+		if ($workflowId === null) {
+			$workflowId = (int)$this->getState('filter.workflow_id');
+		}
+		
+		$dbo = $this->getDbo();
+		$query = $dbo->getQuery(true);
+		
+		$query->select('transition_id, state_id')
+			->from('#__wf_state_transitions')
+			->where('transition_id IN (SELECT id FROM #__wf_transitions WHERE workflow_id ='.$workflowId.')');
+		$dbo->setQuery($query);
+		
+		$rows = $dbo->loadObjectList();
+		
+		$results = array();
+		foreach($rows as $row) {
+			$results[$row->transition_id][] = $row->state_id;	
+		}
+		
+		return $results;
+	}
+	
+	public function getStates($workflowId = null) 
+	{
+		if ($workflowId === null) {
+			$workflowId = (int)$this->getState('filter.workflow_id');
+		}
+		
+		$dbo = $this->getDbo();
+		$query = $dbo->getQuery(true);
+		
+		$query->select('id, title')->from('#__wf_states');
+		if ($workflowId) {
+			$query->where('workflow_id='.$workflowId);
+		}
+		
+		$query->order('title ASC');
+		
+		$dbo->setQuery($query);
+		
+		return $dbo->loadObjectList();	
+	}
+	
+	protected function getDefaultWorkflowId()
+	{
+		$query = $this->_db->getQuery(true);
+		$query->select('id')
+			->from('#__wf_workflows AS a')
+			->order('title ASC');
+		
+		$this->_db->setQuery($query);
+		
+		return $this->_db->loadResult();
 	}
 }

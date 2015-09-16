@@ -41,6 +41,7 @@ JHtml::_('behavior.keepalive');
 				<div class="row-fluid form-horizontal-desktop">
 					<div class="span6">
 						<?php echo $this->form->renderField('title');?>
+						<?php echo $this->form->renderField('workflow_id')?>
 						<?php echo $this->form->renderField('transition_id');?>
 						<?php echo $this->form->renderField('trigger_id'); ?>
 						<?php echo $this->form->renderField('namespace'); ?>

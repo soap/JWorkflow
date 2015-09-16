@@ -49,7 +49,13 @@ class WorkflowViewTransitions extends JViewLegacy
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
-
+		
+		if ($this->getLayout() == 'fromstate') {
+			
+			$this->states = $this->get("States");
+			$this->fromStates = $this->get("FromStates");
+			
+		}
 		// Add the toolbar if it is not in modal
 		if ($this->getLayout() !== 'modal') {
 			$this->addToolbar();
@@ -74,6 +80,10 @@ class WorkflowViewTransitions extends JViewLegacy
 		$state  = $this->get('State');
 		JToolBarHelper::title(JText::_('COM_WORKFLOW_TRANSITIONS_TITLE'));
 
+		if ($this->getLayout()=='fromstate') {
+			JToolBarHelper::cancel('workflow.cancel','JTOOLBAR_BACK');
+			return;
+		}
 		if ($canDo->get('core.create')) {
 			JToolBarHelper::addNew('transition.add', 'JTOOLBAR_NEW');
 		}

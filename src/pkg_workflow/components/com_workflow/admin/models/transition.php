@@ -49,6 +49,13 @@ class WorkflowModelTransition extends JModelAdmin
 	{
 		if ($result = parent::getItem($pk)) {
 
+			if (empty($pk)) {
+				$workflowId = WFApplicationHelper::getActiveWorkflowId();
+				if (!empty($workflowId)) {
+					$result->workflow_id = $workflowId;
+				}
+			}
+			
 			// Convert the created and modified dates to local user time for display in the form.
 			jimport('joomla.utilities.date');
 			$tz	= new DateTimeZone(JFactory::getApplication()->getCfg('offset'));
@@ -70,6 +77,7 @@ class WorkflowModelTransition extends JModelAdmin
 			else {
 				$result->modified = null;
 			}
+			
 		}
 
 		return $result;
@@ -121,6 +129,9 @@ class WorkflowModelTransition extends JModelAdmin
 		if (empty($data)) {
 			$data = $this->getItem();
 			$data->fromstates = $this->loadFromStates($data->id);
+			
+			$data->allowed_groups = $this->loadPermissions($data->id, 'joomla.usergroup');
+			$data->allowed_users = $this->loadPermissions($data->id, 'joomla.user');
 		}
 		
 		return $data;
@@ -266,9 +277,17 @@ class WorkflowModelTransition extends JModelAdmin
             $updated = $this->getTable();
             if ($updated->load($id) === false) return false;
 
-            // Store users
+            // Store from states
             if (isset($data['fromstates'])) {
                 $this->saveFromStates($id, $data['fromstates']);
+            }
+ 
+            if (isset($data['allowed_users'])) {
+            	$this->savePermissions($id, 'joomla.user', $data['allowed_users']);
+            }
+            
+            if (isset($data['allowed_groups'])) {
+            	$this->savePermissions($id, 'joomla.usergroup', $data['allowed_groups']);
             }
 
             // Clean the cache.
@@ -286,7 +305,7 @@ class WorkflowModelTransition extends JModelAdmin
 		
 	}
 	
-	function saveFromStates($pk, $data) 
+	private function saveFromStates($pk, $data) 
 	{
 		
 		if (!$pk) return true;
@@ -319,7 +338,7 @@ class WorkflowModelTransition extends JModelAdmin
         return true;
 	}
 	
-	function loadFromStates($pk) 
+	private function loadFromStates($pk) 
 	{
 		if (!$pk) return true;
 		
@@ -333,5 +352,84 @@ class WorkflowModelTransition extends JModelAdmin
         $list = (array) $this->_db->loadColumn();
         
         return $list;
+	}
+	
+	private function loadPermissions($transitionId, $permissionType)
+	{
+		$db = $this->_db;
+		$query = $db->getQuery(true);
+		$query->select('item_id')->from('#__wf_transition_permissions')
+			->where('permission_context='.$db->quote($permissionType))
+			->where('transition_id='.(int)$transitionId);
+		
+		$db->setQuery($query);
+		$rows = (array) $db->loadColumn();
+		
+		if (!$rows) {
+			//throw new \Exception($db->getErrorMsg());
+		}
+		
+		return $rows;
+		
+	}
+	
+	
+	private function savePermissions($transitionId, $permissionType='', $items = array())
+	{
+		if (!in_array($permissionType, array('joomla.user', 'joomla.usergroup', 'workflow.role'))) {
+			throw new Exception(JText::sprintf('COM_WORKFLOW_EXCEPTION_PERMISSION_TYPE_UNSUPPORT', $permissionType), 500);
+		}
+		
+	    $db = $this->_db;
+        $query = $db->getQuery(true);
+
+        // Delete existing allowed permission type
+        $query
+            ->delete('#__wf_transition_permissions')
+            ->where('transition_id = ' . $transitionId)
+        	->where('permission_context ='.$db->quote($permissionType));
+
+        $db->setQuery($query);
+
+        if (!$db->query()) {
+            throw new \Exception($db->getErrorMsg());
+        }
+
+        // Add the new allowed permissions
+        $permissionType = $db->quote($permissionType);
+        
+        foreach ($items as $id) {
+            $query->clear();
+            $query
+                ->insert('#__wf_transition_permissions')
+                ->columns('transition_id, permission_context, item_id')
+                ->values(sprintf('%s,%s,%s', $transitionId, $permissionType, $id));
+
+            $db->setQuery($query);
+
+            if (!$db->query()) {
+                throw new \Exception($db->getErrorMsg());
+            }
+        }
+	}
+	
+	private function deletePermissions($transitionIds)
+	{
+		if (empty($transitionIds)) {
+			return;
+		}
+		
+		$db = $this->_db;
+		$query = $db->getQuery(true);
+		
+		$query
+			->delete('#__wf_transition_permissions')
+			->where(sprintf('transition_id IN (%s)', implode(',', $transitionIds)));
+		
+		$db->setQuery($query);
+		
+		if (!$db->query()) {
+			throw new \Exception($db->getErrorMsg());
+		}		
 	}
 }

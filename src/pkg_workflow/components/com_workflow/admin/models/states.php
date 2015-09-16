@@ -70,10 +70,9 @@ class WorkflowModelStates extends JModelList
 		$value = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $value);
 
-		$value = $app->getUserStateFromRequest($this->context.'.filter.workflow_id', 'filter_workflow_id');
-		$this->setState('filter.workflow_id', $value);
-		// Set as active workflow
-		$app->setUserState('com_workflow.filter.workflow_id', $value);
+		// Filter - Workflow
+		$workflow = WFApplicationHelper::getActiveWorkflowId('filter_workflow_id');
+		$this->setState('filter.workflow_id', $workflow);
 
 		$value = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $value);
@@ -150,7 +149,7 @@ class WorkflowModelStates extends JModelList
 
 		// Filter by a single or group of categories.
 		$workflowId = $this->getState('filter.workflow_id');
-		if (is_numeric($workflowId)) {
+		if (is_numeric($workflowId) && $workflowId != 0) {
 			$query->where('a.workflow_id = '.(int) $workflowId);
 		}
 		else if (is_array($workflowId)) {

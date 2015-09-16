@@ -1,10 +1,26 @@
 <?php
+use Joomla\Registry\Registry;
+use Composer\Autoload\ClassLoader;
 defined('_JEXEC') or die;
 
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('jquery.framework');
+JHtml::_('formbehavior.chosen');
+
+$data = array();
+$data['selector'] 		= '.advancedSelectUsers';
+$data['type'] 			= 'GET';
+$data['url']			= 'index.php?option=com_workflow&task=user.getUsers&tmpl=component&format=json';
+$data['dataType']		= 'json';
+$data['jsonTermKey']	= 'search';
+$data['afterTypeDelay'] = '500';
+$data['minTermLength']	= '3';
+
+$options = new Registry($data);
+
+JHtml::_('formbehavior.ajaxchosen', $options);
 
 JHtml::_('script', 'com_workflow/workflow/workflow.js', false, true, false, false, false);
 JHtml::_('script', 'com_workflow/workflow/form.js', false, true, false, false, false);
@@ -46,8 +62,8 @@ JHtml::_('script', 'com_workflow/workflow/form.js', false, true, false, false, f
 		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details', JText::_('COM_WORKFLOW_DETAILS', true)); ?>
 		<div class="row-fluid">
 			<div class="span9">
-				<div class="row-fluid form-horizontal-desktop">
-					<div class="span8">
+				<div class="row-fluid">
+					<div class="span6 form-vertical" >
 						<?php echo $this->form->renderField('workflow_id'); ?>
 						<div class="control-group">
 							<div class="control-label">
@@ -62,8 +78,10 @@ JHtml::_('script', 'com_workflow/workflow/form.js', false, true, false, false, f
 						<?php echo $this->form->renderField('system_path')?>
 						<?php echo $this->form->renderField('ordering'); ?>
 					</div>
-					<div class="span4">
+					<div class="span3 form-vertical">
 						<?php echo $this->form->renderField('fromstates')?>
+						<?php echo $this->form->renderField('allowed_groups')?>
+						<?php echo $this->form->renderField('allowed_users')?>
 					</div>
 				</div>
 			</div>

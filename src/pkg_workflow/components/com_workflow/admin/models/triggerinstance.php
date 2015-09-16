@@ -76,7 +76,6 @@ class WorkflowModelTriggerinstance extends JModelAdmin
 	public function getItem($pk = null)
 	{
 		if ($result = parent::getItem($pk)) {
-
 			// Convert the created and modified dates to local user time for display in the form.
 			jimport('joomla.utilities.date');
 			$tz	= new DateTimeZone(JFactory::getApplication()->getCfg('offset'));
@@ -84,7 +83,7 @@ class WorkflowModelTriggerinstance extends JModelAdmin
 			if (intval($result->created)) {
 				$date = new JDate($result->created);
 				$date->setTimezone($tz);
-				$result->created = $date->toSQL(true);
+				$result->created = $date->toSql(true);
 			}
 			else {
 				$result->created = null;
@@ -93,7 +92,7 @@ class WorkflowModelTriggerinstance extends JModelAdmin
 			if (intval($result->modified)) {
 				$date = new JDate($result->modified);
 				$date->setTimezone($tz);
-				$result->modified = $date->toSQL(true);
+				$result->modified = $date->toSql(true);
 			}
 			else {
 				$result->modified = null;
@@ -150,8 +149,16 @@ class WorkflowModelTriggerinstance extends JModelAdmin
 			$data = $this->getItem();
 			if (empty($data->id)) {
 				$transition_id = JFactory::getApplication()->input->get('transition_id', '', 'int');
-				$data->transition_id = $transition_id;	
+				$data->transition_id = $transition_id;
+				$oTransition = JTable::getInstance('Transition', 'WorkflowTable');
+				$oTransition->load($transition_id);
+				$data->workflow_id = $oTransition->workflow_id;	
 			}else{
+				if (!isset($data->workflow_id) || empty($data->workflow_id)) {
+					$oTransition = JTable::getInstance('Transition', 'WorkflowTable');
+					$oTransition->load($data->transition_id);
+					$data->workflow_id = $oTransition->workflow_id;
+				}
 				// Import the appropriate plugin group.
 				JPluginHelper::importPlugin('workflow');
 

@@ -68,8 +68,9 @@ class WorkflowModelBindings extends JModelList
 		$value = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $value);
 
-		$value = $app->getUserStateFromRequest($this->context.'.filter.workflow_', 'filter_workflow_id');
-		$this->setState('filter.workflow_id', $value);
+		// Filter - Workflow
+		$workflow = WFApplicationHelper::getActiveWorkflowId('filter_workflow_id');
+		$this->setState('filter.workflow_id', $workflow);
 		
 		// Set list state ordering defaults.
 		parent::populateState($ordering, $direction);
@@ -143,7 +144,7 @@ class WorkflowModelBindings extends JModelList
 
 		// Filter by a single or group of categories.
 		$workflowId = $this->getState('filter.workflow_id');
-		if (is_numeric($workflowId)) {
+		if (is_numeric($workflowId) && $workflowId != 0) {
 			$query->where('a.workflow_id = '.(int) $workflowId);
 		}
 		else if (is_array($workflowId)) {
@@ -160,7 +161,7 @@ class WorkflowModelBindings extends JModelList
 			$orderCol = 'workflow_title '.$orderDirn.', a.ordering';
 		}
 		$query->order($db->escape($orderCol.' '.$orderDirn));
-
+		
 		return $query;
 	}
 	
@@ -179,4 +180,5 @@ class WorkflowModelBindings extends JModelList
 		
 		return $items;
 	}
+	
 }

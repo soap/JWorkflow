@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- $Id$ -->
 <config>
-    <fieldset name="compat" label="COM_WORKFLOW_CONFIG_COMPAT_LABEL" description="COM_PFTICKETS_CONFIG_COMPAT_DESC">
+    <fieldset name="compat" label="COM_WORKFLOW_CONFIG_COMPAT_LABEL" description="COM_WORFLOW_CONFIG_COMPAT_DESC">
         <field name="jquery_site" type="list" default="" label="COM_WORKFLOW_CONFIG_JQUERY_SITE_LABEL" description="COM_WORKFLOW_CONFIG_JQUERY_SITE_DESC">
 		    <option value="">JAUTO</option>
             <option value="0">JNO</option>

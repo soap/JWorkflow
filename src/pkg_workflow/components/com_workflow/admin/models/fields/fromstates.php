@@ -10,7 +10,7 @@ JFormHelper::loadFieldClass('checkboxes');
  * Form Field class for selecting a task.
  *
  */
-class JFormFieldFromStates extends JFormFieldCheckboxes {
+class JFormFieldFromStates extends JFormFieldList {
 
 	
 	protected $type = 'FromStates';

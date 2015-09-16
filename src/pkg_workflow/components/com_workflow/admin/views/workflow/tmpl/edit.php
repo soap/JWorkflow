@@ -59,13 +59,6 @@ JHtml::_('formbehavior.chosen', 'select');
 			</div>
 		</div>
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
-		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'misc', JText::_('COM_JONGMAN_FIELDSET_MISCELLANEOUS', true)); ?>
-		<div class="row-fluid form-horizontal-desktop">
-				<div class="form-vertical">
-					<?php echo $this->form->renderField('misc'); ?>
-				</div>
-		</div>
-		<?php echo JHtml::_('bootstrap.endTab'); ?>
 
 		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing', JText::_('JGLOBAL_FIELDSET_PUBLISHING', true)); ?>
 		<div class="row-fluid form-horizontal-desktop">
@@ -78,7 +71,7 @@ JHtml::_('formbehavior.chosen', 'select');
 		</div>
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
 
-		<?php echo JLayoutHelper::render('joomla.edit.params', $this); ?>
+		<?php //echo JLayoutHelper::render('joomla.edit.params', $this); ?>
 
 		<?php if (isset($assoc)) : ?>
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'associations', JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS', true)); ?>

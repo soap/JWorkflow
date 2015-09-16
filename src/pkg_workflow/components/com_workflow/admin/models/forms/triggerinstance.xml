@@ -10,6 +10,13 @@
 			class="readonly"
 			size="10"
 			readonly="true"  />
+		
+		<field name="workflow_id"
+			type="workflow"
+			label="COM_WORKFLOW_FIELD_WORKFLOW_LABEL"
+			description="COM_WORKFLOW_FIELD_WORKFLOW_DESC"
+			size="1"
+			readonly="true" />
 
 		<field name="transition_id"
 			type="transition"

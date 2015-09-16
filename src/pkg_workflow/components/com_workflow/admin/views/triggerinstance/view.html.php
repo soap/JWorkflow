@@ -80,10 +80,11 @@ class WorkflowViewTriggerinstance extends JViewLegacy
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')) {
 			JToolBarHelper::apply('triggerinstance.apply', 'JTOOLBAR_APPLY');
-			JToolBarHelper::save('triggerinstance.save', 'JTOOLBAR_SAVE');
-			JToolBarHelper::custom('triggerinstance.save2new', 'save-new.png', null, 'JTOOLBAR_SAVE_AND_NEW', false);
+			if (!$isNew) {
+				JToolBarHelper::save('triggerinstance.save', 'JTOOLBAR_SAVE');
+				JToolBarHelper::custom('triggerinstance.save2new', 'save-new.png', null, 'JTOOLBAR_SAVE_AND_NEW', false);			
+			}
 		}
-
 		// If an existing item, can save to a copy.
 		if (!$isNew && $canDo->get('core.create')) {
 			JToolBarHelper::custom('triggerinstance.save2copy', 'save-copy.png', null, 'JTOOLBAR_SAVE_AS_COPY', false);

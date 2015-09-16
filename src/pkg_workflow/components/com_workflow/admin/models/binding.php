@@ -48,6 +48,12 @@ class WorkflowModelBinding extends JModelAdmin
 	{
 		if ($result = parent::getItem($pk)) {
 
+			if (empty($pk)) {
+				$workflowId = WFApplicationHelper::getActiveWorkflowId();
+				if (!empty($workflowId)) {
+					$result->workflow_id = $workflowId;
+				}
+			}
 			// Convert the created and modified dates to local user time for display in the form.
 			jimport('joomla.utilities.date');
 			$tz	= new DateTimeZone(JFactory::getApplication()->getCfg('offset'));
@@ -157,5 +163,15 @@ class WorkflowModelBinding extends JModelAdmin
 				$table->ordering = $max + 1;
 			}
 		}
+	}
+	
+	public function save($data)
+	{
+		$result = parent::save($data);
+		if ($result) {
+			WFApplicationHelper::setActiveWorkflow($data['workflow_id']);	
+		}
+		
+		return $result;
 	}
 }

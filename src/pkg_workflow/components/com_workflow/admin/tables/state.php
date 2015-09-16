@@ -41,6 +41,12 @@ class WorkflowTableState extends JTable
 			$registry->loadArray($array['params']);
 			$array['params'] = (string) $registry;
 		}
+		
+		// Bind the rules.
+		if (isset($array['rules']) && is_array($array['rules'])) {
+			$rules = new JRules($array['rules']);
+			$this->setRules($rules);
+		}
 
 		return parent::bind($array, $ignore);
 	}
@@ -97,6 +103,26 @@ class WorkflowTableState extends JTable
 		
 		return false;
 	}
+	
+	/**
+	 * Redefined asset name, as we support action control
+	 */
+	protected function _getAssetName() 
+	{
+		$k = $this->_tbl_key;
+		return 'com_workflow.state.'.(int) $this->$k;
+	}
+	
+	/**
+	 * We provide our global ACL as parent
+	 * @see JTable::_getAssetParentId()
+	 */
+	protected function _getAssetParentId(JTable $table = null, $id = null)
+	{
+		$asset = JTable::getInstance('Asset');
+		$asset->loadByName('com_workflow');
+		return $asset->id;
+	}	
 	
 	protected function resetStartState() 
 	{

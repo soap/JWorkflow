@@ -131,7 +131,7 @@ $saveOrder	= $listOrder == 'a.ordering';
 					<?php echo $item->transition_count?></a>
 				</td>
 				<td>
-					<a href="<?php echo JRoute::_('index.php?option=com_workflow&view=fromstate&filter_workflow_id='.$item->id);?>">
+					<a href="<?php echo JRoute::_('index.php?option=com_workflow&view=transitions&layout=fromstate&filter_workflow_id='.$item->id);?>">
 						<?php echo JText::_('COM_WORKFLOW_STATE_AND_TRANSITION')?></a>
 				</td>
 				<td class="center">

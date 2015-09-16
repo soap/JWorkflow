@@ -36,12 +36,10 @@
 			size="45" />
 			
 		<field name="start_state"
-			type="list"
+			type="radio"
 			label="COM_WORKFLOW_START_STATE_LABEL"
 			description="COM_WORKFLOW_START_STATE_DESC"
-			class="inputbox"
-			default="0"
-			size="1" >
+			default="0" class="btn-group btn-group-yesno">
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
@@ -143,27 +141,23 @@
 			readonly="true"
 			filter="unset" />
 	</fieldset>
-
+	<fieldset name="action_control" 
+			label="COM_WORKFLOW_ACTION_CONTROL_FIELDSET_LABEL"
+			description="COM_WORKFLOW_ACTION_CONTROL_FIELDSET_DESC"
+			>
+			<field name="asset_id" type="hidden" filter="unset" />
+			<field name="rules" 
+				type="rules"
+				label=""
+				translate_label="true"
+				filter="rules"
+				validate="rules"
+				class="inputbox"
+				component="com_workflow"
+				section="state" />
+	</fieldset>
+		
 	<fields name="params">
-		<fieldset name="basic" label="COM_WORKFLOW_BASIC_PARAMS_FIELDSET_LABEL">
-			<field name="show_title"
-				type="list"
-				label="JGLOBAL_SHOW_TITLE_LABEL"
-				description="COM_WORKFLOW_PARAM_SHOW_TITLE_DESC">
-				<option value="">JGLOBAL_USE_GLOBAL</option>
-				<option value="0">JHIDE</option>
-				<option value="1">JSHOW</option>
-			</field>
-		</fieldset>
-
-		<fieldset name="advanced" label="COM_WORKFLOW_ADVANCED_PARAMS_FIELDSET_LABEL">
-			<field name="layout"
-				type="componentlayout"
-				label="JFIELD_ALT_LAYOUT_LABEL"
-				description="JFIELD_ALT_COMPONENT_LAYOUT_DESC"
-				extension="COM_WORKFLOW"
-				view="state" />
-		</fieldset>
 	</fields>
 
 </form>
