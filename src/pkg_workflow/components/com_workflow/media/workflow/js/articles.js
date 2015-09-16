@@ -38,6 +38,74 @@ var WFArticles =
 	        );
 		},
 		
+		/**
+		 * 
+		 * @param baseUrl
+		 * @param item_id
+		 */
+		updateButton: function(baseUrl, item_id)
+		{
+    		jQuery.ajax(
+    		{
+    			url: baseUrl + '?option=com_workflow',
+    			data: 'task=content.state&context=com_content.article&id=' + item_id + '&tmpl=component&format=json',
+    			type: 'POST',
+    			cache: false,
+    			dataType: 'json',
+    			success: function(resp)
+    			{
+    				if (resp.success == true) {
+    			        var f = jQuery('#adminForm');
+    					if (resp.data != 'undefined') {
+    						var state = resp.data.state;
+    						var featured = resp.data.featured;
+    						
+    				        jQuery("#articleList > tbody", f).find('tr').each( 
+    					       /* each row */	
+    					       function (rIdx, row) {
+    					        	/* Find id of article */
+    					        	var id = jQuery('td:nth-child(2)', this).find(':checkbox').prop('value');
+    					        	var elementId = jQuery('td:nth-child(2)', this).find(':checkbox').prop('id');
+    					        	var target = jQuery('td:nth-child(3)', this);
+    					        	/* Find state change buttons and update them them */
+    					        	if (id == item_id) {	
+    					        		
+    					        		if (state == '1') {
+    					        			var iconClass = 'icon-publish';
+    					        			var task = 'articles.unpublish';
+    					        		}else if (state == '0') {
+    					        			var iconClass = 'icon-ubpublish';
+    					        			var task = 'articles.publish';
+    					        		}else if (state == '2') {
+    					        			var iconClass = 'icon-archive';
+    					        			var task = 'articles.unpublish'
+    					        		}else if (state == '-2') {
+    					        			var iconClass = 'icon-trash';
+    					        			var task = 'articles.unpublish'
+    					        		}
+    					        		
+    					        		target.find('div > a')
+    					        			.prop('onclick', "return listItemTask('"+elementId+"', '"+task+"')");
+    					        		}
+
+    					        		target.find('div > a > li')
+    					        			.attr('class', iconClass);	
+    					       		}
+    					        );
+    					}
+    				}
+    			},
+    			error: function(resp, e, msg)
+    			{
+    				//Workflow.displayMsg(resp, msg);
+    			},
+    			complete: function()
+    			{
+    				
+    			}
+    		});			
+		},
+		
 		loadWorkflowState : function(baseUrl, target, item_id) 
 		{
 
@@ -146,7 +214,7 @@ var WFArticles =
 		doTransition: function (transitionUrl, transitionData, target, item_id, comment)
 		{
 			jQuery('button#transition-yes').prop('diabled', true);
-			console.log('Try to make transition for com_content.article.'+item_id+' with comment '+comment);
+			//console.log('Try to make transition for com_content.article.'+item_id+' with comment '+comment);
 			jQuery.ajax(
 			{
 	        	url: transitionUrl+'&task=instance.transition',
@@ -169,6 +237,7 @@ var WFArticles =
 	        				    });
 	        				var u = transitionUrl.split('?');
 	        				WFArticles.loadWorkflowState(u[0], target, item_id);
+	        				WFArticles.updateButton(u[0], item_id);
 	        			}
 	        		}
 	        	},
