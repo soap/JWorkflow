@@ -185,8 +185,7 @@ class JInstallerAdapterTrigger extends JAdapterInstance
 			}
 		}
 
-		$group = (string) $xml->attributes()->group
-		;
+		$group = (string) $xml->attributes()->group;
 
 		if (!empty($element) && !empty($group))
 		{

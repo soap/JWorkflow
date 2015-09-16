@@ -253,6 +253,7 @@ abstract class WFToolbar
         $html[] = addslashes(JText::_($text));
         $html[] = '</a>';
 
+        JHtml::_('behavior.core');
         return implode("", $html);
     }
 
@@ -301,6 +302,7 @@ abstract class WFToolbar
         $html[] = '</a>';
         $html[] = '</li>';
 
+        JHtml::_('behavior.core');
         return implode("", $html);
     }
     
@@ -318,17 +320,25 @@ abstract class WFToolbar
         $html  = array();
         $class = (isset($options['class']) ? $options['class'] : 'btn-info');
         $href  = (isset($options['href'])  ? $options['href'].'&transition_id='.$transition_id  : 'javascript:void(0);');
-        $icon  = (isset($options['icon'])  ? $options['icon']  : 'icon-ok icon-white tooltip-group');
+        $icon  = (isset($options['icon'])  ? $options['icon']  : 'icon-ok icon-white glyphicon glyphicon-ok');
         $id    = (isset($options['id'])    ? ' id="' . $options['id'] . '"' : '');
-        $tip   = (isset($options['tip'])    ? ' data-toggle="tooltip" title="' . $options['tip'] . '"' : '');
+        
+        $hasTooltip = false;
+        $tip = '';
+        $tooltipClass = '';
+        if (array_key_exists('tip', $options)) {
+        	$tip = ' data-toggle="tooltip" title="' . $options['tip'] . '"';
+        	$tooltipClass = 'tooltip-group ';
+        }
+        
         $disabled = false;
         if (array_key_exists('disabled', $options)) {
             if ($options['disabled'] == true) {
             	$disabled = true;
-            	$class .= $class.' disabled';
+            	$class = $class.' disabled';
             }
         }
-
+        
         $html[] = '<a class="btn ' . $class . '" href="' . $href . '"';
 
         if ($task && !$disabled) {
@@ -340,16 +350,19 @@ abstract class WFToolbar
 
         $html[] = $id;
         $html[] = '>';
-        $html[] = '<i class="' . $icon . '"' . $tip. '></i> ';
+        $html[] = '<i class="'.$tooltipClass . $icon . '"' . $tip. '></i> ';
         $html[] = addslashes(JText::_($text));
         $html[] = '</a>';
-
+        
+        
+        JHtml::_('behavior.core');
         return implode("", $html);
     }
     
     protected static function getJavaScript()
     {
     	// JHtml key is (prefix).(class).function
+    	JHtml::_('bootstrap.framework');
     	JHtml::_('scripts.transition');
         $script   = array();
 		
@@ -359,7 +372,7 @@ abstract class WFToolbar
         $script[] = '}';
         $script[] = ' ';
         $script[] = 'jQuery(document).ready(function(){ ';
-    	$script[] = '	jQuery(".tooltip-group").tooltip({ placement: \'right\'});';
+    	$script[] = '	jQuery(".tooltip-group").tooltip({ placement: \'right\', container: \'body\'});';
 		$script[] = '});';
 		return $script;    	
     }

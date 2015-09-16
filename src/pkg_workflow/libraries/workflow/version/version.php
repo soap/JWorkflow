@@ -1,10 +1,10 @@
 <?php
 /**
- * @package      pkg_jongman
- * @subpackage   lib_jongman
+ * @package      pkg_workflow
+ * @subpackage   lib_workflow
  *
  * @author       Prasit Gebsaap
- * @copyright    Copyright (C) 2007-2013 Prasit Gebsaap. All rights reserved.
+ * @copyright    Copyright (C) 2007-2015 Prasit Gebsaap. All rights reserved.
  * @license      http://www.gnu.org/licenses/gpl.html GNU/GPL, see LICENSE.txt
  */
 
@@ -12,7 +12,7 @@ defined('_JEXEC') or die();
 
 
 /**
- * Version information class for the JONGman package.
+ * Version information class for the JWorkflow package.
  *
  */
 final class WFVersion
@@ -21,16 +21,16 @@ final class WFVersion
     public $PRODUCT = 'Workflow';
 
     /** @var  string  Release version. */
-    public $RELEASE = '1.5';
+    public $RELEASE = '1.6';
 
     /** @var  string  Maintenance version. */
-    public $DEV_LEVEL = '0';
+    public $DEV_LEVEL = '1';
 
     /** @var  string  Development status. */
     public $DEV_STATUS = 'RC';
 
     /** @var  string  Build number. */
-    public $BUILD = '6';
+    public $BUILD = '1';
 
     /** @var  string  Code name. */
     public $CODENAME = 'Memee';
