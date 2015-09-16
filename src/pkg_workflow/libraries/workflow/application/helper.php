@@ -2,8 +2,8 @@
 /**
  * Workflow utility class to be used by component developer
  * @author Prasit Gebsaap
- * @version 1.5.0 RC3 Dated: 2014-08-31
- * @copyright 2010-2014 by Prasit Gebsaap
+ * @version 1.5.1 RC1 Dated: 2014-08-31
+ * @copyright 2010-2015 by Prasit Gebsaap
  * @internal workflow state stored in JWorkflow table instead of working since version 1.5.0
  */
 // no direct access
@@ -15,10 +15,16 @@ jimport('joomla.database.table');
 
 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_workflow/tables');
 
-
 class WFApplicationHelper {
     
 	protected static $components;
+
+	protected static $workflow;
+	
+	protected static $transitions;
+	
+	protected static $states;
+	protected static $fromstates;
 	
     /**
      * Method to get all workflow related components and plugins
@@ -77,6 +83,85 @@ class WFApplicationHelper {
         return true;
     }
 
+
+    /**
+     * Sets the currently active workflow for the user.
+     * The active workflow serves as a global data filter.
+     *
+     * @param     int        $id    The workflow id
+     *
+     * @return    boolean           True on success, False on error
+     **/
+    public static function setActiveWorkflow($id = 0)
+    {
+    	static $model = null;
+    
+    	if ($id == self::getActiveWorkflowId()) return true;
+    
+    	if (is_null($model)) {
+    		// We did not use in Site yet
+    		$name   = (JFactory::getApplication()->isSite() ? 'Form' : 'Workflow');
+    		$config = array('ignore_request' => true);
+    		$model  = JModelLegacy::getInstance($name, 'WorkflowModel', $config);
+    	}
+    
+    	$result = $model->setActive(array('id' => (int) $id));
+    
+    	if (!$result) {
+    		JFactory::getApplication()->enqueueMessage($model->getError(), 'error');
+    	}
+    	else {
+    		if ($id) {
+    			$title = self::getActiveWorkflowTitle();
+    			$msg   = JText::sprintf('COM_WORLFLOW_INFO_NEW_ACTIVE_WORKFLOW', '"' . $title . '"');
+    			JFactory::getApplication()->enqueueMessage($msg);
+    		}
+    	}
+    
+    	return $result;
+    }
+    
+    
+    /**
+     * Returns the currently active workflow ID of the user.
+     *
+     * @param     string    $request    The name of the variable passed in a request.
+     *
+     * @return    int                   The workflow id
+     **/
+    public static function getActiveWorkflowId($request = null)
+    {
+    	$key     = 'com_workflow.workflow.active.id';
+    	$current = JFactory::getApplication()->getUserState($key);
+    	$current = (is_null($current) ? '' : $current);
+    
+    	if (empty($request)) return $current;
+		
+    	$request = JFactory::getApplication()->input->get($request, null);
+		
+    	if (!is_null($request) && self::setActiveWorkflow((int) $request)) {
+    		$current = is_numeric($request) ? $request : (int) $request;
+    	}
+    
+    	return $current;
+    }
+    
+    
+    /**
+     * Returns the currently active workflow title of the user.
+     *
+     * @param     string    $alt    Alternative value of no workflow is set
+     *
+     * @return    string            The workflow title
+     **/
+    public static function getActiveWorkflowTitle($alt = '')
+    {
+    	if ($alt) $alt = JText::_($alt);
+    
+    	$title = JFactory::getApplication()->getUserState('com_workflow.workflow.active.title', $alt);
+    
+    	return $title;
+    }
     /**
      * 
      * @param unknown $oDocument
@@ -104,19 +189,33 @@ class WFApplicationHelper {
         	
             return $oState;
         }
+        
         $aTransitions = self::getTransitionsFrom($oState);    
         $oDocument = self::getDocument($oInstance);
         
         $aEnabledTransitions = array();
-        
         foreach ($aTransitions as $oTransition) 
         {
+        	// validate against Joomla ACL first
+        	$allowed = self::allowUser($oTransition->id, $oUser->get('id'));
+        	if (!$allowed) 
+        	{
+        		if ($includeBlocked) {
+        			$oTransition->blocked = true;
+        			$oTransition->explain = JText::_('COM_WORKFLOW_WARNING_NO_PERMISSION');
+        			$aEnabledTransitions[] = $oTransition;
+        		}
+        		continue;
+        	}
+        	
+        	// Continue check on guards
             $aGuardTriggers = self::getGuardTriggersForTransition($oTransition);
             if (JError::isError($aGuardTriggers)) 
             {
                 return $aGuardTriggers; // error out?
             }
             
+
             if ( is_array($aGuardTriggers) && (count($aGuardTriggers)> 0) ) {
             	$blocked = false;
             	foreach ($aGuardTriggers as $oTrigger) {
@@ -160,7 +259,7 @@ class WFApplicationHelper {
     }
     
     /**
-     * Gets the workflow state that applies to the given document,
+     * Gets the workflow state that applies to the given instance,
      * returning null if there is no workflow assigned.
      * if options contains ids then only id will be returned.
      * @sinc 1.5.0
@@ -352,7 +451,7 @@ class WFApplicationHelper {
     /** 
      * Retrieves the triggers for a given workflow id in their WorkflowTrigger form.
      */
-    function getTriggersForWorkflow($iWorkflowId) {
+    static function getTriggersForWorkflow($iWorkflowId) {
         $oCPWorkflowTriggerRegistry = & WorkflowTriggerRegistry::getInstance();
         /* FIXME: Who should call this function */ 
         self::loadWorkflowTriggers();
@@ -376,7 +475,7 @@ class WFApplicationHelper {
     	$oTransition = self::getTransition($transitionId);
     	$oInstance = self::getWorkflowInstance($context, $item_id);
     
-    	$fromState = $instance->workflow_state_id;
+    	$fromState = $oInstance->workflow_state_id;
     	$user = JFactory::getUser();
     	
     	if (!WFApplicationHelper::performTransitionOnInstance($oTransition, $oInstance, $user, $context, $comment))
@@ -430,9 +529,13 @@ class WFApplicationHelper {
     		return $oWorkflow; // return JException ?
     	}
     	
-    	if ($oDocument = self::getDocument($oInstance) == false) {
+    	$oDocument = self::getDocument($oInstance);
+    	if ($oDocument === false) {
+    		JLog::add('Cannot load document object', JLog::INFO, 'jworkflow');
     		return false;	
     	}
+    	
+    	//JLog::add('Document class is '.get_class($oDocument), JLog::INFO, 'jworkflow');
     	
     	// walk the action triggers.
     	$aActionTriggers = self::getActionTriggersForTransition($oTransition);
@@ -526,17 +629,19 @@ class WFApplicationHelper {
     		//JLog::add('comment is '.$data['comment'], JLog::DEBUG, 'jworkflow');
     	}
     	
-    	// walk the action triggers.
+    	self::emailAfterTransition($context, $oInstance, $oTransition, $oSourceState, $oTargetState, $oDocument, $oUser, $comment);
+    	// walk through the action triggers.
+    	JLog::add(sprintf('Walk through action %d triggers', count($aActionTriggers)), JLog::INFO, 'jworkflow');
     	foreach ($aActionTriggers as $oTrigger) {
-    		$res = $oTrigger->afterTransition($oDocument, $oUser, $oInstance);
+    		$res = $oTrigger->afterTransition($oInstance, $oDocument, $oUser);
     		if (JError::isError($res)) {
     			return $res;
     		}
     	}
     	
     	/* Create work item to list waiting object for user */
-    	/* Clear existing todo items for groups and users from start state and re-create fro the target state */
-    	//CpPermission::updatePermissionLookUp( $oDocument );
+    	/* Clear existing todo items for groups and users from start state and re-create */
+    	self::updateWaitingItems( $context, $oInstance, $oUser );
     	
     	self::performSystemActionOnInstance( $oInstance, $context );
     	return true;    	
@@ -589,7 +694,7 @@ class WFApplicationHelper {
         // Import workflow plugin
         JPluginHelper::importPlugin('workflow');
         // Get the dispatcher.
-		$dispatcher = JDispatcher::getInstance();
+		$dispatcher = JEventDispatcher::getInstance();
         $results = $dispatcher->trigger('onWorkflowBeforeTransition', 
         		array($context, $oDocument, $oUser, $comment, $oTransition, $oSourceState, $oTargetState)
         	);
@@ -652,9 +757,7 @@ class WFApplicationHelper {
        	    	$oTransitionLog->store();
        	    }else{
        	    	
-       	    }
-         	
-        
+       	    }    	
         }
 
         // walk the action triggers.
@@ -667,14 +770,19 @@ class WFApplicationHelper {
         
         /* Create work item to list waiting object for user */ 
         /* Clear existing todo items for groups and users from start state and re-create fro the target state */
-        //CpPermission::updatePermissionLookUp( $oDocument );
+        //self::updateWaitingItems( $oDocument );
         
         self::performSystemActionOnDocument( $oDocument, $context );
         return true;
             
     }
     
-    
+    /**
+     * 
+     * @param unknown $oDocument
+     * @param unknown $context
+     * @deprecated since 1.5 see performSystemActionOnInstance
+     */
     static function performSystemActionOnDocument( $oDocument, $context ) 
     {
     	self::performSystemActionOnInstance($oDocument, $context);	
@@ -697,6 +805,7 @@ class WFApplicationHelper {
                 break;
             }
         }
+        
         /* Perform transition on document */
         if (!empty($selected_transition)) {
             return self::performTransitionOnInstance($transition, $oInstance, null, context);
@@ -710,29 +819,247 @@ class WFApplicationHelper {
     	return false;	
     }
     
+    protected static function updateWaitingItems( $context, $oInstance, $oUser )
+    {
+    	$dbo = JFactory::getDbo();
+    	$query = $dbo->getQuery(true);
+
+    	$query->delete('#__wf_waiting_items')
+    		->where('context='.$dbo->quote($context))
+    		->where('item_id='.(int)$oInstance->item_id);
+    	
+    	$dbo->setQuery($query);
+    	@$dbo->execute();
+    	
+    	$oState = self::getWorkflowStateForInstance($oInstance);
+    	$transitions = self::getTransitionsFrom($oState, array('type'=>'id'));
+    	
+    	if (empty($transitions)) return false;
+    	
+    	$query->clear();
+    	$query->select('permission_context, item_id')
+			->from('#__wf_transition_permissions')
+			->where('transition_id IN ('.join(',',$transitions).')')
+    		->group('permission_context', 'item_id');
+    	$dbo->setQuery($query);
+    	$rows = $dbo->loadObjectList();
+		
+    	if (empty($rows)) return false;
+		
+    	foreach($rows as $row) {
+    		$obj = new StdClass();
+    		$obj->context = $context;
+    		$obj->item_id = $oInstance->item_id;
+    		$obj->role_type = $row->permission_context;
+    		$obj->role_id = $row->item_id;
+    		$obj->created = JDate::getInstance()->toSql();
+    		$obj->created_by = $oUser->get('id');
+
+    		$dbo->insertObject('#__wf_waiting_items', $obj);
+    	}
+    	
+    	return true;
+    } 
+    
+    /**
+     * Get the document object based on parameters provided in binding information
+     * @param unknown $oInstance
+     * @return boolean| JTable descendant object
+     * @since 3.0 (2015-01-01)
+     * @internal Tested and verified again on 2015-09-14
+     */
     protected static function getDocument($oInstance)
     {
     	$oBinding = JTable::getInstance('Binding', 'WorkflowTable');
-    	$oBinding->load($oInstance->binding_id);
-    	
+    	if (!$oBinding->load($oInstance->binding_id)) {
+    		JLog::add('Method: '.__METHOD__.', cannot load binding data from workflow instance', JLog::ERROR, 'jworkflow');
+    		return false;
+    	}
+    		
     	$oResult = false;
     	if ( isset($oBinding->params) && !empty($oBinding->params)) {
     		$oBinding->params = new JRegistry($oBinding->params);
     		$path = $oBinding->params->get('table_path');
     		$prefix = $oBinding->params->get('table_prefix');
     		$name = $oBinding->params->get('table_name');
+    		
+    		JLog::add('Path: '.$path.' Prefix: '.$prefix.' Name: '.$name, JLog::INFO, 'jworkflow');
+    		
     		if (!empty($path)) {
-    			$path = JPath::clean(JPATH_ADMINISTRATOR.'/'.$path);
+    			$path = JPATH_ADMINISTRATOR.'/'.$path;
+    			JLog::add('Path: '.$path.' Prefix: '.$prefix.' Name: '.$name, JLog::INFO, 'jworkflow');
     			JTable::addIncludePath($path);
     		}
     		
     		$oResult = JTable::getInstance($name, $prefix);
-    		$oResult->load($oInstance->item_id);
+    		
+    		if ($oResult === false) {
+    			// If we were unable to find the class file in the JTable include paths, raise a warning and return false.
+    			JLog::add(JText::sprintf('COM_WORKFLOW_ERROR_LOADING_DOCUMENT_CLASS', $prefix.$name), JLog::WARNING, 'jworkflow');
+    			return false;
+    		}
+    		
+    		JLog::add('Try to load document object: '.$prefix.$name.$oInstance->item_id, JLog::WARNING, 'jworkflow');
+    		// Try to load registry class
+    		$success = $oResult->load($oInstance->item_id);
+    		
+    		if ($success) {
+
+				if (isset($oResult->attribs) &&  !($oResult->attribs instanceof JRegistry)) {
+    				$oResult->attribs = new JRegistry($oResult->attribs);
+    			}
+    		
+    			if (isset($oResult->params) && !($oResult->params instanceof JRegistry)) {
+    				$oResult->params = new JRegistry($oResult->params);
+    			}
+    		}else{
+    			JLog::add(JText::sprintf('COM_WORKFLOW_ERROR_LOADING_DOCUMENT_OBJECT', $prefix.$name.$oInstance->item_id), JLog::WARNING, 'jworkflow');
+    		}
+    	}else{
+    		JLog::add(JText::_('COM_WORKFLOW_ERROR_NO_BINDING_PARAMS'), JLog::WARNING, 'jworkflow');
     	}
 
     	return $oResult;
     } 
     
+    /**
+     * 
+     * @param unknown $conetext
+     * @param unknown $oTransition
+     * @param unknown $oSourceState
+     * @param unknown $oTargetState
+     * @param unknown $oDocument
+     * @param unknown $oUser
+     * @param unknown $comment
+     */
+    protected static function emailAfterTransition($conetext, $oInstance, $oTransition, $oSourceState, $oTargetState, $oDocument, $oUser, $comment)
+    {
+    	jimport('workflow.mail.mail');
+    	
+    	$config = JFactory::getConfig();
+    	$sender = array(
+    			$config->get( 'mailfrom' ),
+    			$config->get( 'fromname' )
+    	);
+    	//get author and owner 's e-mail
+    	$oBinding = JTable::getInstance('Binding', 'WorkflowTable');
+    	$oBinding->load($oInstance->binding_id);
+    	$bindingParams = new JRegistry($oBinding->params);
+    	
+    	$authorField = $bindingParams->get('author_field');
+    	$ownerField = $bindingParams->get('owner_field');
+    	
+    	$transitionParams = $oTransition->params;
+    	if (!($transitionParams instanceof JRegistry)) {
+    		$transitionParams = new JRegistry($transitionParams);
+    	}
+    	
+    	$notifyAuthor 		= (bool)$transitionParams->get('notify_author');
+    	$notifyOwner 		= (bool)$transitionParams->get('notify_owner');
+    	$notifyActor 		= (bool)$transitionParams->get('notify_actor');
+
+    	$reciepts = array();
+    	$reciepts['authors'] = array();
+    	$reciepts['actor'] = array();
+    	$reciepts['next_actors'] = array();
+    	
+    	if ($notifyAuthor && !empty($authorField) && (isset($oDocument->$authorField))) {
+    		$reciepts['authors'][] = JFactory::getUser($oDocument->$authorField)->email;
+    	}
+    	
+    	if ($notifyOwner && !empty($ownerField) && (isset($oDocument->$ownerField))) {
+    		$reciepts['authors'][] = JFactory::getUser($oDocument->$ownerField)->email;
+    	}
+    	
+    	if ($notifyActors && $oUser instanceof JUser) {
+    		$reciepts['actor'][] = $oUser->email;
+    	}
+    
+  	
+   	
+    	list($basePath, $context) = explode('.', $oBinding->context);
+    	$basePath = JPATH_ROOT.'/components/'.$basePath.'/layouts';
+
+    	// Get data for e-mail template
+    	require_once($basePath.'/emails/layoutdata.php');
+    	// Pass data to class to prepare variables
+    	$layoutData = new RFLayoutData($oInstance, $oTransition, $oSourceState, $oTargetState, $oDocument, $oUser, $comment);
+    	if ($notifyAuthor || $notifyOwner) {
+    		
+    		// E-mail template 
+    		$notifyAuthorEmailTemplate = new JLayoutFile('emails.notify_author_html', $basePath);
+    		$recieptEmails = $reciepts['authors'];
+    		$ccEmails = array();
+    		$bccEmails = array();
+    		
+    		
+    		$displayData = $layoutData->getDisplayData('notify_actor');
+    		$replacements = $layoutData->getReplacementPairs('notify_actor');
+    		
+    		$mailer = WFMail::getInstance();
+    		$body = $notifyAuthorEmailTemplate->render($displayData);
+    		$mailer->setReplacements($replacements);
+    		$mailer->setSender($sender);
+    		$mailer->addRecipient($reciepts['authors']);
+    		$mailer->setSubject(JText::sprintf('COM_WORKFLOW_EMAIL_SUBJECT_NOTIFY_AUTHOR', $oTransition->name, $oUser->name));
+    		$mailer->setBody($body);
+    		$mailer->IsHtml(true);
+    		
+    		if (!$mailer->send()) {
+    			return false;
+    		}
+    		
+    	}
+    	
+    	if ($notifyActors && count($reciepts['actor'])) {
+    		$notifyActorEmailTemplate = new JLayoutFile('emails.notify_actor', $basePath);
+    		
+    		$receiptEmails = array($reciepts['actor']);
+    		$ccEmails = array();
+    		$bccEmails = array();
+    		$displayData = array(); 
+    		$replacements = array();
+    		
+    		$mailer = WFMail::getInstance();
+    		$body = $notifyActorEmailTemplate->render($displayData);
+    		$mailer->setReplacements($replacements);
+    		$mailer->setSender($sender);
+    		$mailer->addRecipient($reciepts['actor']);
+    		$mailer->setSubject(JText::_('COM_JONGMAN_EMAIL_SUBJECT_NOTIFY_ACTOR'));
+    		$mailer->setBody($body);
+    		$mailer->IsHtml(true);
+    		
+    		if (!$mailer->send()) {
+    			return false;
+    		}
+    		
+    	}
+
+    	if (count($reciepts['next_actors'])) {
+    		// We always notify next actors
+    		$notifyNextActorsEmailTemplate = new JLayoutFile('emails.notify_next_actors', $basePath);
+    	
+    		$recieptEmails = array();
+    		$ccEmails = array();
+    		$bccEmails = array();
+    		$displayData = array();
+    		$replacements = array();
+    	
+    		$mailer = WFMail::getInstance();
+    		$body = $notifyNextActorsEmailTemplate->render($displayData);
+    		$mailer->setReplacements($replacements);
+    		$mailer->setSender($sender);
+    		$mailer->addRecipient($reciepts['next_actors']);
+    		$mailer->setSubject(JText::_('COM_JONGMAN_EMAIL_SUBJECT_NOTIFY_NEXT_ACTORS'));
+    		$mailer->setBody($body);
+    		$mailer->IsHtml(true);
+    	
+    		if (!$mailer->send()) {
+    			return false;
+    		}
+    	}
+    	return true;
+    } 
     
     public static function getStateName($stateId) 
     {
@@ -745,7 +1072,7 @@ class WFApplicationHelper {
    			->where('id = '. (int)stateId);
    		$db->setQuery($query);
    		
-   		return $db->loadResult(); 	
+   		return $db->loadResult(); 
     }
     
     public static function getTransitionLogs($context, $item_id)
@@ -780,6 +1107,40 @@ class WFApplicationHelper {
     }
     
     /**
+     * Get possible states in workflow
+     * @param unknown $context
+     * @return boolean|mixed
+     */
+    
+    public static function getStatesByContext($context)
+    {
+    	$app = JFactory::getApplication();
+    	if (empty($context)) {
+    		$app->enqueueMessage('No context id provided to get all active states', 'warning');
+    		return false;
+    	}
+    	
+    	$dbo = JFactory::getDbo();
+    	$query = $dbo->getQuery(true);
+    	
+    	$query->select('workflow_id')
+    		->from('#__wf_bindings')
+    		->where('context='.$dbo->quote($context));
+    	$dbo->setQuery($query);
+    	$workflowId = $dbo->loadResult();
+    	
+    	if (empty($workflowId)) {
+    		$app->enqueueMessage('No associate context found', 'warning');
+    		return false;    		
+    	}
+    	
+    	$query->clear();
+    	$query->select('id, title')->from('#__wf_states')->where('workflow_id='.$workflowId);
+    	$dbo->setQuery($query);
+    	
+    	return $dbo->loadObjectList();
+    } 
+    /**
      * Check if workflow if exists for provided context
      * @param unknown $context
      */
@@ -800,6 +1161,48 @@ class WFApplicationHelper {
     	return true;
     }
     
+ 	public static function allowUser($transitionId, $userId = null) 
+ 	{
+ 		if ($userId === 0) {
+ 			//this is system act as user
+ 		}else if ($userId === null) {
+ 			$user = JFactory::getUser();
+ 			$userId = $user->get('id');
+ 		}else{
+ 			$userId = (int) $userId;
+ 			$user = JFactory::getUser($userId);
+ 		}
+ 		
+ 		$db = JFactory::getDbo();
+ 		$query = $db->getQuery(true);
+ 		//check for user permission
+
+ 		$query->select('count(item_id)')
+ 			->from('#__wf_transition_permissions')
+ 			->where('transition_id='.(int)$transitionId)
+ 			->where('permission_context='.$db->quote('joomla.user'))
+ 			->where('item_id='.(int)$userId);
+ 		
+ 		$db->setQuery($query);
+ 		if ((bool)$db->loadResult()) {
+ 			return true;
+ 		}
+
+ 		//check for group permission
+ 		$query->clear();
+ 		$query->select('item_id')
+ 			->from('#__wf_transition_permissions')
+ 			->where('transition_id='.(int)$transitionId)
+ 			->where('permission_context='.$db->quote('joomla.usergroup'));
+ 		$db->setQuery($query);
+
+ 		$groups = $db->loadColumn();
+ 		$userGroups = JAccess::getGroupsByUser($userId, true);
+ 		
+ 		$matches = array_intersect($groups, $userGroups);
+
+ 		return (count($matches) > 0);
+ 	}   
     
     public static function getStateByContext($context, $id=null)
     {
@@ -822,6 +1225,48 @@ class WFApplicationHelper {
     	$dbo->setQuery($query);
     	
     	return $dbo->loadObject();
+    }
+    
+    public static function isWorkflowEnabled($context, $id) 
+    {
+    	$dbo = JFactory::getDbo();
+    	$query = $dbo->getQuery(true);
+    	$query->select('workflow_id, workflow_state_id')
+    		->from('#__wf_instances')
+    		->where('context='.$dbo->quote($context))
+    		->where('item_id='.(int)$id);
+    	
+    	$dbo->setQuery($query);
+    	$data = $dbo->loadObject();
+    	if ($data && ($data->workflow_id > 0) && ($data->workflow_state_id > 0) ) return true;
+
+    	return false;
+    }
+    
+    /**
+     * Get authorised action based on working item state
+     * @param unknown $context
+     * @param unknown $item_id
+     * @return JObject
+     */
+    public static function getActions($context, $item_id)
+    {
+    	$oInstance = self::getWorkflowInstance($context, $item_id);
+    	
+    	$assetName = 'com_workflow.state.'.$oInstance->get('workflow_state_id');
+    	
+    	$user	= JFactory::getUser();
+    	$result	= new JObject;
+    	
+    	$actions = array(
+    			'core.admin', 'core.manage', 'core.create', 'core.edit', 'core.edit.state', 'core.delete', 'core.edit.own', 'core.delete.own'
+    	);
+    	
+    	foreach ($actions as $action) {
+    		$result->set($action, $user->authorise($action, $assetName));
+    	}
+    	
+    	return $result;
     }
     
     public function getVersion()
